@@ -15,8 +15,6 @@ Il faut d'abord s'assurer que les valeurs dans ``config.py`` soient cohérentes,
 pip install -r requirements.txt
 # Créer la base de données
 python creation.py
-# Insérer les données
-python insertions.py
 # Lancer le site web
 python run.py
 ```
