@@ -2,15 +2,14 @@ from flask import render_template, jsonify, flash, redirect, url_for
 from app import app, db, modeles
 import random
 from app.outils import utile
-from app.formulaires import utilisateur as fu
+from app.formulaires import reservation as rs
 from app.outils import geographie
 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    form = fu.Demande()
-    print(form.validate())
+    form = rs.Demande()
     if form.validate_on_submit():
         # Géolocaliser les adresses
         localisation_dep = ' '.join([
@@ -25,8 +24,8 @@ def index():
             form.ville_arr.data
         ])
 
-        position_dep = geographie.geocoder(localisation_dep)
-        position_arr = geographie.geocoder(localisation_arr)
+        depart = {'position': geographie.geocoder(localisation_dep)}
+        arrivee = {'position': geographie.geocoder(localisation_arr)}
 
         adresse_dep = modeles.Adresse(
             adresse=form.adresse_dep.data,
@@ -34,7 +33,7 @@ def index():
             cp=form.cp_dep.data,
             ville=form.ville_dep.data,
             position='POINT({0} {1})'.format(
-                position_dep['lat'], position_dep['lon'])
+                depart['position']['lat'], depart['position']['lon'])
         )
 
         adresse_arr = modeles.Adresse(
@@ -43,7 +42,7 @@ def index():
             cp=form.cp_arr.data,
             ville=form.ville_arr.data,
             position='POINT({0} {1})'.format(
-                position_arr['lat'], position_arr['lon'])
+                arrivee['position']['lat'], arrivee['position']['lon'])
         )
         # Ajouter l'adresse à la BD
         db.session.add(adresse_dep)

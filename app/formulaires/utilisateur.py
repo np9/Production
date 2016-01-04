@@ -95,18 +95,3 @@ class Modification(Form):
                     description='Nom')
     telephone = TextField(validators=[Required(), Length(min=6)],
                           description='Numéro de téléphone')
-
-
-class Demande(Form):
-
-    ''' Demande de réservation d'un taxi par un utilisateur. '''
-
-    ville_dep = TextField(description='Ville de départ')
-    cp_dep = TextField(description='Code postal', validators=[Length(max=5)])
-    adresse_dep = TextField(description='Adresse')
-    numero_dep = TextField(description='Numéro')
-
-    ville_arr = TextField(description="Ville d'arrivée")
-    cp_arr = TextField(description='Code postal', validators=[Length(max=5)])
-    adresse_arr = TextField(description='Adresse')
-    numero_arr = TextField(description='Numéro')
