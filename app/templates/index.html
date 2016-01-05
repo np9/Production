@@ -54,11 +54,26 @@ $( "#datepicker" ).datepicker(
 
 <div class="ui centered grid">
     <div class="left floated ten wide column">
-        {% if current_user.is_authenticated == false %}
-        <h3 class="ui header">Formulaire non-connecté.</h3> 
-        {% endif %}
-        <h3 class="ui header">Formulaire connecté.</h3> 
         <form class="ui form" action="/index" method="POST">
+        {% if current_user.is_authenticated == false %}      
+        <h4 class="ui pink dividing header">Informations utilisateur</h4>  
+        <div class="two fields">
+            <div class="six wide field">
+            {{ m.render_field(form.nom)}}
+            </div>
+            <div class="six wide field">
+            {{ m.render_field(form.prenom)}}
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="ten wide field">
+            {{ m.render_field(form.telephone)}}
+            </div>
+            <div class="ten wide field">
+            {{ m.render_field(form.mail)}}
+            </div>
+        </div>
+        {% endif %}
             <h4 class="ui pink dividing header">Itinéraire</h4>
             <div class="field">
                 <label>Adresse de départ</label>
@@ -137,7 +152,7 @@ $( "#datepicker" ).datepicker(
                     <div class="ten wide field">
                         {{ m.render_field(form.commentaire) }} 
                     </div> 
-                </div>             
+                </div>           
             </div>
             {{ form.csrf_token }}
             <button class="ui inverted blue primary button" type="submit">Valider</button>

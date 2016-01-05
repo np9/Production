@@ -2,28 +2,7 @@ from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField
 from wtforms.validators import (Required, Length, Email, ValidationError, EqualTo)
 from app.modeles import Utilisateur
-
-
-class Unique(object):
-
-    '''
-    Validateur fait maison pour s'assurer qu'un
-    attribut est unique. Par exemple on ne veut
-    pas qu'un utilisateur puisse utiliser une
-    adresse email qui a déjà été utilisé pour
-    un autre compte. Cette classe suppose qu'on
-    utilise SQLAlchemy.
-    '''
-
-    def __init__(self, model, field, message):
-        self.model = model
-        self.field = field
-        self.message = message
-
-    def __call__(self, form, field):
-        check = self.model.query.filter(self.field == field.data).first()
-        if check:
-            raise ValidationError(self.message)
+from app.formulaires import validateurs
 
 
 class Oubli(Form):
@@ -66,11 +45,11 @@ class Enregistrement(Form):
     	description = 'Nom')
     
     telephone = TextField(
-    	validators = [Required(), Length(min=6), Unique(Utilisateur, Utilisateur.telephone, 'Ce numéro de téléphone est déjà lié à un compte.')], 
+    	validators = [Required(), Length(min=6), validateurs.Unique(Utilisateur, Utilisateur.telephone, 'Ce numéro de téléphone est déjà lié à un compte.')], 
     	description = 'Numéro de téléphone')
     					
     email = TextField(
-    	validators = [Required(), Email(), Unique(Utilisateur, Utilisateur.email, 'Cette adresse email est déjà liée à un compte.')], 
+    	validators = [Required(), Email(), validateurs.Unique(Utilisateur, Utilisateur.email, 'Cette adresse email est déjà liée à un compte.')], 
     	description = 'Adresse email')
 
     ville = TextField(description = 'Ville')

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 #On cherche à retourner le type de tarif (Jour ou Nuit/Dimanche/JoursFériés)
-def Type_tarif(demande):
+def type_tarif(demande):
     
     #On récupère la date et l'heure de départ
     date = demande['date_debut'].split('-')
@@ -25,33 +25,34 @@ def Type_tarif(demande):
     test = False
     
     #On concaténe le mois et le jour de façon a avoir une chaine de la forme 'jour/mois'  
-    dateC = str(date.day)+'/'+str(date.month)
+    dateC = str(date.day)+ '/' +str(date.month)
     
     #On vérifie si la date en entrée est un jour ferie
-    ferie = dateC  in ['1/1',
-                     '1/5',
-                     '8/5',
-                     '14/7',
-                     '15/8',
-                     '1/11',
-                     '11/11',
-                     '25/12'
+    ferie = dateC in [
+        '1/1',
+        '1/5',
+        '8/5',
+        '14/7',
+        '15/8',
+        '1/11',
+        '11/11',
+        '25/12'
     ]
     
     #On vérifie si l'heure est de nuit ou un dimanche
-    dimanche=date.weekday()
+    dimanche = date.weekday()
    
     if date.hour > 19:
         test = True
     
-    elif date.hour <8:
+    elif date.hour < 8:
         test = True
     
     elif ferie == True or dimanche == 6:
         test = True  
         
     #Test tarif spécial (Nuit/JourFérié/Dimanche)
-    if test :
+    if test:
         Type_tarif = 'TarifD'
         
     #Tarif de jour par défaut 

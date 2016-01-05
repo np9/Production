@@ -1,6 +1,1 @@
 *.pyc
-Ngrok
-venv
-staticfiles
-.env
-db.sqlite3

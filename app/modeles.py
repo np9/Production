@@ -11,11 +11,13 @@ class Utilisateur(db.Model, UserMixin):
     __tablename__ = 'utilisateurs'
 
     telephone = db.Column(db.String, primary_key=True)
+    civilite = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     confirmation = db.Column(db.Boolean)
     categorie = db.Column(db.String)
     prenom = db.Column(db.String)
     nom = db.Column(db.String)
+    fax = db.Column(db.Integer)
     notification_email = db.Column(db.Boolean)
     notification_sms = db.Column(db.Boolean)
     inscription = db.Column(db.DateTime)
@@ -96,7 +98,10 @@ class Conducteur(db.Model):
     __tablename__ = 'conducteurs'
 
     telephone = db.Column(db.String, primary_key=True)
+    civilite = db.Column(db.String)
     email = db.Column(db.String, unique=True)
+    date_naissance = db.Column(db.Date)
+    fax = db.Column(db.Integer)
     prenom = db.Column(db.String)
     nom = db.Column(db.String)
     libre = db.Column(db.Boolean)
@@ -160,9 +165,23 @@ class Vehicule(db.Model):
 
     immatriculation = db.Column(db.String, primary_key=True)
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    places = db.Column(db.Integer, db.CheckConstraint('1 <= places'))
+    places = db.Column(db.Integer, db.CheckConstraint('1 <= places And places <= 10'))
     couleur = db.Column(db.String)
     marque = db.Column(db.String)
+    animaux = db.Column(db.Boolean)
+    modele = db.Column(db.String)
+    american_express = db.Column(db.Boolean)
+    carte_bleue = db.Column(db.Boolean)
+    cheque = db.Column(db.Boolean)
+    anglais = db.Column(db.Boolean)
+    espagnol = db.Column(db.Boolean)
+    allemand = db.Column(db.Boolean)
+    vip = db.Column(db.Boolean)
+    attelage = db.Column(db.Boolean)
+    vbreak = db.Column(db.Boolean)
+    voiture_basse = db.Column(db.Boolean)
+    blacklist = db.Column(db.Boolean)
+    mineur = db.Column(db.Boolean)
 
 
 class Privilege(db.Model):
@@ -187,7 +206,7 @@ class Adresse(db.Model):
     __tablename__ = 'adresses'
 
     identifiant = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    adresse = db.Column(db.String)
+    nom_rue = db.Column(db.String)
     numero = db.Column(db.String)
     cp = db.Column(db.Integer)
     ville = db.Column(db.String)
@@ -272,6 +291,7 @@ class Proposition(db.Model):
     reponse = db.Column(db.DateTime)
     statut = db.Column(db.String)
     raison = db.Column(db.String)
+    ordre = db.Column(db.Integer)
 
     __table_args__ = (
         db.PrimaryKeyConstraint('iteration', 'course', 'conducteur', name='pk_proposition'),

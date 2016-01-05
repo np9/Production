@@ -1,9 +1,9 @@
 import pandas as pd
-import Calcul_distance as cd
-import Type_tarif as Typta
+import app.devis.calcul_distance as cd
+import app.devis.Type_tarif as tt
 
-heures_tarif = pd.read_csv('Data/tarif.csv', encoding='utf8')
-supp = pd.read_csv('Data/Supplements.csv', encoding='utf8')
+heures_tarif = pd.read_csv('app/devis/data/tarifs.csv', encoding='utf8')
+supp = pd.read_csv('app/devis/data/supplements.csv', encoding='utf8')
 
 def calcul_tarifs(demande):
     
@@ -11,7 +11,7 @@ def calcul_tarifs(demande):
     prise_en_charge = supp[supp['Supplements'] == 'Prise_en_charge']
     
     #On prend les lignes selon les types de tarifs et on en tire le prix associé
-    ligne = heures_tarif[heures_tarif['Type_Tarif'] == Typta.Type_tarif(demande)]
+    ligne = heures_tarif[heures_tarif['Type_Tarif'] == tt.Type_tarif(demande)]
     prix = float(ligne['tarif_par_km'])
     
     #On calcule les suppléments
@@ -45,5 +45,5 @@ def calcul_tarifs(demande):
     #On retourne le prix total
     return prixTotal
     
-print("Votre itinéraire devrait vous coûter " + str(round(calcul_tarifs(Typta.demande),2)) + "€")
+#print("Votre itinéraire devrait vous coûter " + str(round(calcul_tarifs(tt.demande),2)) + "€")
 
