@@ -1,6 +1,7 @@
 from flask import request, Response
 from werkzeug.exceptions import HTTPException
 from flask.ext.admin.contrib.sqla import ModelView
+from flask.ext.admin.contrib.geoa import ModelView as VueGeo
 from flask.ext.admin.contrib.fileadmin import FileAdmin
 import os.path as op
 from app import app
@@ -29,7 +30,7 @@ class VueUtilisateur(VueModele):
 
     # Rendre impossible la création, la modification et la suppression
     can_create = False
-    can_edit = False
+    can_edit = True
     can_delete = False
 
     # Colonnes invisible
@@ -82,13 +83,21 @@ class VueConducteur(VueModele) :
     # Rendre impossible la création, la modification et la suppression
     can_create = False
     can_edit = False
-    can_delete = False    
+    can_delete = False
         
     #Colonnes pour chercher
     column_searchable_list = ['nom','prenom']
 
 
-       
+class VueAdresse(VueGeo) :
+
+    # Rendre impossible la création, la modification et la suppression
+    can_create = True
+    can_edit = True
+    can_delete = True
+
+# Adresses
+admin.add_view(VueAdresse(modeles.Adresse, db.session))     
 
 # Utilisateurs
 admin.add_view(VueUtilisateur(modeles.Utilisateur, db.session))

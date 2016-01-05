@@ -14,10 +14,17 @@ def geocoder(adresse):
     mots_cles = '+'.join(texte.split())
     url = ''.join((base, mots_cles))
     reponse = utile.requete_http(url)
-    adresse = json.loads(reponse)[0]
-    latitude = float(adresse['lat'])
-    longitude = float(adresse['lon'])
-    return {
-        'lat': latitude,
-        'lon': longitude
-    }
+    try:
+        adresse = json.loads(reponse)[0]
+        latitude = float(adresse['lat'])
+        longitude = float(adresse['lon'])
+        return {
+            'statut': 'succes',
+            'lat': latitude,
+            'lon': longitude
+        }
+    # L'adresse n'est pas valide
+    except:
+        return {
+            'statut': 'echec'
+        }

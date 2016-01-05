@@ -1,4 +1,5 @@
 from flask import render_template, jsonify, flash, redirect, url_for
+from flask.ext.login import current_user
 from app import app, db, modeles
 import random
 from app.outils import utile
@@ -6,11 +7,19 @@ from app.formulaires import reservation as rs
 from app.outils import geographie
 
 
+# Redirection des pages web
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     form = rs.Demande()
+
+    # Formattage de la date
+    date_course = str(form.date_debut.data) + " " + \
+        str(form.heures.data) + ":" + str(form.minutes.data) + ":00"
+    print(date_course)
     if form.validate_on_submit():
+
         # Géolocaliser les adresses
         localisation_dep = ' '.join([
             form.numero_dep.data,
@@ -24,9 +33,11 @@ def index():
             form.ville_arr.data
         ])
 
+        # Géocalisation des adressses de départ et d'arrivée
         depart = {'position': geographie.geocoder(localisation_dep)}
         arrivee = {'position': geographie.geocoder(localisation_arr)}
 
+        # Adresse de départ
         adresse_dep = modeles.Adresse(
             adresse=form.adresse_dep.data,
             numero=form.numero_dep.data,
@@ -36,6 +47,7 @@ def index():
                 depart['position']['lat'], depart['position']['lon'])
         )
 
+        # Adresse d'arrivée
         adresse_arr = modeles.Adresse(
             adresse=form.adresse_arr.data,
             numero=form.numero_arr.data,
@@ -48,6 +60,39 @@ def index():
         db.session.add(adresse_dep)
         db.session.add(adresse_arr)
 
+        # Modification de la tarification appliquée à l'utilisateur
+        current_user.categorie = form.categorie.data
+
+        # Création d'une nouvelle course
+        nouvelle_course = modeles.Course(
+            utilisateur=current_user.telephone,
+            depart=adresse_dep.identifiant,
+            arrivee=adresse_arr.identifiant,
+            places=form.nb_passagers.data,
+            commentaire=form.commentaire.data,
+            debut=date_course,
+            trouvee=False,
+            finie=False
+        )
+
+        # Ajout de la course à la BD
+        db.session.add(nouvelle_course)
+
+        db.session.commit()
+
+        # Création d'une nouvelle facture
+        nouvelle_facture = modeles.Facture(
+            course=nouvelle_course.numero,
+            paiement=form.paiement.data,
+            estimation=0,
+            montant=0,
+            rabais=0
+        )
+
+        # Ajout de la facture à la BD
+        db.session.add(nouvelle_facture)
+
+        # Sauvegarde des transations
         db.session.commit()
 
         flash('La demande de réservation a été prise en compte.', 'positive')

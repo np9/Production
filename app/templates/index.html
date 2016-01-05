@@ -13,6 +13,25 @@
  });
 </script>
 
+
+<!-- Date -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script>
+$(function() {
+$( "#datepicker" ).datepicker(
+    {
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ],
+        monthNames: [ "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre" ]
+    }
+     );
+
+});
+</script>
+
 <div class="ui inline cookie nag">
   <span class="title">
     En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de cookies.
@@ -35,20 +54,93 @@
 
 <div class="ui centered grid">
     <div class="left floated ten wide column">
+        {% if current_user.is_authenticated == false %}
+        <h3 class="ui header">Formulaire non-connecté.</h3> 
+        {% endif %}
+        <h3 class="ui header">Formulaire connecté.</h3> 
         <form class="ui form" action="/index" method="POST">
-            <h4 class="ui pink dividing header">Coordonnées</h4>
-            <label>Adresse de départ</label>
-            {{ m.render_field(form.ville_dep, "Toulouse") }}
-            {{ m.render_field(form.cp_dep) }}    
-            {{ m.render_field(form.numero_dep) }}  
-            {{ m.render_field(form.adresse_dep) }}    
-            <label>Adresse d'arrivée</label>
-            {{ m.render_field(form.ville_arr) }}
-            {{ m.render_field(form.cp_arr) }}    
-            {{ m.render_field(form.numero_arr) }}  
-            {{ m.render_field(form.adresse_arr) }}      
+            <h4 class="ui pink dividing header">Itinéraire</h4>
+            <div class="field">
+                <label>Adresse de départ</label>
+                <div class="two fields">
+                    <div class="ten wide field">
+                    {{ m.render_field(form.ville_dep, "Toulouse") }}
+                    </div>
+                    <div class="four wide field">
+                    {{ m.render_field(form.cp_dep) }}
+                    </div>   
+                </div> 
+                <div class="two fields">
+                    <div class="eight wide field">
+                    {{ m.render_field(form.adresse_dep) }}    
+                    </div>
+                    <div class="four wide field">
+                    {{ m.render_field(form.numero_dep) }} 
+                    </div>   
+                </div>
+            <label>Date et horaire de départ</label>
+            <div class="three fields">
+                <div class="four wide field">
+                    <input type="text" name="date_debut" id="datepicker" placeholder='Départ le'>
+                </div>
+                <label> à </label>
+                <div class="two wide field">
+                    {{ m.render_field(form.heures) }}
+                </div>
+                <label> Heure </label>
+                <div class="two wide field">
+                    {{ m.render_field(form.minutes) }}
+                </div>
+            </div>
+            </div>
+            <div class="field">
+                <label>Adresse d'arrivée</label>
+                <div class="two fields">
+                    <div class="ten wide field">
+                    {{ m.render_field(form.ville_arr, "Toulouse") }}
+                    </div>
+                    <div class="four wide field">
+                    {{ m.render_field(form.cp_arr) }}
+                    </div>   
+                </div> 
+                <div class="two fields">
+                    <div class="eight wide field">
+                    {{ m.render_field(form.adresse_arr) }}    
+                    </div>
+                    <div class="four wide field">
+                    {{ m.render_field(form.numero_arr) }} 
+                    </div>   
+                </div>
+            </div>
+            <h4 class="ui pink dividing header">Informations complémentaires</h4>
+            <div class="field">
+                <label>Type de paiement</label>
+                <div class="two fields">
+                    <div class="four wide field">
+                        {{ m.render_field(form.paiement) }} 
+                    </div> 
+                </div>  
+                <label>Nombre de passagers</label>
+                <div class="two fields">
+                    <div class="four wide field">
+                        {{ m.render_field(form.nb_passagers) }} 
+                    </div> 
+                </div> 
+                <label>Tarification</label>
+                <div class="two fields">
+                    <div class="four wide field">
+                        {{ m.render_field(form.categorie) }} 
+                    </div> 
+                </div> 
+                <label>Commentaire</label>
+                <div class="two fields">
+                    <div class="ten wide field">
+                        {{ m.render_field(form.commentaire) }} 
+                    </div> 
+                </div>             
+            </div>
             {{ form.csrf_token }}
-            <button class="ui primary button" type="submit">Valider</button>
+            <button class="ui inverted blue primary button" type="submit">Valider</button>
         </form>
     </div>
     <div class="right floated six wide column">
