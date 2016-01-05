@@ -265,25 +265,16 @@ class Proposition(db.Model):
 
     __tablename__ = 'propositions'
 
-    numero = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    iteration = db.Column(db.Integer)
     course = db.Column(db.Integer, db.ForeignKey('courses.numero'))
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    moment = db.Column(db.DateTime)
-
-
-class Refus(db.Model):
-
-    ''' Un refus explicite ou implicite à une proposition. '''
-
-    __tablename__ = 'refus'
-
-    proposition = db.Column(db.Integer, db.ForeignKey('propositions.numero'))
-    moment = db.Column(db.DateTime)
-    conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    explicite = db.Column(db.Boolean)
+    proposition = db.Column(db.DateTime)
+    reponse = db.Column(db.DateTime)
+    statut = db.Column(db.String)
+    raison = db.Column(db.String)
 
     __table_args__ = (
-        db.PrimaryKeyConstraint('proposition', 'moment', name='pk_refus'),
+        db.PrimaryKeyConstraint('iteration', 'course', 'conducteur', name='pk_proposition'),
     )
 
 
