@@ -86,7 +86,8 @@ class VueConducteur(VueModele) :
         
     #Colonnes pour chercher
     column_searchable_list = ['nom','prenom']
-    
+
+
        
 
 # Utilisateurs
@@ -103,3 +104,13 @@ admin.add_view(VueVehicule(modeles.Vehicule, db.session))
 
 # Conducteurs
 admin.add_view(VueConducteur(modeles.Conducteur, db.session))
+
+from flask_admin import BaseView, expose
+import random
+
+class VueCarte(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('index.html', position=position)
+
+admin.add_view(VueCarte())
