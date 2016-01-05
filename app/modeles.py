@@ -233,10 +233,9 @@ class Course(db.Model):
     fin = db.Column(db.DateTime)
     retour = db.Column(db.Boolean)
     commentaire = db.Column(db.String)
-    bagages = db.Column(db.Boolean)
-    animaux = db.Column(db.Boolean)
+    bagages = db.Column(db.Integer)
+    animaux = db.Column(db.Integer)
     gare = db.Column(db.Boolean)
-    nombreux = db.Column(db.Boolean)
     depart = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     arrivee = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
 
