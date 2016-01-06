@@ -16,18 +16,60 @@
 
 {% block content %}
 
+    <h1>Bonjour {{ nom }}</h1>
     <h1>{{ numero }}</h1>
+    <h1>{{ lat }}</h1>
+    <h1>{{ lon }}</h1>
+    <h1>{{ libre }}</h1>
+    <head>
+        <p> Voulez vous changer votre statut ? </p>
+        <script type="text/javascript">
 
-	<h1 class="ui header">{{ titre }}</h1>
+        function libre () {
+            var answer = confirm("Etes-vous libre?")
+            if (answer){
+                $.ajax({
+                type: "POST",
+                async: true,
+                url: "/libre"
+                }).done(function(response) {
+				 alert(response)
+                        });	
+                alert("Votre statut a été mis à jour.")	
+                }
+        }
+        function occupe () {
+            var answer = confirm("Etes-vous occupé?")
+            if (answer){
+                $.ajax({
+                type: "POST",
+                async: true,
+                url: "/occupe"
+                }).done(function(response) {
+				 alert(response)
+				 });
+                alert("Votre statut a été mis à jour.")
+                }    
+        }
+        </script>
+    </head>
 
-	{% if current_user.is_authenticated %}
-	  	<h2 class="ui header">Bonjour {{ current_user.prenom }}!</h2>
-	{% endif %}
+    <body>
+        <form>
+            <input type="button" onclick="libre();location.reload()" value="Libre">
+            <input type="button" onclick="occupe();location.reload()" value="Occupé">
+        </form>
+    </body>
+
+    <h1 class="ui header">{{ titre }}</h1>
+
+    {% if current_user.is_authenticated %}
+    <h2 class="ui header">Bonjour {{ current_user.prenom }}!</h2>
+    {% endif %}
 
     <div id="map"></div>
-    
+   
     <script type="text/javascript">
-
         L.mapbox.accessToken = 'pk.eyJ1IjoibGVtYXgiLCJhIjoidnNDV1kzNCJ9.iH26jLhEuimYd6vLOO6v1g';
         var map = L.mapbox.map('map', 'mapbox.outdoors', {
             maxZoom: 20,
@@ -46,8 +88,6 @@
             null,
             {position: 'topleft'}
         ).addTo(map);
-
-
         // Centrer la carte sur la position de l'utilisateur
         position = null;
         var geoOptions = {
@@ -58,6 +98,9 @@
             var lat = pos.coords.latitude;
             var lon = pos.coords.longitude;
             position = [lat, lon];
+                
+            marker = L.marker([lat, lon]);
+            marker.addTo(map);    
             map.setView(position, 13);
         };
         function geoError(err) {
@@ -65,8 +108,26 @@
         };
         navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
 
+            lat = {{ lon }};
+            lon = {{ lat }};
             
+            marker = L.marker([lat, lon]);
+            marker.addTo(map);
+        
 
+        function rafraichir_positions(){
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/rafraichir_carte"
+            }).done(function(response) {
+                afficher_taxi([lat, lon]);
+            });
+        }
+
+        rafraichir_positions();
+
+            
     </script>
 
 {% endblock %}

@@ -41,4 +41,3 @@ def get_heure(json):
     resultat = json['routes'][0]['legs'][0]['duration_in_traffic']['value']
     resultat = round(resultat / 60)
     return resultat
-

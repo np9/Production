@@ -1,8 +1,10 @@
+
 from flask import request, Response
 from werkzeug.exceptions import HTTPException
 from flask.ext.admin.contrib.sqla import ModelView
-#from flask.ext.admin.contrib.geoa import ModelView as VueGeo
+from flask.ext.admin.contrib.geoa import ModelView as VueGeo
 from flask.ext.admin.contrib.fileadmin import FileAdmin
+from flask_admin import BaseView, expose
 import os.path as op
 from app import app
 from app import admin
@@ -15,6 +17,14 @@ class VueModele(ModelView):
     Vue de base qui implémente une authentification
     HTTP. Toutes les autres vues héritent de cette vue.
     '''
+    
+    # Afficher clé primaire
+    column_display_pk = True
+    
+    # Afficher clé étrangère
+    #please_do_show_fk_value = True
+    column_display_fk = True
+    column_hide_backrefs = True
 
     def is_accessible(self):
         auth = request.authorization or request.environ.get(
@@ -32,12 +42,17 @@ class VueUtilisateur(VueModele):
     can_create = False
     can_edit = True
     can_delete = False
-
+    
+    
     # Colonnes invisible
     column_exclude_list = ['_mdp']
+<<<<<<< HEAD
 
     column_select_related_list = ['adresse']
 
+=======
+    
+>>>>>>> 502a4155cdff81dab9cd30eebaab29da126fc70a
     # Colonnes pour chercher
     column_searchable_list = ['prenom', 'nom']
 
@@ -54,7 +69,8 @@ class VueSecteur(VueModele) :
 
     # Colonnes pour chercher
     column_searchable_list = ['nom']
-    
+ 
+ 
 class VueStation(VueModele) :
         
     # Rendre impossible la création, la modification et la suppression
@@ -65,7 +81,9 @@ class VueStation(VueModele) :
     # Colonnes pour chercher
     column_searchable_list = ['nom']
     
-    
+    # Colonnes Filtres
+    column_filters = ['secteur']
+
 
 class VueVehicule(VueModele) :
     
@@ -74,11 +92,9 @@ class VueVehicule(VueModele) :
     can_edit = True
     can_delete = True
 
-    #Colonnes invisible
-    column_exclude_list = ['immatriculation']    
-    
     #Colonnes pour chercher
     column_searchable_list = ['marque','couleur']    
+
 
 class VueConducteur(VueModele) :
 
@@ -86,12 +102,15 @@ class VueConducteur(VueModele) :
     can_create = False
     can_edit = False
     can_delete = False
-        
+    
     #Colonnes pour chercher
     column_searchable_list = ['nom','prenom']
+            
+    # Colonnes pour filtrer
+    column_filters = ['libre']
 
 
-class VueAdresse(VueModele) :
+class VueAdresse(VueGeo) :
 
     # Rendre impossible la création, la modification et la suppression
     can_create = True
@@ -116,12 +135,24 @@ admin.add_view(VueVehicule(modeles.Vehicule, db.session))
 # Conducteurs
 admin.add_view(VueConducteur(modeles.Conducteur, db.session))
 
-from flask_admin import BaseView, expose
+''' /!\ On a mis des \ avant les \''' car le SELECT... ne c'était mis en commentaire à cause de ça (ça faisait tout buguer) /!\
+####################################
+# Vue Utilisateur Catégorie Contact#
+####################################
+class VueUtilisateurContact(ModelView):
+    @expose('/contact')
+    def utilisateurContact(self) :
+        req = db.session.execute(\'''
+		SELECT nom, prenom, telephone, email, adresse, categorie 
+		FROM Utilisateurs;
+        \''')
+        UtilisateurContact = req.fetchall()
+        return self.render('contact.html',utilisateurs=UtilisateurContact)
+admin.add_view(VueUtilisateurContact(None,db.session))
 import random
-
 class VueCarte(BaseView):
     @expose('/')
     def index(self):
         return self.render('index.html', position=position)
-
 admin.add_view(VueCarte())
+'''

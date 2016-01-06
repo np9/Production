@@ -44,6 +44,7 @@ def enregistrement():
             telephone=form.telephone.data,
             email=form.email.data,
             confirmation=False,
+            civilite=form.civilite.data,
             categorie='Normal',
             prenom=form.prenom.data,
             nom=form.nom.data,

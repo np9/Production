@@ -18,6 +18,11 @@ class Demande_NonAuth(Form):
     mail = TextField(validators=[Email(
         message='Adresse email non valide')], description='Adresse email')
 
+    civilite = SelectField('Civilité', choices=[
+        ('monsieur', 'Monsieur'),
+        ('madame', 'Madame')
+    ])
+
     ville_dep = TextField(validators=[
         Required(message='Veuillez renseigner la ville de départ.'),
         Length(min=2)
@@ -62,7 +67,7 @@ class Demande_NonAuth(Form):
 
     nb_passagers = SelectField('Nombre de passagers', choices=[
         (str(i), str(i))
-        for i in range(9)
+        for i in range(1, 9)
     ])
 
     paiement = SelectField('Paiement', choices=[
@@ -138,7 +143,7 @@ class Demande_Auth(Form):
 
     nb_passagers = SelectField('Nombre de passagers', choices=[
         (str(i), str(i))
-        for i in range(9)
+        for i in range(1, 9)
     ])
 
     paiement = SelectField('Paiement', choices=[

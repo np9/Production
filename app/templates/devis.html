@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+
+	<h1 class = "ui header">{{ titre }}</h1>
+
+	{% if current_user.is_authenticated %}
+	  	<h2 class = "ui header">Bonjour {{ current_user.prenom }}!</h2>
+	{% endif %}
+
+	<div class = "ui centered grid">
+		<div class = "sixteen wide column">
+			<table>
+			{% for key, value in donnees.items() %}
+			   <tr>
+			        <th> {{ key }} </th>
+			        <td> {{ value }} </td>
+			   </tr>
+			{% endfor %}
+			</table>
+		</div>
+	</div>
+
+{% endblock %}
