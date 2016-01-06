@@ -30,7 +30,7 @@ def enregistrement():
         position = geographie.geocoder(localisation)
         # Créer une adresse
         adresse = modeles.Adresse(
-            adresse=form.adresse.data,
+            nom_rue=form.adresse.data,
             numero=form.numero.data,
             cp=form.cp.data,
             ville=form.ville.data,
