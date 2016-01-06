@@ -123,9 +123,21 @@
       <div class="ui formulaire-utilisateur center raised very padded text container segment">
           <form class="ui form" action="/utilisateur/compte" method="POST">
             <h4 class="ui dividing header">Champs à modifier</h4>
-              {{ m.render_field(form.prenom, current_user.prenom) }}
-              {{ m.render_field(form.nom, current_user.nom) }}
-              {{ m.render_field(form.telephone, current_user.telephone) }}
+              <div class="two fields">
+                    <div class="sixteen wide field">
+                        {{ m.render_field(form.prenom, current_user.prenom) }}
+                    </div> 
+              </div>  
+              <div class="two fields">
+                    <div class="sixteen wide field">
+                        {{ m.render_field(form.nom, current_user.nom) }}
+                    </div> 
+              </div>
+              <div class="two fields">
+                    <div class="sixteen wide field">
+                        {{ m.render_field(form.telephone, current_user.telephone) }}
+                    </div> 
+              </div>
               {{ form.csrf_token }}
               <button class="ui primary button" type="submit">Valider</button>
           </form>
