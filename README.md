@@ -8,7 +8,11 @@ A faire.
 
 ## Utilisation
 
-Il faut d'abord s'assurer que les valeurs dans ``config.py`` soient cohérentes, c'est à dire bien faire en sorte que le port et le mot de passe de PostgreSQL soient les mêmes que ceux de l'ordinateur d'où l'application est lancée. Si la base de données a déjà été créée elle peut être supprimée en lancant le script ``suppression.py``.
+Il faut d'abord s'assurer que les valeurs dans ``config.py`` soient cohérentes :
+- ligne 9 : le mot de passe de PostgreSQL doit être le même que ceux de l'ordinateur d'où l'application est lancée
+- ligne 10 : le port doit être le même ce celui d'où l'application est lancée
+
+Si la base de données a déjà été créée elle peut être supprimée en lancant le script ``suppression.py``.
 
 ```sh
 # Installer les librairies
