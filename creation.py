@@ -30,12 +30,12 @@ print('Tables créées.')
 
 # Création des triggers
 
-for trigger in glob.glob('app/triggers/*.sql'):
-	sql = open(trigger).read()
-	try:
-		db.session.execute(sql)
-		db.session.commit()
-	except:
-		print('Erreur sur le trigger {}.'.format(trigger))
+#for trigger in glob.glob('app/triggers/*.sql'):
+#	sql = open(trigger).read()
+#	try:
+#		db.session.execute(sql)
+#		db.session.commit()
+#	except:
+#		print('Erreur sur le trigger {}.'.format(trigger))
 
 print('Triggers crées.')
