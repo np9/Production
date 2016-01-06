@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block head %}
+    {{ super() }}
+	
+	
+
+
+	<h1>Statut:  {{ reponse}}</h1>
+{% endblock %}
+{% block content %}
+	<head>
+<p> Voulez vous changer votre statut ? </p>
+   <script type="text/javascript">
+
+    function libre () {
+    var answer = confirm("Etes-vous libre?")
+    if (answer){
+				$.ajax({
+                type: "POST",
+                async: true,
+                url: "/libre"
+            }).done(function(response) {
+				alert(response)
+            });
+	
+    alert("Votre statut a été mis à jour.")
+
+	
+    }
+
+    }
+ function occupe () {
+    var answer = confirm("Etes-vous occupé?")
+    if (answer){
+		$.ajax({
+                type: "POST",
+                async: true,
+                url: "/occupe"
+            }).done(function(response) {
+				alert(response)
+            });
+  alert("Votre statut a été mis à jour.")
+    }
+   
+    
+}
+    </script>
+    </head>
+    <body>
+    <form>
+    <input type="button" onclick="libre();history.go(0)" value="Libre">
+	<input type="button" onclick="occupe();history.go(0)" value="Occupé">
+    </form>
+    </body>
+
+{% endblock %}
