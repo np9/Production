@@ -2,13 +2,11 @@
 Last Update on Wed 6 13:00:00 2016
 Dernières modifications : ajout des fonctions convert_date et formatage_url
 """
-from urllib.request
-import urlopen
+from urllib.request import urlopen
 import unicodedata
 import time
 import json
-from datetime 
-import datetime
+from datetime import datetime
 
 
 def nettoyer(chaine):
