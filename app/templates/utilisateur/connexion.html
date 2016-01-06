@@ -9,8 +9,16 @@
 	<div class="ui formulaire-utilisateur center raised very padded text container pink segment">
 		<form class="ui form" action="/utilisateur/connexion" method="post">
 			<h4 class="ui dividing header">Se connecter</h4>
-	    	{{ m.render_field(form.email) }}
-	    	{{ m.render_field(form.mdp) }}
+			<div class="two fields">
+                <div class="sixteen wide field">
+			    	{{ m.render_field(form.email) }}
+	    		</div>
+	    	</div>			
+			<div class="two fields">
+                <div class="sixteen wide field">
+			    	{{ m.render_field(form.mdp) }}
+	    		</div>
+	    	</div>
 		  	{{ form.csrf_token }}
   			<button class="ui primary button" type="submit">
   				Valider
