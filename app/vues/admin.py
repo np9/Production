@@ -129,17 +129,17 @@ admin.add_view(VueVehicule(modeles.Vehicule, db.session))
 # Conducteurs
 admin.add_view(VueConducteur(modeles.Conducteur, db.session))
 
-'''
+''' /!\ On a mis des \ avant les \''' car le SELECT... ne c'était mis en commentaire à cause de ça (ça faisait tout buguer) /!\
 ####################################
 # Vue Utilisateur Catégorie Contact#
 ####################################
 class VueUtilisateurContact(ModelView):
     @expose('/contact')
     def utilisateurContact(self) :
-        req = db.session.execute('''
-        SELECT nom, prenom, telephone, email, adresse, categorie
-        FROM Utilisateurs;
-        ''')
+        req = db.session.execute(\'''
+		SELECT nom, prenom, telephone, email, adresse, categorie 
+		FROM Utilisateurs;
+        \''')
         UtilisateurContact = req.fetchall()
         return self.render('contact.html',utilisateurs=UtilisateurContact)
 admin.add_view(VueUtilisateurContact(None,db.session))
