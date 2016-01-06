@@ -18,7 +18,8 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<link rel="stylesheet" href="/resources/demos/style.css">
+
+<!-- JavaScript pout récupérer la date -->
 <script>
 $(function() {
 $( "#datepicker" ).datepicker(
@@ -43,6 +44,7 @@ $( "#datepicker" ).datepicker(
 
 {% block content %}
 
+
 <h1 class="ui header">{{ titre }}</h1>
 {% if current_user.is_authenticated %}
     <h2 class="ui header">Bonjour {{ current_user.prenom }}!</h2> 
@@ -57,7 +59,10 @@ $( "#datepicker" ).datepicker(
         <form class="ui form" action="/index" method="POST">
         {% if current_user.is_authenticated == false %}      
         <h4 class="ui pink dividing header">Informations utilisateur</h4>  
-        <div class="two fields">
+        <div class="three fields">
+            <div class="four wide field">
+            {{ m.render_field(form.civilite)}}
+            </div>
             <div class="six wide field">
             {{ m.render_field(form.nom)}}
             </div>
@@ -173,4 +178,5 @@ $( "#datepicker" ).datepicker(
         </div>
     </div>
 </div>
+
 {% endblock %}

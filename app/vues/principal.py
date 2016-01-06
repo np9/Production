@@ -1,4 +1,5 @@
 from flask import render_template, jsonify, flash, redirect, url_for
+from flask.ext.login import current_user
 from app import app, db, modeles
 import random
 from app.outils import utile
@@ -6,12 +7,39 @@ from app.formulaires import reservation as rs
 from app.outils import geographie
 
 
+# Redirection des pages web
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    form = rs.Demande()
+
+    if current_user.is_authenticated == False:
+        form = rs.Demande_NonAuth()
+    else:
+        form = rs.Demande_Auth()
+
+    print(form.data)
+
     if form.validate_on_submit():
-        # Géolocaliser les adresses
+
+        # Formattage de la date
+        date_course = str(form.date_debut.data) + " " + \
+            str(form.heures.data) + ":" + str(form.minutes.data) + ":00"
+
+        # On insère l'utilisateur s'il n'est pas dans la base
+        if current_user.is_authenticated == False:
+            utilisateur = modeles.Utilisateur(
+                telephone=form.telephone.data,
+                prenom=form.prenom.data,
+                nom=form.nom.data,
+                email=form.mail.data,
+                categorie=form.categorie.data,
+                civilite=form.civilite.data
+            )
+            db.session.add(utilisateur)
+            db.session.commit()
+
+        # On construit les adresses pour les géolocaliser
         localisation_dep = ' '.join([
             form.numero_dep.data,
             form.adresse_dep.data,
@@ -24,35 +52,81 @@ def index():
             form.ville_arr.data
         ])
 
-        depart = {'position': geographie.geocoder(localisation_dep)}
-        arrivee = {'position': geographie.geocoder(localisation_arr)}
+        # Géocalisation des adressses de départ et d'arrivée
+        positions = {
+            'depart': geographie.geocoder(localisation_dep),
+            'arrivee': geographie.geocoder(localisation_arr)
+        }
 
+        # Adresse de départ
         adresse_dep = modeles.Adresse(
-            adresse=form.adresse_dep.data,
+            nom_rue=form.adresse_dep.data,
             numero=form.numero_dep.data,
             cp=form.cp_dep.data,
             ville=form.ville_dep.data,
             position='POINT({0} {1})'.format(
-                depart['position']['lat'], depart['position']['lon'])
+                positions['depart']['lat'],
+                positions['depart']['lon']
+            )
         )
+        db.session.add(adresse_dep)
+        db.session.commit()
 
+        # Adresse d'arrivée
         adresse_arr = modeles.Adresse(
-            adresse=form.adresse_arr.data,
+            nom_rue=form.adresse_arr.data,
             numero=form.numero_arr.data,
             cp=form.cp_arr.data,
             ville=form.ville_arr.data,
             position='POINT({0} {1})'.format(
-                arrivee['position']['lat'], arrivee['position']['lon'])
+                positions['arrivee']['lat'],
+                positions['arrivee']['lon']
+            )
         )
-        # Ajouter l'adresse à la BD
-        db.session.add(adresse_dep)
         db.session.add(adresse_arr)
+        db.session.commit()
 
+        # Création de la course
+        nouvelle_course = modeles.Course(
+            depart=adresse_dep.identifiant,
+            arrivee=adresse_arr.identifiant,
+            places=form.nb_passagers.data,
+            commentaire=form.commentaire.data,
+            debut=date_course,
+            trouvee=False,
+            finie=False
+        )
+
+        if current_user.is_authenticated:
+            # Pas sur de ça
+            current_user.categorie = form.categorie.data
+            nouvelle_course.utilisateur = current_user.telephone
+        else:
+            nouvelle_course.utilisateur = form.telephone.data
+
+        db.session.add(nouvelle_course)
+        db.session.commit()
+
+        # Création d'une nouvelle facture
+        facture = modeles.Facture(
+            course=nouvelle_course.numero,
+            paiement=form.paiement.data,
+            estimation=0,
+            montant=0,
+            rabais=0
+        )
+
+        db.session.add(facture)
         db.session.commit()
 
         flash('La demande de réservation a été prise en compte.', 'positive')
-        return redirect(url_for('index'))
+        return render_template('devis.html', form=form, titre='Devis')
     return render_template('index.html', form=form, titre='Réserver un taxi')
+
+
+@app.route('/devis')
+def devis():
+    return render_template('devis.html', form=form, titre='Devis')
 
 
 @app.route('/carte')
@@ -91,44 +165,3 @@ def contact():
 @app.route('/api')
 def api():
     return render_template('api.html', titre='API')
-
-@app.route('/G7')
-def G7():
-    return render_template('G7.html', titre='G7')
-    
-@app.route('/Attribution')
-def Attribution():
-    return render_template('Attribution.html', titre='Attribution')
-    
-@app.route('/Navigation')
-def Navigation():
-    return render_template('Navigation.html', titre='Navigation')
-    
-@app.route('/CarteDesBeauxGosses')
-def CarteDesBeauxGosses():
-    return render_template('CarteDesBeauxGosses.html', titre='CarteDesBeauxGosses')
-
-@app.route('/Statut', methods=['GET', 'POST'])
-def statutActuel():
-	lib = db.session.execute("SELECT libre FROM conducteurs where email='amiraayadi@wanadoo.fr'")
-	rep = lib.fetchall()
-	rep = str(rep)
-	rep = rep[2]
-	if rep=="T": 
-		reponse= "Vous êtes actuellement libre"
-	else: 
-		reponse="Vous êtes actuellement occupé"
-	return render_template("Statut.html",reponse = reponse)
-	
-@app.route('/occupe', methods=['GET', 'POST'])
-def occupe():
-	db.session.execute("UPDATE conducteurs SET libre = false where email='amiraayadi@wanadoo.fr'" )
-	db.session.commit()
-	lib1 = db.session.execute("SELECT libre FROM conducteurs where email='amiraayadi@wanadoo.fr'")
-	rc = lib1.fetchall()
-	return rc
-	
-@app.route('/libre', methods=['GET', 'POST'])
-def libre():
-	db.session.execute("UPDATE conducteurs SET libre = true where email='amiraayadi@wanadoo.fr'" )
-	db.session.commit()

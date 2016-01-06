@@ -17,6 +17,12 @@
 	    		</div>
 	    	</div>
 			<div class="two fields">
+				<label>Civilité</label>
+                <div class="sixteen wide field">
+			    	{{ m.render_field(form.civilite) }}
+	    		</div>
+	    	</div>	   	    	
+			<div class="two fields">
                 <div class="sixteen wide field">
 			    	{{ m.render_field(form.telephone) }}
 	    		</div>
@@ -37,13 +43,11 @@
 	    		</div>
 	    	</div>	    		    	
 			<div class="two fields">
-                <div class="sixteen wide field">
-			    	{{ m.render_field(form.adresse) }}
-	    		</div>
-	    	</div>
-			<div class="two fields">
-                <div class="sixteen wide field">
+                <div class="four wide field">
 			    	{{ m.render_field(form.numero) }}
+	    		</div>
+	    		<div class="twelve wide field">
+			    	{{ m.render_field(form.adresse) }}
 	    		</div>
 	    	</div>
 			<div class="two fields">
