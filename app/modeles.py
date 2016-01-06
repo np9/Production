@@ -21,7 +21,7 @@ class Utilisateur(db.Model, UserMixin):
     notification_email = db.Column(db.Boolean)
     notification_sms = db.Column(db.Boolean)
     inscription = db.Column(db.DateTime)
-    adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'), lazy='joined')
+    adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     _mdp = db.Column(db.String)
 
     @hybrid_property
@@ -105,8 +105,9 @@ class Conducteur(db.Model):
     fax = db.Column(db.Integer)
     prenom = db.Column(db.String)
     nom = db.Column(db.String)
-    libre = db.Column(db.Boolean)
+    statut = db.Column(db.String)
     station = db.Column(db.String, db.ForeignKey('stations.nom'))
+    station_entree = db.Column(db.DateTime)
     position = db.Column(Geometry('POINT'))
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     inscription = db.Column(db.DateTime)
@@ -152,6 +153,7 @@ class Positions(db.Model):
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
     moment = db.Column(db.DateTime)
     positions = db.Column(Geometry('POINT'))
+    meme_station = db.Column(db.Boolean)
 
     __table_args__ = (
         db.PrimaryKeyConstraint('conducteur', 'moment', name='pk_positions'),
@@ -212,6 +214,7 @@ class Adresse(db.Model):
     cp = db.Column(db.Integer)
     ville = db.Column(db.String)
     position = db.Column(Geometry('POINT'))
+    secteur = db.Column(db.String, db.ForeignKey('secteurs.nom'))
 
 
 class Station(db.Model):
@@ -222,8 +225,13 @@ class Station(db.Model):
 
     nom = db.Column(db.String, primary_key=True)
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
-    distance = db.Column(db.Float, db.CheckConstraint('0 <= distance'))
-    secteur = db.Column(db.String, db.ForeignKey('secteurs.nom'))
+    distance_entree = db.Column(db.Float, db.CheckConstraint('0 <= distance_entree'))
+    distance_sortie = db.Column(db.Float, db.CheckConstraint('0 <= distance_sortie'))
+
+    __table_args__ = (
+        db.CheckConstraint('distance_entree < distance_sortie',
+                           name='entree_inf_sortie_check'),
+    )
 
 
 class Secteur(db.Model):

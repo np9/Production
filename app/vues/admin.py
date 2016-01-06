@@ -46,13 +46,9 @@ class VueUtilisateur(VueModele):
     
     # Colonnes invisible
     column_exclude_list = ['_mdp']
-<<<<<<< HEAD
 
     column_select_related_list = ['adresse']
 
-=======
-    
->>>>>>> 502a4155cdff81dab9cd30eebaab29da126fc70a
     # Colonnes pour chercher
     column_searchable_list = ['prenom', 'nom']
 
@@ -80,9 +76,6 @@ class VueStation(VueModele) :
 
     # Colonnes pour chercher
     column_searchable_list = ['nom']
-    
-    # Colonnes Filtres
-    column_filters = ['secteur']
 
 
 class VueVehicule(VueModele) :
@@ -105,9 +98,6 @@ class VueConducteur(VueModele) :
     
     #Colonnes pour chercher
     column_searchable_list = ['nom','prenom']
-            
-    # Colonnes pour filtrer
-    column_filters = ['libre']
 
 
 class VueAdresse(VueGeo) :
