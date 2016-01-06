@@ -21,7 +21,7 @@ class Utilisateur(db.Model, UserMixin):
     notification_email = db.Column(db.Boolean)
     notification_sms = db.Column(db.Boolean)
     inscription = db.Column(db.DateTime)
-    adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
+    adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'), lazy='joined')
     _mdp = db.Column(db.String)
 
     @hybrid_property
@@ -33,6 +33,7 @@ class Utilisateur(db.Model, UserMixin):
         self._mdp = bcrypt.generate_password_hash(plaintext)
 
     def check_password(self, plaintext):
+        # A changer, problème d'UTF-8 avec PostgreSQL
         return True
         return bcrypt.check_password_hash(self.mdp, plaintext)
 

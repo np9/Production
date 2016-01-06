@@ -36,6 +36,8 @@ class VueUtilisateur(VueModele):
     # Colonnes invisible
     column_exclude_list = ['_mdp']
 
+    column_select_related_list = ['adresse']
+
     # Colonnes pour chercher
     column_searchable_list = ['prenom', 'nom']
 
