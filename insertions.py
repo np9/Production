@@ -1,6 +1,3 @@
-from scipy.spatial import Voronoi
-import shapely.geometry
-import shapely.ops
 import pandas as pd
 from datetime import datetime
 from app import db
