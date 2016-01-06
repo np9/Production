@@ -113,7 +113,7 @@ class Conducteur(db.Model):
     inscription = db.Column(db.DateTime)
 
 
-class Penalites(db.Model):
+class Penalite(db.Model):
 
     ''' Une pénalité infligée à un conducteur. '''
 
@@ -129,7 +129,7 @@ class Penalites(db.Model):
     )
 
 
-class Messages(db.Model):
+class Message(db.Model):
 
     ''' Un message envoyé à un conducteur. '''
 
@@ -144,7 +144,7 @@ class Messages(db.Model):
     )
 
 
-class Positions(db.Model):
+class Position(db.Model):
 
     ''' Une position d'un conducteur à un moment donné. '''
 
