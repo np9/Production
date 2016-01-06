@@ -34,3 +34,42 @@ Il faut utiliser l'utilitaire ``ngrok`` qui est inclu dans le dossier. Commencez
 ## Déploiement sur un serveur
 
 Se référer au dossier ``setup/``.
+
+## Installation de packages
+
+Installer geoalchemy2 :
+
+```sh
+# Installer la librairie
+pip install geoalchemy2
+```
+Installer shapely :
+
+  Pour Linux :
+
+```sh
+sudo apt-get build-dep python-shapely
+# OU
+brew install python-shapely
+```
+
+  Pour Windows :
+  
+Telecharger la librairie shapely sur le site http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely
+Le mettre dans le dossier de votre projet (exemple : TAXISID)
+
+```sh
+# Se placer dans le dossier où se trouve le fichier
+pip install nomdufichier.whl
+```
+
+  Pour Mac OSX :
+
+```sh
+# Installer Homebrew
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+# Installer Geos
+brew install geos
+# Installer Shapely
+pip install shapely
+```
