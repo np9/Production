@@ -73,7 +73,7 @@ def inserer_vehicule_conducteur(ligne):
         prenom=ligne['prenom'],
         nom=ligne['nom'],
         libre=True,
-        station=ligne['station'],
+        #station=ligne['station'],
         position='POINT({0} {1})'.format(ligne['lat'], ligne['lon']),
         adresse=1,
         inscription=datetime.utcnow()
