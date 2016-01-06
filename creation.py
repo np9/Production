@@ -15,7 +15,8 @@ bd = uri[-1]
 with contextlib.suppress(sqlalchemy.exc.ProgrammingError):
     with create_engine(url,
                        isolation_level='AUTOCOMMIT').connect() as connexion:
-        connexion.execute("CREATE DATABASE {} WITH encoding='utf-8'".format(bd))
+        connexion.execute(
+            "CREATE DATABASE {} WITH encoding='utf-8'".format(bd))
 
 print('Base de données créée.')
 
@@ -30,7 +31,7 @@ print('Tables créées.')
 
 # Création des triggers
 
-#for trigger in glob.glob('app/triggers/*.sql'):
+# for trigger in glob.glob('app/triggers/*.sql'):
 #	sql = open(trigger).read()
 #	try:
 #		db.session.execute(sql)
@@ -38,4 +39,4 @@ print('Tables créées.')
 #	except:
 #		print('Erreur sur le trigger {}.'.format(trigger))
 
-print('Triggers crées.')
+# print('Triggers crées.')
