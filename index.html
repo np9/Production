@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Production by TaxiSID</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Production</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/TaxiSID/Production" class="btn">View on GitHub</a>
+      <a href="https://github.com/TaxiSID/Production/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/TaxiSID/Production/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="production" class="anchor" href="#production" aria-hidden="true"><span class="octicon octicon-link"></span></a>Production</h1>
+
+<p>Ce dossier contient l'application finale, celle qui doit marcher sans faille.</p>
+
+<h2>
+<a id="architecture" class="anchor" href="#architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>Architecture</h2>
+
+<p><img src="doc/architecture.png" alt="alt text"></p>
+
+<h2>
+<a id="utilisation" class="anchor" href="#utilisation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Utilisation</h2>
+
+<p>Il faut d'abord s'assurer que les valeurs dans <code>config.py</code> soient cohérentes :</p>
+
+<ul>
+<li>ligne 9 : le mot de passe de PostgreSQL doit être le même que ceux de l'ordinateur d'où l'application est lancée</li>
+<li>ligne 10 : le port doit être le même ce celui d'où l'application est lancée</li>
+</ul>
+
+<p>Si la base de données a déjà été créée elle peut être supprimée en lancant le script <code>suppression.py</code>.</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Installer les librairies</span>
+pip install -r requirements.txt
+<span class="pl-c"># Créer la base de données</span>
+python creation.py
+<span class="pl-c"># Insérer les données de départ</span>
+python insertions.py
+<span class="pl-c"># Lancer le site web</span>
+python run.py</pre></div>
+
+<p>Ensuite il suffit de consulter l'URL <code>localhost:5000</code> dans le navigateur.</p>
+
+<h2>
+<a id="partage-du-localhost" class="anchor" href="#partage-du-localhost" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partage du localhost</h2>
+
+<p>Il faut utiliser l'utilitaire <code>ngrok</code> qui est inclu dans le dossier. Commencez par taper <code>python run.py</code> dans une console. Ensuite ouvrez une nouvelle console puis tapez <code>./ngrok http 5000</code>, <code>ngrok</code> vous informe alors de l'URL à laquelle le localhost est disponible.</p>
+
+<h2>
+<a id="déploiement-sur-un-serveur" class="anchor" href="#d%C3%A9ploiement-sur-un-serveur" aria-hidden="true"><span class="octicon octicon-link"></span></a>Déploiement sur un serveur</h2>
+
+<p>Se référer au dossier <code>setup/</code>.</p>
+
+<h2>
+<a id="installation-de-packages" class="anchor" href="#installation-de-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation de packages</h2>
+
+<p>Installer geoalchemy2 :</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Installer la librairie</span>
+pip install geoalchemy2</pre></div>
+
+<p>Installer shapely :</p>
+
+<p>Pour Linux :</p>
+
+<div class="highlight highlight-source-shell"><pre>sudo apt-get build-dep python-shapely
+<span class="pl-c"># OU</span>
+brew install python-shapely</pre></div>
+
+<p>Pour Windows :</p>
+
+<p>Telecharger la librairie shapely sur <a href="http://www.lfd.uci.edu/%7Egohlke/pythonlibs/#shapely">ce site</a>
+Le mettre dans le dossier de votre projet (exemple : TAXISID)</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Se placer dans le dossier où se trouve le fichier</span>
+pip install nomdufichier.whl</pre></div>
+
+<p>Pour Mac OSX :</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># Installer Homebrew</span>
+ruby -e <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c"># Installer Geos</span>
+brew install geos
+<span class="pl-c"># Installer Shapely</span>
+pip install shapely</pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/TaxiSID/Production">Production</a> is maintained by <a href="https://github.com/TaxiSID">TaxiSID</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
