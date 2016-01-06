@@ -11,8 +11,7 @@ du traffic
 
 # -*- coding: utf-8 -*-
 #Librairies
-from app.outils 
-import utile
+from app.outils import utile
 import json
 
 def parcours(depart, arrivee, heure_debut):
