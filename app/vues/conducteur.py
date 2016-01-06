@@ -11,7 +11,6 @@ def gps(depart, arrivee):
 	key = 'AIzaSyCBQSQ2Ze-8wEnZcT1V8__ug2WLdRmtdmA'
 	url = '{0}'
 
-@conducteurbp.route('/', methods=['GET', 'POST'])
-def conducteur_accueil():
-	p = 'Thibault'
-	return render_template('conducteur/accueil.html', titre='Conducteur', prenom=p)
+@conducteurbp.route('/<numero>', methods=['GET', 'POST'])
+def conducteur_accueil(numero):
+	return render_template('conducteur/accueil.html', titre='Conducteur', numero=numero)
