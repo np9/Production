@@ -55,7 +55,7 @@ brew install python-shapely
 
   Pour Windows :
   
-Telecharger la librairie shapely sur le site http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely
+Telecharger la librairie shapely sur [ce site](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
 Le mettre dans le dossier de votre projet (exemple : TAXISID)
 
 ```sh
