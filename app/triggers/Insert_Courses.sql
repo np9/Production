@@ -16,9 +16,6 @@ CREATE OR REPLACE FUNCTION insert_courses() RETURNS TRIGGER AS $insert_courses$
         IF comptadress < 1 THEN
             INSERT INTO habitudes VALUES(NEW.utilisateur, NEW.arrivee);
 		END IF;
-		IF comptadress = 1 THEN
-            RAISE EXCEPTION 'Cet utilisateur a déjà cette habitude.'
-		END IF;
 	return null;
     END;
  
