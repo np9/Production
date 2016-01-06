@@ -1,7 +1,7 @@
 from flask import request, Response
 from werkzeug.exceptions import HTTPException
 from flask.ext.admin.contrib.sqla import ModelView
-from flask.ext.admin.contrib.geoa import ModelView as VueGeo
+#from flask.ext.admin.contrib.geoa import ModelView as VueGeo
 from flask.ext.admin.contrib.fileadmin import FileAdmin
 import os.path as op
 from app import app
@@ -89,7 +89,7 @@ class VueConducteur(VueModele) :
     column_searchable_list = ['nom','prenom']
 
 
-class VueAdresse(VueGeo) :
+class VueAdresse(VueModele) :
 
     # Rendre impossible la création, la modification et la suppression
     can_create = True
