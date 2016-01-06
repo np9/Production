@@ -12,12 +12,17 @@ from app.outils import geographie
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+
     form = rs.Demande()
-    # Formattage de la date
-    date_course = str(form.date_debut.data) + " " + \
-        str(form.heures.data) + ":" + str(form.minutes.data) + ":00"
+    print(form.data)
+
     if form.validate_on_submit():
 
+        # Formattage de la date
+        date_course = str(form.date_debut.data) + " " + \
+            str(form.heures.data) + ":" + str(form.minutes.data) + ":00"
+
+        # On insère l'utilisateur s'il n'est pas dans la base
         if current_user.is_authenticated == False:
             utilisateur = modeles.Utilisateur(
                 telephone=form.telephone.data,
@@ -26,11 +31,10 @@ def index():
                 email=form.mail.data,
                 categorie=form.categorie.data
             )
-            # Ajout de l'utilisateur à la BD
             db.session.add(utilisateur)
             db.session.commit()
 
-        # Géolocaliser les adresses
+        # On construit les adresses pour les géolocaliser
         localisation_dep = ' '.join([
             form.numero_dep.data,
             form.adresse_dep.data,
@@ -44,8 +48,10 @@ def index():
         ])
 
         # Géocalisation des adressses de départ et d'arrivée
-        depart = {'position': geographie.geocoder(localisation_dep)}
-        arrivee = {'position': geographie.geocoder(localisation_arr)}
+        positions = {
+            'depart': geographie.geocoder(localisation_dep),
+            'arrivee': geographie.geocoder(localisation_arr)
+        }
 
         # Adresse de départ
         adresse_dep = modeles.Adresse(
@@ -54,8 +60,12 @@ def index():
             cp=form.cp_dep.data,
             ville=form.ville_dep.data,
             position='POINT({0} {1})'.format(
-                depart['position']['lat'], depart['position']['lon'])
+                positions['depart']['lat'],
+                positions['depart']['lon']
+            )
         )
+        db.session.add(adresse_dep)
+        db.session.commit()
 
         # Adresse d'arrivée
         adresse_arr = modeles.Adresse(
@@ -64,45 +74,36 @@ def index():
             cp=form.cp_arr.data,
             ville=form.ville_arr.data,
             position='POINT({0} {1})'.format(
-                arrivee['position']['lat'], arrivee['position']['lon'])
+                positions['arrivee']['lat'],
+                positions['arrivee']['lon']
+            )
         )
-        # Ajouter l'adresse à la BD
-        db.session.add(adresse_dep)
         db.session.add(adresse_arr)
+        db.session.commit()
 
-        # Modification de la tarification appliquée à l'utilisateur si il est
-        # connecté
+        # Création de la course
+        nouvelle_course = modeles.Course(
+            depart=adresse_dep.identifiant,
+            arrivee=adresse_arr.identifiant,
+            places=form.nb_passagers.data,
+            commentaire=form.commentaire.data,
+            debut=date_course,
+            trouvee=False,
+            finie=False
+        )
+
         if current_user.is_authenticated:
+            # Pas sur de ça
             current_user.categorie = form.categorie.data
-
-            # Création d'une nouvelle course pour un utilisateur connecté
-            nouvelle_course = modeles.Course(
-                utilisateur=current_user.telephone,
-                depart=adresse_dep.identifiant,
-                arrivee=adresse_arr.identifiant,
-                places=form.nb_passagers.data,
-                commentaire=form.commentaire.data,
-                debut=date_course,
-                trouvee=False,
-                finie=False)
+            nouvelle_course.utilisateur = current_user.telephone
         else:
-            # Création d'une nouvelle course pour un utilisateur non-connecté
-            nouvelle_course = modeles.Course(
-                utilisateur=form.telephone.data,
-                depart=adresse_dep.identifiant,
-                arrivee=adresse_arr.identifiant,
-                places=form.nb_passagers.data,
-                commentaire=form.commentaire.data,
-                debut=date_course,
-                trouvee=False,
-                finie=False)
+            nouvelle_course.utilisateur = form.telephone.data
 
-        # Ajout de la course à la BD
         db.session.add(nouvelle_course)
         db.session.commit()
 
         # Création d'une nouvelle facture
-        nouvelle_facture = modeles.Facture(
+        facture = modeles.Facture(
             course=nouvelle_course.numero,
             paiement=form.paiement.data,
             estimation=0,
@@ -110,10 +111,7 @@ def index():
             rabais=0
         )
 
-        # Ajout de la facture à la BD
-        db.session.add(nouvelle_facture)
-
-        # Sauvegarde des transations
+        db.session.add(facture)
         db.session.commit()
 
         flash('La demande de réservation a été prise en compte.', 'positive')
