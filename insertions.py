@@ -74,7 +74,7 @@ def inserer_utilisateur(ligne):
         prenom=ligne['prenom'].lower().capitalize(),
         nom=ligne['nom'].lower().capitalize(),
         email=ligne['email'],
-        telephone=ligne['telephone'],
+        telephone=str(ligne['telephone']),
         categorie=ligne['categorie'],
         confirmation=True,
         notification_sms=True,
@@ -101,7 +101,7 @@ def inserer_vehicule_conducteur(ligne):
         marque=ligne['marque']
     )
     conducteur = modeles.Conducteur(
-        telephone=ligne['telephone'],
+        telephone=str(ligne['telephone']),
         email=ligne['email'],
         prenom=ligne['prenom'],
         nom=ligne['nom'],
@@ -129,8 +129,8 @@ data.apply(inserer_vehicule_conducteur, axis=1)
 
 def inserer_course(ligne):
 	course = modeles.Course(
-		utilisateur=ligne['utilisateur'],
-		conducteur=ligne['conducteur'],
+		utilisateur=str(ligne['utilisateur']),
+		conducteur=str(ligne['conducteur']),
 		finie=True,
 		places=ligne['places'],
 		priorite=ligne['priorite'],
