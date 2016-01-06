@@ -1,10 +1,11 @@
-from flask import render_template, jsonify, flash, redirect, url_for
+from flask import render_template, jsonify, flash, redirect, url_for, request
 from flask.ext.login import current_user
 from app import app, db, modeles
 import random
 from app.outils import utile
 from app.formulaires import reservation as rs
 from app.outils import geographie
+import json
 
 
 # Redirection des pages web
@@ -18,8 +19,6 @@ def index():
     else:
         form = rs.Demande_Auth()
 
-    print(form.data)
-
     if form.validate_on_submit():
 
         # Formattage de la date
@@ -29,12 +28,12 @@ def index():
         # On insère l'utilisateur s'il n'est pas dans la base
         if current_user.is_authenticated == False:
             utilisateur = modeles.Utilisateur(
-                telephone=form.telephone.data,
-                prenom=form.prenom.data,
-                nom=form.nom.data,
-                email=form.mail.data,
-                categorie=form.categorie.data,
-                civilite=form.civilite.data
+                telephone = form.telephone.data,
+                prenom = form.prenom.data,
+                nom = form.nom.data,
+                email = form.mail.data,
+                categorie = form.categorie.data,
+                civilite = form.civilite.data
             )
             db.session.add(utilisateur)
             db.session.commit()
@@ -60,11 +59,11 @@ def index():
 
         # Adresse de départ
         adresse_dep = modeles.Adresse(
-            nom_rue=form.adresse_dep.data,
-            numero=form.numero_dep.data,
-            cp=form.cp_dep.data,
-            ville=form.ville_dep.data,
-            position='POINT({0} {1})'.format(
+            nom_rue = form.adresse_dep.data,
+            numero = form.numero_dep.data,
+            cp = form.cp_dep.data,
+            ville = form.ville_dep.data,
+            position = 'POINT({0} {1})'.format(
                 positions['depart']['lat'],
                 positions['depart']['lon']
             )
@@ -74,11 +73,11 @@ def index():
 
         # Adresse d'arrivée
         adresse_arr = modeles.Adresse(
-            nom_rue=form.adresse_arr.data,
-            numero=form.numero_arr.data,
-            cp=form.cp_arr.data,
-            ville=form.ville_arr.data,
-            position='POINT({0} {1})'.format(
+            nom_rue = form.adresse_arr.data,
+            numero = form.numero_arr.data,
+            cp = form.cp_arr.data,
+            ville = form.ville_arr.data,
+            position = 'POINT({0} {1})'.format(
                 positions['arrivee']['lat'],
                 positions['arrivee']['lon']
             )
@@ -88,13 +87,13 @@ def index():
 
         # Création de la course
         nouvelle_course = modeles.Course(
-            depart=adresse_dep.identifiant,
-            arrivee=adresse_arr.identifiant,
-            places=form.nb_passagers.data,
-            commentaire=form.commentaire.data,
-            debut=date_course,
-            trouvee=False,
-            finie=False
+            depart = adresse_dep.identifiant,
+            arrivee = adresse_arr.identifiant,
+            places = form.nb_passagers.data,
+            commentaire = form.commentaire.data,
+            debut = date_course,
+            trouvee = False,
+            finie = False
         )
 
         if current_user.is_authenticated:
@@ -109,24 +108,29 @@ def index():
 
         # Création d'une nouvelle facture
         facture = modeles.Facture(
-            course=nouvelle_course.numero,
-            paiement=form.paiement.data,
-            estimation=0,
-            montant=0,
-            rabais=0
+            course = nouvelle_course.numero,
+            paiement = form.paiement.data,
+            estimation = 0,
+            montant = 0,
+            rabais = 0
         )
 
         db.session.add(facture)
         db.session.commit()
 
         flash('La demande de réservation a été prise en compte.', 'positive')
-        return render_template('devis.html', form=form, titre='Devis')
+
+        donnees = form.data
+        return redirect(url_for('devis', form=donnees))
     return render_template('index.html', form=form, titre='Réserver un taxi')
 
 
 @app.route('/devis')
 def devis():
-    return render_template('devis.html', form=form, titre='Devis')
+    form = request.args.get('form')
+    form = form.replace("'", '"')
+    donnees = json.loads(form)
+    return render_template('devis.html', titre='Devis', donnees=donnees)
 
 
 @app.route('/carte')
