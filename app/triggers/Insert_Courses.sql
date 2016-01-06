@@ -1,27 +1,29 @@
-CREATE FUNCTION Insert_Courses() RETURNS TRIGGER AS $Insert_Courses$
+CREATE OR REPLACE FUNCTION insert_courses() RETURNS TRIGGER AS $insert_courses$
     
 	DECLARE
-		Comptadress INTEGER;
+		comptadress INTEGER;
     
 	BEGIN  
         
         -- Vérifie si l'adresse de destination existe dans habitude
 		-- et si non, on ajoute une nouvelle habitude
        
-		SELECT count(*) INTO Comptadress
-		FROM Habitude H
-		WHERE H.Adresse = NEW.Adresse AND
-		H.Utilisateur = NEW.Arrivee;
+		SELECT count(*) INTO comptadress
+		FROM habitudes h
+		WHERE h.adresse = NEW.arrivee AND
+		h.utilisateur = NEW.utilisateur;
         
-        IF Comptadress < 1 THEN
-            INSERT INTO Habitude VALUES(NEW.Utilisateur, NEW.Arrivee);
+        IF comptadress < 1 THEN
+            INSERT INTO habitudes VALUES(NEW.utilisateur, NEW.arrivee);
 		END IF;
+		IF comptadress = 1 THEN
+            RAISE EXCEPTION 'Cet utilisateur a déjà cette habitude.'
+		END IF;
+	return null;
     END;
  
-$Insert_Courses$ lANGUAGE plpgsql;
+$insert_courses$ lANGUAGE plpgsql;
     
-CREATE TRIGGER Insert_Courses
-    AFTER INSERT OR UPDATE ON Courses
-    FOR EACH ROW EXECUTE PROCEDURE Insert_Courses();
-    
-  
+CREATE TRIGGER insert_courses
+    AFTER INSERT OR UPDATE ON courses
+    FOR EACH ROW EXECUTE PROCEDURE insert_courses();

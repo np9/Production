@@ -1,4 +1,4 @@
-CREATE FUNCTION Insert_Update_Courses() RETURNS TRIGGER AS $Insert_Update_Courses$
+CREATE OR REPLACE FUNCTION Insert_Update_Courses() RETURNS TRIGGER AS $Insert_Update_Courses$
     
 	DECLARE
 		ComptBan INTEGER;
@@ -8,14 +8,14 @@ CREATE FUNCTION Insert_Update_Courses() RETURNS TRIGGER AS $Insert_Update_Course
         -- Vérifie qu'un utilisateur n'est pas bannit
         
         SELECT count(*) INTO ComptBan 
-        FROM Bannissements B
-        WHERE B.Telephone = NEW.Telephone 
+        FROM banissements B
+        WHERE B.telephone = NEW.telephone 
 		AND B.fin >= CURRENT_DATE;
         
 		IF ComptBan > 0 THEN
             RAISE EXCEPTION 'l''utilisateur est actuellement bannit';
         END IF;
-        
+    return null;    
     END;
     
 $Insert_Update_Courses$ lANGUAGE plpgsql;     
