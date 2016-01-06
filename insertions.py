@@ -31,36 +31,6 @@ db.session.execute('TRUNCATE TABLE adresses RESTART IDENTITY CASCADE;')
 adresses = pd.read_csv('app/data/adresses.csv', encoding='utf8')
 adresses.apply(inserer_adresse, axis=1)
 
-############################
-### Secteurs et stations ###
-############################
-
-secteurs = pd.read_csv('app/data/secteurs.csv')
-vor = Voronoi(secteurs[['lat', 'lon']])
-# On récupère les polygones qui ne s'étendent pas à l'infini
-lines = [
-    shapely.geometry.LineString(vor.vertices[line])
-    for line in vor.ridge_vertices
-    if -1 not in line
-]
-# Pequeno problemo a resolvar manana
-for i, polygone in enumerate(shapely.ops.polygonize(lines)):
-    # Insertion d'un secteur
-    secteur = modeles.Secteur(
-        nom=secteurs['nom'][i],
-        surface=polygone.to_wkt()
-    )
-    db.session.add(secteur)
-    db.session.commit()
-    # Insertion de la station correspondante
-    station = modeles.Station(
-        nom=secteurs['nom'][i],
-        adresse=i+1,
-        distance=200,
-        secteur=secteurs['nom'][i]
-    )
-    db.session.add(station)
-    db.session.commit()
 
 ####################
 ### Utilisateurs ###
@@ -105,7 +75,7 @@ def inserer_vehicule_conducteur(ligne):
         libre=True,
         station=ligne['station'],
         position='POINT({0} {1})'.format(ligne['lat'], ligne['lon']),
-        adresse=i+1,
+        adresse=1,
         inscription=datetime.utcnow()
     )
     db.session.add(vehicule)
