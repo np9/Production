@@ -6,21 +6,20 @@
     <title>Production by TaxiSID</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   </head>
   <body>
     <div class="wrapper">
-      <header>
+      <header class="without-description">
         <h1>Production</h1>
         <p></p>
-
         <p class="view"><a href="https://github.com/TaxiSID/Production">View the Project on GitHub <small>TaxiSID/Production</small></a></p>
-
-
         <ul>
           <li><a href="https://github.com/TaxiSID/Production/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/TaxiSID/Production/tarball/master">Download <strong>TAR Ball</strong></a></li>
@@ -29,14 +28,9 @@
       </header>
       <section>
         <h1>
-<a id="production" class="anchor" href="#production" aria-hidden="true"><span class="octicon octicon-link"></span></a>Production</h1>
+<a id="taxisid" class="anchor" href="#taxisid" aria-hidden="true"><span class="octicon octicon-link"></span></a>TaxiSID</h1>
 
 <p>Ce dossier contient l'application finale, celle qui doit marcher sans faille.</p>
-
-<h2>
-<a id="architecture" class="anchor" href="#architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>Architecture</h2>
-
-<p><img src="doc/architecture.png" alt="alt text"></p>
 
 <h2>
 <a id="utilisation" class="anchor" href="#utilisation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Utilisation</h2>
@@ -64,7 +58,7 @@ python run.py</pre></div>
 <h2>
 <a id="partage-du-localhost" class="anchor" href="#partage-du-localhost" aria-hidden="true"><span class="octicon octicon-link"></span></a>Partage du localhost</h2>
 
-<p>Il faut utiliser l'utilitaire <code>ngrok</code> qui est inclu dans le dossier. Commencez par taper <code>python run.py</code> dans une console. Ensuite ouvrez une nouvelle console puis tapez <code>./ngrok http 5000</code>, <code>ngrok</code> vous informe alors de l'URL à laquelle le localhost est disponible.</p>
+<p>Il faut utiliser l'utilitaire <code>ngrok</code>. Celui-ci est téléchargeable <a href="https://ngrok.com/download">ici</a>. Commencez pas dézipper le téléchargement et à inclure le binaire qui s'appelle <code>ngrok</code> à la racine. Tapez ensuite <code>python run.py</code> dans une console. Puis ouvrez une nouvelle console puis tapez <code>./ngrok http 5000</code>, <code>ngrok</code> vous informe alors de l'URL à laquelle le localhost est disponible.</p>
 
 <h2>
 <a id="déploiement-sur-un-serveur" class="anchor" href="#d%C3%A9ploiement-sur-un-serveur" aria-hidden="true"><span class="octicon octicon-link"></span></a>Déploiement sur un serveur</h2>
@@ -74,28 +68,32 @@ python run.py</pre></div>
 <h2>
 <a id="installation-de-packages" class="anchor" href="#installation-de-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation de packages</h2>
 
-<p>Installer geoalchemy2 :</p>
+<h3>
+<a id="installer-geoalchemy2" class="anchor" href="#installer-geoalchemy2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installer geoalchemy2</h3>
 
 <div class="highlight highlight-source-shell"><pre><span class="pl-c"># Installer la librairie</span>
 pip install geoalchemy2</pre></div>
 
-<p>Installer shapely :</p>
+<h3>
+<a id="installer-shapely" class="anchor" href="#installer-shapely" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installer shapely</h3>
 
-<p>Pour Linux :</p>
+<h4>
+<a id="linux" class="anchor" href="#linux" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linux</h4>
 
 <div class="highlight highlight-source-shell"><pre>sudo apt-get build-dep python-shapely
 <span class="pl-c"># OU</span>
 brew install python-shapely</pre></div>
 
-<p>Pour Windows :</p>
+<h4>
+<a id="windows" class="anchor" href="#windows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Windows</h4>
 
-<p>Telecharger la librairie shapely sur <a href="http://www.lfd.uci.edu/%7Egohlke/pythonlibs/#shapely">ce site</a>
-Le mettre dans le dossier de votre projet (exemple : TAXISID)</p>
+<p>Téléchargez la librairie <code>shapely</code> sur <a href="http://www.lfd.uci.edu/%7Egohlke/pythonlibs/#shapely">ce site</a> puis mettez la dans le dossier de votre projet (exemple : TAXISID)</p>
 
 <div class="highlight highlight-source-shell"><pre><span class="pl-c"># Se placer dans le dossier où se trouve le fichier</span>
 pip install nomdufichier.whl</pre></div>
 
-<p>Pour Mac OSX :</p>
+<h4>
+<a id="macos" class="anchor" href="#macos" aria-hidden="true"><span class="octicon octicon-link"></span></a>MacOS</h4>
 
 <div class="highlight highlight-source-shell"><pre><span class="pl-c"># Installer Homebrew</span>
 ruby -e <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
@@ -104,12 +102,12 @@ brew install geos
 <span class="pl-c"># Installer Shapely</span>
 pip install shapely</pre></div>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/TaxiSID">TaxiSID</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/TaxiSID">TaxiSID</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
