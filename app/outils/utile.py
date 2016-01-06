@@ -1,8 +1,14 @@
-from urllib.request import urlopen
+"""
+Last Update on Wed 6 13:00:00 2016
+Dernières modifications : ajout des fonctions convert_date et formatage_url
+"""
+from urllib.request
+import urlopen
 import unicodedata
 import time
 import json
-from datetime import datetime
+from datetime 
+import datetime
 
 
 def nettoyer(chaine):
@@ -87,3 +93,38 @@ class MWT(object):
             return v[0]
         func.func_name = f.__name__
         return func
+
+
+def convert_date(date, date_format = "%Y-%m-%d %H:%M:%S"):
+    '''Fonction pour convertir la date en timestamp utilisé pour la fonction
+    distance'''
+
+    timestamp = time.mktime(datetime.strptime(
+                            date, date_format).timetuple())
+    return timestamp
+    
+def formatage_url(adresse):
+    '''Fonction permettant de formater la chaîne de caractère.
+    On remplace plusieurs espaces par un seul, puis les espaces par des +'''
+    
+    adresse = ' '.join(adresse.split())
+    adresse = adresse.replace(' ','+')
+   
+    '''On remplace les caractères spéciaux (accents, ponctuation ...)'''
+    texte = unicodedata.normalize('NFKD', adresse)
+    octets = texte.encode('ascii', 'ignore')
+    adresse = octets.decode('utf-8')
+    list_sc = [";",":",
+		"!",",",
+		".","-",
+		"?","'",
+		"[","]",
+		"(",")",
+		"{","}"
+	]
+    adresse = ''.join([i if i not in list_sc else '' for i in adresse ])
+   
+    '''On met la première lettre de l'adresse en majuscule et le reste en 
+    minuscule'''   
+    adresse = adresse.capitalize()
+    return adresse
