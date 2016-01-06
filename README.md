@@ -4,7 +4,7 @@ Ce dossier contient l'application finale, celle qui doit marcher sans faille.
 
 ## Architecture
 
-A faire.
+![alt tag](https://github.com/TaxiSID/Production/Architecture.png)
 
 ## Utilisation
 
