@@ -4,7 +4,7 @@ Ce dossier contient l'application finale, celle qui doit marcher sans faille.
 
 ## Architecture
 
-![alt text](Architecture.png)
+![alt text](doc/Architecture.png)
 
 ## Utilisation
 
