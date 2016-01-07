@@ -2,9 +2,11 @@
 
 Ce dossier contient l'application finale, celle qui doit marcher sans faille.
 
+
 ## Architecture
 
 ![alt text](doc/architecture.png)
+
 
 ## Utilisation
 
@@ -27,25 +29,31 @@ python run.py
 
 Ensuite il suffit de consulter l'URL ``localhost:5000`` dans le navigateur.
 
-## Partage du localhost
+#### Partage du localhost
 
 Il faut utiliser l'utilitaire ``ngrok``. Celui-ci est téléchargeable [ici](https://ngrok.com/download). Commencez pas dézipper le téléchargement et à inclure le binaire qui s'appelle ``ngrok`` à la racine. Tapez ensuite ``python run.py`` dans une console. Puis ouvrez une nouvelle console puis tapez ``./ngrok http 5000``, ``ngrok`` vous informe alors de l'URL à laquelle le localhost est disponible.
 
-## Déploiement sur un serveur
+#### Déploiement sur un serveur
 
 Se référer au dossier ``setup/``.
 
+
+## Motivation
+
+Ce projet a été proposé par la société CapitoleTaxi. Notre équipe a pour but de créer une application web et téléphone. Celle ci doit permettre à des utilisateurs de réserver un taxi et doit permettre aux taxis d'accepter ou non les courses qu'on leur propose. Une demande de course doit être proposé aux taxis les plus proches de l'adresse de départ de l'utilisateur.
+
+
 ## Installation de packages
 
-### Installer geoalchemy2
+#### Installer geoalchemy2
 
 ```sh
 # Installer la librairie
 pip install geoalchemy2
 ```
-### Installer shapely
+#### Installer shapely
 
-#### Linux
+##### Sur Linux
 
 ```sh
 sudo apt-get build-dep python-shapely
@@ -53,7 +61,7 @@ sudo apt-get build-dep python-shapely
 brew install python-shapely
 ```
 
-#### Windows
+##### Sur Windows
   
 Téléchargez la librairie ``shapely`` sur [ce site](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely) puis mettez la dans le dossier de votre projet (exemple : TAXISID)
 
@@ -62,7 +70,7 @@ Téléchargez la librairie ``shapely`` sur [ce site](http://www.lfd.uci.edu/~goh
 pip install nomdufichier.whl
 ```
 
-#### MacOS
+##### Sur MacOS
 
 ```sh
 # Installer Homebrew
@@ -75,7 +83,7 @@ pip install shapely
 
 #### Installer psycopg2
 
-#### Windows et Linux
+##### Sur Windows et Linux
 
 Téléchargez la librairie ``psycopg2`` [ici](http://www.lfd.uci.edu/~gohlke/pythonlibs/#psycopg) puis le mettre à la racine du projet.
 
@@ -86,7 +94,7 @@ pip install psycopg2
 
 Attention vous pouvez avoir une erreur psycopg2 si vous n'avez pas mis votre mot de passe postgre dans le fichier config.py, voir la partie utilisation ci-dessus.
 
-#### Mac
+##### Sur Mac
 
 Il faut d'abord indiquer le chemin vers l'exécutable de PostgreSQL, installer ``psycopg2`` via ``pip`` et enfin changer la librairie /usr/lib/libpq.5.dylib car elle est trop vieille avec les commandes suivantes:
 
@@ -111,3 +119,23 @@ Puis installer psycopg2
 ```sh
 pip install psycopg2
 ```
+
+
+## API
+
+L'API renvoit des données au format json, le lien vers celle ci est : http://localhost:5000/api
+
+Les différentes commandes sont :
+- ~/api/utilisateurs
+- ~/api/conducteurs
+- ~/api/adresses
+- ~/api/stations
+- ~/api/vehicules
+- ~/api/courses
+- ~/api/factures
+- ~/api/positions
+
+
+## Contributeurs
+
+Ce projet est réalisé par tous les élèves de la formation CMI SID de Toulouse [site de la formation](https://cmisid.univ-tlse3.fr/) de l'Université Paul Sabatier, avec l'aide de certains de leurs professeurs.
