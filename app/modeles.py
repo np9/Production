@@ -153,7 +153,6 @@ class Position(db.Model):
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
     moment = db.Column(db.DateTime)
     positions = db.Column(Geometry('POINT'))
-    meme_station = db.Column(db.Boolean)
 
     __table_args__ = (
         db.PrimaryKeyConstraint('conducteur', 'moment', name='pk_positions'),
@@ -302,6 +301,7 @@ class Proposition(db.Model):
     statut = db.Column(db.String)
     raison = db.Column(db.String)
     ordre = db.Column(db.Integer)
+    meme_station = db.Column(db.Boolean)
 
     __table_args__ = (
         db.PrimaryKeyConstraint('iteration', 'course', 'conducteur', name='pk_proposition'),
