@@ -44,7 +44,7 @@
         ).addTo(map);
         map.setView({{[48.8534100, 2.3488000]}}, 13);
 
-        marker = [48.8534100, 2.3488000];
+        marker = [1, 1];
 
         function afficher_taxi(position){
             map.removeLayer(marker);
@@ -54,23 +54,24 @@
             marker.addTo(map);
         }
 
-        function rafraichir_positions(){
+        function rafraichir(){
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/rafraichir_carte"
-            }).done(function(response) {
-                pos = response.position;
-                lat = pos[0];
-                lon = pos[1];
-                afficher_taxi([lat, lon]);
+                url: "/admin/carte/rafraichir"
+            }).done(function(reponse) {
+                console.log(reponse.conducteurs)
+                // pos = response.position;
+                // lat = pos[0];
+                // lon = pos[1];
+                // afficher_taxi([lat, lon]);
             });
         }
 
-        rafraichir_positions();
+        rafraichir();
         window.setInterval(function(){
-            rafraichir_positions();
-        }, 1000);
+            rafraichir();
+        }, 3000);
 
     </script>
 

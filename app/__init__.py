@@ -21,11 +21,31 @@ bcrypt = Bcrypt(app)
 from flask_admin import Admin
 admin = Admin(app, name='Admin', template_mode='bootstrap3')
 
-# Importer les vues
-from app.vues import principal, utilisateur, erreur, admin, api, conducteur
+# Importer les vues classiques
+from app.vues import (
+	principal,
+	utilisateur,
+	erreur,
+	api,
+	conducteur
+)
+
+# Certaines des vues classiques utilisent des patrons (blueprints)
 app.register_blueprint(utilisateur.utilisateurbp)
 app.register_blueprint(api.apibp)
 app.register_blueprint(conducteur.conducteurbp)
+
+# Importer les vues administrateurs
+from app.vues.admin import (
+	utilisateurs,
+	conducteurs,
+	vehicules,
+	stations,
+	factures,
+	adresses,
+	courses,
+	carte
+)
 
 # Mettre en place la gestion de compte utilisateur
 from flask.ext.login import LoginManager
@@ -39,3 +59,13 @@ login_manager.login_view = 'utilisateurbp.connexion'
 @login_manager.user_loader
 def load_user(telephone):
     return Utilisateur.query.filter(Utilisateur.telephone == telephone).first()
+
+# Langue française
+from flask import request
+from flask_babelex import Babel
+
+babel = Babel(app)
+
+@babel.localeselector
+def get_locale():
+    return 'fr'

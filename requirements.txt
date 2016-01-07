@@ -12,3 +12,4 @@ flask-socketio
 flask-admin
 sure
 pytest
+flask-babelex

@@ -198,12 +198,6 @@ class Adresse(db.Model):
     position = db.Column(Geometry('POINT'))
     station = db.Column(db.String, db.ForeignKey('stations.nom'))
 
-    def __unicode__(self):
-        return self.identifiant
-
-    def __repr__(self):
-        return self.nom_rue + ' ' + self.numero
-
 
 class Station(db.Model):
 
@@ -229,6 +223,7 @@ class Course(db.Model):
     __tablename__ = 'courses'
 
     numero = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    trouvee = db.Column(db.Boolean)
     finie = db.Column(db.Boolean)
     utilisateur = db.Column(db.String, db.ForeignKey('utilisateurs.telephone'))
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
