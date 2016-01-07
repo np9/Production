@@ -1,0 +1,58 @@
+Test du trigger Insert_Update_Courses
+
+On bannit d'abord un utilisateur. Puis on essaye de lui ajouter une course !
+INSERT INTO banissements values('33628251338','05/01/2016','06/01/2016','Impolitesse')
+INSERT INTO courses(utilisateur, conducteur, places, priorite, debut, fin, retour, commentaire, depart, arrivee) VALUES ('33628251338','33699428430', 4, 'high', '2016-01-05 02:03:04.3256', '2016-01-05 04:03:04.3256', FALSE, 'Haha', 1,2)
+
+ERREUR:  l'utilisateur est actuellement bannit
+********** Erreur **********
+
+ERREUR: l'utilisateur est actuellement bannit
+État SQL :P0001
+
+
+Test du trigger Insert_Courses
+
+On ajoute un utilisateur puis on lui ajoute une course qui sera une habitude puis si il fait une autre course avec la même arrivée, il a déjà cette habitude.
+INSERT INTO utilisateurs(telephone) VALUES ('33221144556');
+INSERT INTO courses(utilisateur, conducteur, places, priorite, debut, fin, retour, commentaire, depart, arrivee) VALUES ('33221144556','33699428430', 4, 'high', '2016-01-07 02:03:04.3256', '2016-01-07 04:03:04.3256', FALSE, 'Haha', 1,2);
+INSERT INTO courses(utilisateur, conducteur, places, priorite, debut, fin, retour, commentaire, depart, arrivee) VALUES ('33221144556','33699428430', 4, 'high', '2016-01-06 02:03:04.3256', '2016-01-06 04:03:04.3256', FALSE, 'Yeah', 10,2);
+
+
+Test Trigger SupprCourse
+
+Suppression de la date de fin de la première course
+
+UPDATE courses
+SET fin = NULL
+WHERE numero = 1;
+
+	-- Résultat : La première course est supprimée et la facture correspondante est supprimée aussi
+Suppression de la date de fin de la seconde course
+UPDATE courses
+SET fin = NULL
+WHERE numero = 2;
+	-- Résultat : La seconde course n'est pas supprimée et la facture correspondante n'est pas supprimée
+	
+--Test ok (réalisé le 2016-01-06 à 11:25)
+
+
+--Test trigger verifheuredepart
+
+Insertion d'une course avec l'heure de début infèrieur à l'heure de l'insertion
+
+INSERT INTO courses(utilisateur, conducteur, places, priorite, debut, fin, retour, commentaire, depart, arrivee) VALUES ('33221144556','33699428430', 4, 'high', '2016-01-04 02:03:04.3256', '2016-01-04 04:03:04.3256', FALSE, 'Haha', 1,10)
+	
+ERREUR:  L'heure de depart de la course doit être postérieure à l'heure de la commande
+********** Erreur **********
+
+ERREUR: L'heure de depart de la course doit être postérieure à l'heure de la commande
+État SQL :P0001
+
+Insertion d'une course avec l'heure de début postérieur à l'heure de l'insertion
+
+INSERT INTO courses(finie, utilisateur, conducteur, places, priorite, debut, fin, retour, commentaire, depart, arrivee) VALUES (FALSE,'33221144556','33699428430', 4, 'high', '2016-01-07 02:03:04.3256', '2016-01-07 04:03:04.3256', FALSE, 'Haha', 1,10)
+	
+	-- Résultat : La requête a été exécutée avec succès : une ligne modifiée. La requête a été exécutée en 122 ms.
+	
+-- Test ok (réalisé le 06/01/2016 à 14h00)
