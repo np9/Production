@@ -72,3 +72,42 @@ brew install geos
 # Installer Shapely
 pip install shapely
 ```
+
+#### Installer psycopg2
+
+#### Windows et Linux
+
+Téléchargez la librairie ``psycopg2`` [ici](http://www.lfd.uci.edu/~gohlke/pythonlibs/#psycopg) puis le mettre à la racine du projet.
+
+```sh
+# Installer psycopg2
+pip install psycopg2
+```
+
+Attention vous pouvez avoir une erreur psycopg2 si vous n'avez pas mis votre mot de passe postgre dans le fichier config.py, voir la partie utilisation ci-dessus.
+
+#### Mac
+
+Il faut d'abord indiquer le chemin vers l'exécutable de PostgreSQL, installer ``psycopg2`` via ``pip`` et enfin changer la librairie /usr/lib/libpq.5.dylib car elle est trop vieille avec les commandes suivantes:
+
+```sh
+export PATH="/Library/PostgreSQL/9.5/bin:$PATH"
+anaconda/bin/pip install psycopg2
+sudo mv /usr/lib/libpq.5.dylib /usr/lib/libpq.5.dylib.old
+sudo ln -s /Library/PostgreSQL/9.5/lib/libpq.5.dylib /usr/lib
+```
+
+Si vous avez OS X El Capitan, que les commandes précédentes ne fonctionnent pas ou que vous avez un message d'erreur en important ``psycopg2`` dans Python, veuillez suivre les consignes suivantes :
+
+```sh
+anaconda/bin/pip install psycopg2
+sudo chown -R $(whoami):admin /usr/local
+sudo ln -s /Library/PostgreSQL/9.5/lib/libssl.1.0.0.dylib /usr/local/lib/
+sudo ln -s /Library/PostgreSQL/9.5/lib/libcrypto.1.0.0.dylib /usr/local/lib/
+```
+
+Puis installer psycopg2
+
+```sh
+pip install psycopg2
+```
