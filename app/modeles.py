@@ -167,7 +167,9 @@ class Vehicule(db.Model):
 
     immatriculation = db.Column(db.String, primary_key=True)
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    places = db.Column(db.Integer, db.CheckConstraint('1 <= places And places <= 10'))
+    places = db.Column(db.Integer, db.CheckConstraint(
+        '1 <= places And places <= 10')
+    )
     couleur = db.Column(db.String)
     marque = db.Column(db.String)
     animaux = db.Column(db.Boolean)
@@ -211,7 +213,8 @@ class Adresse(db.Model):
     nom_rue = db.Column(db.String)
     numero = db.Column(db.String)
     cp = db.Column(db.Integer)
-    ville = db.Column(db.String)
+    ville = db.Column
+    texte = db.Column(db.String)
     position = db.Column(Geometry('POINT'))
     secteur = db.Column(db.String, db.ForeignKey('secteurs.nom'))
 
@@ -224,8 +227,12 @@ class Station(db.Model):
 
     nom = db.Column(db.String, primary_key=True)
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
-    distance_entree = db.Column(db.Float, db.CheckConstraint('0 <= distance_entree'))
-    distance_sortie = db.Column(db.Float, db.CheckConstraint('0 <= distance_sortie'))
+    distance_entree = db.Column(
+        db.Float, db.CheckConstraint('0 <= distance_entree')
+    )
+    distance_sortie = db.Column(
+        db.Float, db.CheckConstraint('0 <= distance_sortie')
+    )
 
     __table_args__ = (
         db.CheckConstraint('distance_entree < distance_sortie',
@@ -304,7 +311,8 @@ class Proposition(db.Model):
     meme_station = db.Column(db.Boolean)
 
     __table_args__ = (
-        db.PrimaryKeyConstraint('iteration', 'course', 'conducteur', name='pk_proposition'),
+        db.PrimaryKeyConstraint('iteration', 'course',
+                                'conducteur', name='pk_proposition'),
     )
 
 
