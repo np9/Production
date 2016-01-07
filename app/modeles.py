@@ -188,10 +188,11 @@ class Adresse(db.Model):
     __tablename__ = 'adresses'
 
     identifiant = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    adresse = db.Column(db.String)
+    nom_rue = db.Column(db.String)
     numero = db.Column(db.String)
     cp = db.Column(db.Integer)
     ville = db.Column(db.String)
+    adr_complete = db.Column(db.String)
     position = db.Column(Geometry('POINT'))
 
 
