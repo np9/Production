@@ -1,5 +1,18 @@
 ## Base de données
 
+### Description de la BD
+
+Lorsqu’un utilisateur fait sa demande pour un taxi dans un formulaire, une course est créée. Pour cette course, plusieurs propositions sont faites avec des conducteurs différents. Un devis est calculé et est à valider par l’utilisateur. Si c’est le cas la facture s’enregistre dans la table Factures et une notification par sms et par mail alerte le client dès qu’un conducteur lui est attribué. Ceci est enregistré dans la table Notifications. 
+
+
+Chaque conducteur possède son propre véhicule. Il peut envoyer des messages et recevoir des pénalités s’il ne répond pas favorablement à 5 propositions consécutives alors qu’il est libre. Sa position instantanée est également enregistrée. 
+Un utilisateur peut être banni, si c’est le cas sa demande n’est pas prise en compte. Un utilisateur peut au contraire avoir des destinations habituelles, qui seront alors proposées en pré-saisie dans le formulaire. Chaque adresse (de départ ou d’arrivée) correspond à une station ET à un secteur.
+
+
+Un client VIP peut demander un conducteur préférentiel.
+
+### Schéma de la BD
+
 ![alt text](MCD.png)
 
 ### Utilisateurs
