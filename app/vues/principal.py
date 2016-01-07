@@ -6,6 +6,7 @@ from app.outils import utile
 from app.formulaires import reservation as rs
 from app.outils import geographie
 import json
+from app.devis import calculer
 
 
 # Redirection des pages web
@@ -20,119 +21,112 @@ def index():
         form = rs.Demande_Auth()
 
     if form.validate_on_submit():
-
-        # Formattage de la date
-        date_course = str(form.date_debut.data) + " " + \
-            str(form.heures.data) + ":" + str(form.minutes.data) + ":00"
-
-        # On insère l'utilisateur s'il n'est pas dans la base
-        if current_user.is_authenticated == False:
-            utilisateur = modeles.Utilisateur(
-                telephone=form.telephone.data,
-                prenom=form.prenom.data,
-                nom=form.nom.data,
-                email=form.mail.data,
-                categorie=form.categorie.data,
-                civilite=form.civilite.data
-            )
-            db.session.add(utilisateur)
-            db.session.commit()
-
-        # On construit les adresses pour les géolocaliser
-        localisation_dep = ' '.join([
-            form.numero_dep.data,
-            form.adresse_dep.data,
-            form.ville_dep.data
-        ])
-
-        localisation_arr = ' '.join([
-            form.numero_arr.data,
-            form.adresse_arr.data,
-            form.ville_arr.data
-        ])
-
-        # Géocalisation des adressses de départ et d'arrivée
-        positions = {
-            'depart': geographie.geocoder(localisation_dep),
-            'arrivee': geographie.geocoder(localisation_arr)
-        }
-
-        # Adresse de départ
-        adresse_dep = modeles.Adresse(
-            nom_rue=form.adresse_dep.data,
-            numero=form.numero_dep.data,
-            cp=form.cp_dep.data,
-            ville=form.ville_dep.data,
-            position='POINT({0} {1})'.format(
-                positions['depart']['lat'],
-                positions['depart']['lon']
-            )
-        )
-        db.session.add(adresse_dep)
-        db.session.commit()
-
-        # Adresse d'arrivée
-        adresse_arr = modeles.Adresse(
-            nom_rue=form.adresse_arr.data,
-            numero=form.numero_arr.data,
-            cp=form.cp_arr.data,
-            ville=form.ville_arr.data,
-            position='POINT({0} {1})'.format(
-                positions['arrivee']['lat'],
-                positions['arrivee']['lon']
-            )
-        )
-        db.session.add(adresse_arr)
-        db.session.commit()
-
-        # Création de la course
-        nouvelle_course = modeles.Course(
-            depart=adresse_dep.identifiant,
-            arrivee=adresse_arr.identifiant,
-            places=form.nb_passagers.data,
-            commentaire=form.commentaire.data,
-            debut=date_course,
-            trouvee=False,
-            finie=False
-        )
-
-        if current_user.is_authenticated:
-            # Pas sur de ça
-            current_user.categorie = form.categorie.data
-            nouvelle_course.utilisateur = current_user.telephone
-        else:
-            nouvelle_course.utilisateur = form.telephone.data
-
-        db.session.add(nouvelle_course)
-        db.session.commit()
-
-        # Création d'une nouvelle facture
-        facture = modeles.Facture(
-            course=nouvelle_course.numero,
-            paiement=form.paiement.data,
-            estimation=0,
-            montant=0,
-            rabais=0
-        )
-
-        db.session.add(facture)
-        db.session.commit()
-
         flash('Le formulaire de réservation a été validé.', 'positive')
 
         donnees = form.data
-        return render_template('devis.html', donnees=donnees, titre='Devis')
+
+        if current_user.is_authenticated:
+            donnees['prenom'] = current_user.prenom
+            donnees['nom'] = current_user.nom
+            donnees['telephone'] = current_user.telephone
+            donnees['mail'] = current_user.email
+
+        # Données de test
+        donnees['A-R'] = 'False'
+        donnees['bagage'] = '0'
+        donnees['gare'] = 'False'
+        donnees['aeroport'] = 'False'
+        donnees['animaux'] = '0'
+        donnees['categorie'] = 'particulier'
+        # Calculs de la tarification provisoire - création du devis
+        devis = calculer.tarifs(donnees)
+        print(devis)
+
+        return render_template('devis.html', donnees=donnees, devis=devis, titre='Devis')
     return render_template('index.html', form=form, titre='Réserver un taxi')
 
 
-@app.route('/accepter', methods=['POST'])
+@app.route('/accepter', methods=['GET', 'POST'])
 def accepter():
-    print("Route /accepter")
 
-    data = json.loads(request.data.decode())
-    print(data)
+    # Récupération des données et formatage du JSON
+    donnees = str(json.loads(request.data.decode()))
+    donnees = donnees.replace('&#39;', '"')
+    donnees = json.loads(donnees)
 
-    # Code d'insertion BD
+    # Formattage de la date
+    date_course = str(donnees['date_debut']) + " " + \
+        str(donnees['heures']) + ":" + str(donnees['minutes']) + ":00"
+
+    # On insère l'utilisateur s'il n'est pas dans la base
+    if current_user.is_authenticated == False:
+        utilisateur = modeles.Utilisateur(
+            telephone=donnees['telephone'],
+            prenom=donnees['prenom'],
+            nom=donnees['nom'],
+            email=donnees['mail'],
+            civilite=donnees['civilite'],
+        )
+        db.session.add(utilisateur)
+        db.session.commit()
+
+    # Géocalisation des adressses de départ et d'arrivée
+    positions = {
+        'depart': geographie.geocoder(donnees['adresse_dep']),
+        'arrivee': geographie.geocoder(donnees['adresse_arr'])
+    }
+
+    # Adresse de départ
+    adresse_dep = modeles.Adresse(
+        position='POINT({0} {1})'.format(
+            positions['depart']['lat'],
+            positions['depart']['lon']
+        )
+    )
+    db.session.add(adresse_dep)
+    db.session.commit()
+
+    # Adresse d'arrivée
+    adresse_arr = modeles.Adresse(
+        position='POINT({0} {1})'.format(
+            positions['arrivee']['lat'],
+            positions['arrivee']['lon']
+        )
+    )
+    db.session.add(adresse_arr)
+    db.session.commit()
+
+    # Création de la course
+    nouvelle_course = modeles.Course(
+        depart=adresse_dep.identifiant,
+        arrivee=adresse_arr.identifiant,
+        places=donnees['nb_passagers'],
+        commentaire=donnees['commentaire'],
+        debut=date_course,
+        trouvee=False,
+        finie=False
+    )
+
+    if current_user.is_authenticated:
+        # Pas sur de ça
+        nouvelle_course.utilisateur = current_user.telephone
+    else:
+        nouvelle_course.utilisateur = donnees['telephone']
+
+    db.session.add(nouvelle_course)
+    db.session.commit()
+
+    # Création d'une nouvelle facture
+    facture = modeles.Facture(
+        course=nouvelle_course.numero,
+        paiement=donnees['paiement'],
+        estimation=0,
+        montant=0,
+        rabais=0
+    )
+
+    db.session.add(facture)
+    db.session.commit()
 
     flash('La demande de réservation a été prise en compte.', 'positive')
     return jsonify({'statut': 'succes'})
