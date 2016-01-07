@@ -1,5 +1,7 @@
 ## Base de données
 
+![alt text](MCD.png)
+
 ### Utilisateurs
 
 - Un utilisateur est défini par son numéro de téléphone.
