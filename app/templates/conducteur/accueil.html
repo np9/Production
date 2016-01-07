@@ -98,7 +98,19 @@
             var lat = pos.coords.latitude;
             var lon = pos.coords.longitude;
             position = [lat, lon];
-                
+
+// partie qui fonctionne pas encore //
+'''$.ajax({
+                type: "POST",
+                async: true,
+                url: "/majlat"
+                data : 
+                }).done(function(response) {
+				 alert(response)
+				 });'''
+// fin de la partie qui ne marche pas encore //            
+
+    
             marker = L.marker([lat, lon]);
             marker.addTo(map);    
             map.setView(position, 13);
