@@ -217,10 +217,10 @@ def carte_refresh():
 
 
 # Utilisateurs
-admin.add_view(VueUtilisateurContact(modeles.Utilisateur, db.session, endpoint='contact',
-                                     category='Utilisateur', name='contact', menu_icon_type='glyph', menu_icon_value='glyphicon-earphone'))
-admin.add_view(VueUtilisateurCompte(modeles.Utilisateur, db.session, endpoint='compte',
-                                    category='Utilisateur', name='compte', menu_icon_type='glyph', menu_icon_value='glyphicon-file'))
+#admin.add_view(VueUtilisateurContact(modeles.Utilisateur, db.session, endpoint='contact',
+#                                     category='Utilisateur', name='contact', menu_icon_type='glyph', menu_icon_value='glyphicon-earphone'))
+#admin.add_view(VueUtilisateurCompte(modeles.Utilisateur, db.session, endpoint='compte',
+#                                    category='Utilisateur', name='compte', menu_icon_type='glyph', menu_icon_value='glyphicon-file'))
 
 # /!\ BUG avec les vues ci-dessus /!\
 

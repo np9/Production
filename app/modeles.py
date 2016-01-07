@@ -13,7 +13,6 @@ class Utilisateur(db.Model, UserMixin):
     telephone = db.Column(db.String, primary_key=True)
     email = db.Column(db.String, unique=True)
     confirmation = db.Column(db.Boolean)
-    categorie = db.Column(db.String)
     prenom = db.Column(db.String)
     nom = db.Column(db.String)
     notification_email = db.Column(db.Boolean)
@@ -28,10 +27,10 @@ class Utilisateur(db.Model, UserMixin):
 
     @mdp.setter
     def _set_password(self, plaintext):
-        # $2b$12$D0gGB7VrzxMTfINENhGBY.GDKsAK0wQ29jdMNce0sQy90sUg2Zbsu
         self._mdp = bcrypt.generate_password_hash(plaintext)
 
     def check_password(self, plaintext):
+        # A changer, problème d'UTF-8 avec PostgreSQL
         return True
         return bcrypt.check_password_hash(self.mdp, plaintext)
 
@@ -97,33 +96,22 @@ class Conducteur(db.Model):
     __tablename__ = 'conducteurs'
 
     telephone = db.Column(db.String, primary_key=True)
+    civilite = db.Column(db.String)
     email = db.Column(db.String, unique=True)
+    date_naissance = db.Column(db.Date)
+    fax = db.Column(db.Integer)
     prenom = db.Column(db.String)
     nom = db.Column(db.String)
-    libre = db.Column(db.Boolean)
+    statut = db.Column(db.String)
     station = db.Column(db.String, db.ForeignKey('stations.nom'))
+    station_entree = db.Column(db.DateTime)
     position = db.Column(Geometry('POINT'))
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     inscription = db.Column(db.DateTime)
+    penalite = db.Column(db.DateTime)
 
 
-class Penalites(db.Model):
-
-    ''' Une pénalité infligée à un conducteur. '''
-
-    __tablename__ = 'penalites'
-
-    conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    debut = db.Column(db.DateTime)
-    fin = db.Column(db.DateTime)
-    raison = db.Column(db.String)
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('conducteur', 'debut', name='pk_penalites'),
-    )
-
-
-class Messages(db.Model):
+class Message(db.Model):
 
     ''' Un message envoyé à un conducteur. '''
 
@@ -138,7 +126,7 @@ class Messages(db.Model):
     )
 
 
-class Positions(db.Model):
+class Position(db.Model):
 
     ''' Une position d'un conducteur à un moment donné. '''
 
@@ -161,9 +149,23 @@ class Vehicule(db.Model):
 
     immatriculation = db.Column(db.String, primary_key=True)
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    places = db.Column(db.Integer, db.CheckConstraint('1 <= places'))
+    places = db.Column(db.Integer, db.CheckConstraint('1 <= places And places <= 10'))
     couleur = db.Column(db.String)
     marque = db.Column(db.String)
+    animaux = db.Column(db.Boolean)
+    modele = db.Column(db.String)
+    american_express = db.Column(db.Boolean)
+    carte_bleue = db.Column(db.Boolean)
+    cheque = db.Column(db.Boolean)
+    anglais = db.Column(db.Boolean)
+    espagnol = db.Column(db.Boolean)
+    allemand = db.Column(db.Boolean)
+    vip = db.Column(db.Boolean)
+    attelage = db.Column(db.Boolean)
+    vbreak = db.Column(db.Boolean)
+    voiture_basse = db.Column(db.Boolean)
+    blacklist = db.Column(db.Boolean)
+    mineur = db.Column(db.Boolean)
 
 
 class Privilege(db.Model):
@@ -194,6 +196,13 @@ class Adresse(db.Model):
     ville = db.Column(db.String)
     adr_complete = db.Column(db.String)
     position = db.Column(Geometry('POINT'))
+    station = db.Column(db.String, db.ForeignKey('stations.nom'))
+
+    def __unicode__(self):
+        return self.identifiant
+
+    def __repr__(self):
+        return self.nom_rue + ' ' + self.numero
 
 
 class Station(db.Model):
@@ -204,18 +213,13 @@ class Station(db.Model):
 
     nom = db.Column(db.String, primary_key=True)
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
-    distance = db.Column(db.Float, db.CheckConstraint('0 <= distance'))
-    secteur = db.Column(db.String, db.ForeignKey('secteurs.nom'))
+    distance_entree = db.Column(db.Float, db.CheckConstraint('0 <= distance_entree'))
+    distance_sortie = db.Column(db.Float, db.CheckConstraint('0 <= distance_sortie'))
 
-
-class Secteur(db.Model):
-
-    ''' Une secteur contenant des stations. '''
-
-    __tablename__ = 'secteurs'
-
-    nom = db.Column(db.String, primary_key=True)
-    surface = db.Column(Geometry('POLYGON'))
+    __table_args__ = (
+        db.CheckConstraint('distance_entree < distance_sortie',
+                           name='entree_inf_sortie_check'),
+    )
 
 
 class Course(db.Model):
@@ -232,10 +236,14 @@ class Course(db.Model):
     priorite = db.Column(db.String)
     debut = db.Column(db.DateTime)
     fin = db.Column(db.DateTime)
-    retour = db.Column(db.Boolean)
     commentaire = db.Column(db.String)
     depart = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     arrivee = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
+    bagages = db.Column(db.Integer)
+    animaux_petits = db.Column(db.Integer)
+    animaux_gros = db.Column(db.Integer)
+    gare = db.Column(db.Boolean)
+    aeroport = db.Column(db.Boolean)
 
     __table_args__ = (
         db.CheckConstraint('debut < fin', name='debut_inf_fin_check'),
@@ -263,25 +271,18 @@ class Proposition(db.Model):
 
     __tablename__ = 'propositions'
 
-    numero = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    iteration = db.Column(db.Integer)
     course = db.Column(db.Integer, db.ForeignKey('courses.numero'))
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    moment = db.Column(db.DateTime)
-
-
-class Refus(db.Model):
-
-    ''' Un refus explicite ou implicite à une proposition. '''
-
-    __tablename__ = 'refus'
-
-    proposition = db.Column(db.Integer, db.ForeignKey('propositions.numero'))
-    moment = db.Column(db.DateTime)
-    conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-    explicite = db.Column(db.Boolean)
+    proposition = db.Column(db.DateTime)
+    reponse = db.Column(db.DateTime)
+    statut = db.Column(db.String)
+    raison = db.Column(db.String)
+    ordre = db.Column(db.Integer)
+    meme_station = db.Column(db.Boolean)
 
     __table_args__ = (
-        db.PrimaryKeyConstraint('proposition', 'moment', name='pk_refus'),
+        db.PrimaryKeyConstraint('iteration', 'course', 'conducteur', name='pk_proposition'),
     )
 
 
