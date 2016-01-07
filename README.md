@@ -72,3 +72,15 @@ brew install geos
 # Installer Shapely
 pip install shapely
 ```
+
+#### Installer psycopg2
+
+#### Windows et Linux
+
+Téléchargez la librairie ``psycopg2`` [ici]psycopg2-2.6.1-cp35-none-win_amd64.whl puis le mettre à la racine du projet.
+
+```sh
+# Installer psycopg2
+pip install psycopg2
+```
+Attention vous pouvez avoir une erreur psycopg2 si vous n'avez pas mis votre mot de passe postgre dans le fichier config.py, voir la partie utilisation ci-dessus.
