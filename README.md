@@ -77,7 +77,7 @@ pip install shapely
 
 #### Windows et Linux
 
-Téléchargez la librairie ``psycopg2`` [ici]psycopg2-2.6.1-cp35-none-win_amd64.whl puis le mettre à la racine du projet.
+Téléchargez la librairie ``psycopg2`` [ici](psycopg2-2.6.1-cp35-none-win_amd64.whl) puis le mettre à la racine du projet.
 
 ```sh
 # Installer psycopg2
