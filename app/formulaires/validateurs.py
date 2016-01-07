@@ -1,6 +1,7 @@
 from wtforms import ValidationError
 from app.outils import geographie
 
+
 class Unique(object):
 
     '''
@@ -22,6 +23,7 @@ class Unique(object):
         if check:
             raise ValidationError(self.message)
 
+
 class AdresseValide(object):
 
     '''
@@ -30,11 +32,13 @@ class AdresseValide(object):
     réussi à la géocoder en lat/lon.
     '''
 
-    def __init__(self, adresse):
-        self.adresse = adresse
+    def __init__(self, model, field):
+        self.model = model
+        self.field = field
         self.message = "Cette adresse n'est pas reconnue."
 
     def __call__(self, form, field):
-        position = geographie.geocoder(localisation)
+        print(field.data)
+        position = geographie.geocoder(field.data)
         if position['statut'] == 'echec':
             raise ValidationError(self.message)

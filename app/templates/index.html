@@ -84,20 +84,9 @@ $( "#datepicker" ).datepicker(
                 <label>Adresse de départ</label>
                 <div class="two fields">
                     <div class="ten wide field">
-                    {{ m.render_field(form.ville_dep, "Toulouse") }}
-                    </div>
-                    <div class="four wide field">
-                    {{ m.render_field(form.cp_dep) }}
-                    </div>   
+                    {{ m.render_field(form.adresse_dep) }}
+                    </div> 
                 </div> 
-                <div class="two fields">
-                    <div class="eight wide field">
-                    {{ m.render_field(form.adresse_dep) }}    
-                    </div>
-                    <div class="four wide field">
-                    {{ m.render_field(form.numero_dep) }} 
-                    </div>   
-                </div>
             <label>Date et horaire de départ</label>
             <div class="three fields">
                 <div class="four wide field">
@@ -117,20 +106,9 @@ $( "#datepicker" ).datepicker(
                 <label>Adresse d'arrivée</label>
                 <div class="two fields">
                     <div class="ten wide field">
-                    {{ m.render_field(form.ville_arr, "Toulouse") }}
-                    </div>
-                    <div class="four wide field">
-                    {{ m.render_field(form.cp_arr) }}
-                    </div>   
+                    {{ m.render_field(form.adresse_arr) }}
+                    </div> 
                 </div> 
-                <div class="two fields">
-                    <div class="eight wide field">
-                    {{ m.render_field(form.adresse_arr) }}    
-                    </div>
-                    <div class="four wide field">
-                    {{ m.render_field(form.numero_arr) }} 
-                    </div>   
-                </div>
             </div>
             <h4 class="ui pink dividing header">Informations complémentaires</h4>
             <div class="field">
@@ -144,12 +122,6 @@ $( "#datepicker" ).datepicker(
                 <div class="two fields">
                     <div class="four wide field">
                         {{ m.render_field(form.nb_passagers) }} 
-                    </div> 
-                </div> 
-                <label>Tarification</label>
-                <div class="two fields">
-                    <div class="four wide field">
-                        {{ m.render_field(form.categorie) }} 
                     </div> 
                 </div> 
                 <label>Commentaire</label>
