@@ -63,7 +63,7 @@ def index():
             numero = form.numero_dep.data,
             cp = form.cp_dep.data,
             ville = form.ville_dep.data,
-            position = 'POINT({0} {1})'.format(
+            position='POINT({0} {1})'.format(
                 positions['depart']['lat'],
                 positions['depart']['lon']
             )
@@ -89,7 +89,7 @@ def index():
         nouvelle_course = modeles.Course(
             depart = adresse_dep.identifiant,
             arrivee = adresse_arr.identifiant,
-            places = form.nb_passagers.data,
+            places= form.nb_passagers.data,
             commentaire = form.commentaire.data,
             debut = date_course,
             trouvee = False,
@@ -118,19 +118,24 @@ def index():
         db.session.add(facture)
         db.session.commit()
 
-        flash('La demande de réservation a été prise en compte.', 'positive')
+        flash('Le formulaire de réservation a été validé.', 'positive')
 
         donnees = form.data
-        return redirect(url_for('devis', form=donnees))
+        return render_template('devis.html', donnees=donnees, titre='Devis')
     return render_template('index.html', form=form, titre='Réserver un taxi')
 
 
-@app.route('/devis')
-def devis():
-    form = request.args.get('form')
-    form = form.replace("'", '"')
-    donnees = json.loads(form)
-    return render_template('devis.html', titre='Devis', donnees=donnees)
+@app.route('/accepter', methods=['POST'])
+def accepter():
+    print("Route /accepter")
+
+    data = json.loads(request.data.decode())
+    print(data)
+
+    # Code d'insertion BD
+
+    flash('La demande de réservation a été prise en compte.', 'positive')
+    return jsonify({'statut': 'succes'})
 
 
 @app.route('/carte')
