@@ -46,8 +46,8 @@ def tarifs(demande):
             2][1]]
         # Calcul du prix/km par pourcentage du temps passé en tarif jour et
         # nuit
-        prix = float(ligne['tarif_par_km']) * tt.type_tarif(demande)[1][0] + float(ligne2[
-            'tarif_par_km']) * tt.type_tarif(demande)[1][1]  # avec pourcentage de jour et de nuit
+        prix = round(float(ligne['tarif_par_km']) * tt.type_tarif(demande)[1][0] + float(ligne2[
+            'tarif_par_km']) * tt.type_tarif(demande)[1][1],2)  # avec pourcentage de jour et de nuit
 
     # Calcul des suppléments
     # On récupère les lignes selon les suppléments et leurs prix
@@ -56,6 +56,8 @@ def tarifs(demande):
     PerS = supp[supp['Supplements'] == 'PersonneSup']
     Gar = supp[supp['Supplements'] == 'Gare']
     Aer = supp[supp['Supplements'] == 'Aeroport']
+    TaV = supp[supp['Supplements'] == 'Trajet_a_vide']
+    PtR = supp[supp['Supplements'] == 'Prix_trajet_ralenti']
 
     # Calcul du montant total des suppléments
     # Suppléments pour bagages et/ou animaux
@@ -67,6 +69,9 @@ def tarifs(demande):
         supplement += (float(demande['nb_passagers']
                              ) - 4) * float(PerS['Prix'])
 
+    # Supplément trajet à vide
+    supplement += float(TaV['Prix'])
+
     # Suppléments pour la prise en charge à la gare
     if demande['gare'] == 'True':
         supplement += float(Gar['Prix'])
@@ -76,14 +81,21 @@ def tarifs(demande):
         supplement += float(Aer['Prix'])
 
     # On concatenne les adresses de départ et d'arrivée
+    # depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
+    #     ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
+    # arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
+    #     ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
+
     depart = demande['adresse_dep']
     arrive = demande['adresse_arr']
 
     # On calcule le prix total
-    # prix = coût de prise en charge + tarif par km * nombre de km + coût des
-    # suppléments
-    prixTotal = float(prise_en_charge['Prix']) + prix * round(float(Par(
-        geo.geocoder(depart), geo.geocoder(arrive), str(date)).distance), 2) + supplement
+    # On calcule le tarif supplémentaire appliqué à un trajet ralenti
+    Tarif_ralenti = float(tt.type_tarif(demande)[4]) * float(PtR['Prix'])/3600
+
+    # prix = coût de prise en charge + tarif par km * nombre de km + coût des suppléments 
+    prixTotal = float(prise_en_charge['Prix']) + prix * round(float(Par(geo.geocoder(depart),geo.geocoder(arrive),str(date)).distance),2) + supplement + Tarif_ralenti
+          
 
     # On vérifie que le prix total soit supérieur au prix minimal
     prixMinimal = float(supp[supp['Supplements'] == 'Tarif_minimum']['Prix'])
@@ -129,7 +141,8 @@ def tarifs(demande):
         'Prix_par_personnes_sup': str(float(PerS['Prix'])),
         'Prix_personnes_sup': str((nbPersonnes) * float(PerS['Prix'])),
         'Aeroport': str(demande['aeroport']),
-        'Prix_Aeroport': str(prixA)
+        'Prix_Aeroport': str(prixA),
+        'Temps_course': str(tt.type_tarif(demande)[3])
     }
 
     # On retourne le prix total

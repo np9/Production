@@ -20,6 +20,11 @@ def type_tarif(demande):
                     heure_depart, minutes_depart)
 
     # On concatenne les adresses de départ et d'arrivée
+    # depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
+    #     ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
+    # arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
+    #     ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
+
     depart = demande['adresse_dep']
     arrive = demande['adresse_arr']
 
@@ -27,7 +32,32 @@ def type_tarif(demande):
     # On calcule la date d'arrivée estimée du trajet
     temps_trajet = timedelta(minutes=Par(geo.geocoder(
         depart), geo.geocoder(arrive), str(date)).temps)
+
     date_arrive = date + temps_trajet
+
+    hours, remainder = divmod(temps_trajet.seconds,3600)
+    minutes, seconds = divmod(remainder, 60)
+    temps_trajet_retourne = '%s:%s:%s' % (hours, minutes, seconds)
+
+
+    
+
+    # Comparer différence de temps de trajet entre temps estimé et temps de référence
+    # Initialisation de la date de comparaison (jour de trajet + 7 jours à 10h)
+    heure_comparaison = datetime.strptime(str(annee_depart) + '-' + str(mois_depart) + '-' + str(jour_depart) + ' 10:00:00', '%Y-%m-%d %H:%M:%S')
+    date_comparaison = heure_comparaison + timedelta(days=7)
+    
+    # Calcul du temps de trajet de référence
+    temps_trajet_reference = timedelta(minutes=Par(geo.geocoder(depart),geo.geocoder(arrive),str(date_comparaison)).temps)
+    
+    # Calcul en minute entre trajet estimé et trajet de référence
+    diff_temps = abs(temps_trajet - temps_trajet_reference)
+    diff_temps = diff_temps.seconds
+    
+    if diff_temps > 0:
+        diff_minutes = diff_temps
+    else:
+        diff_minutes = 0
 
     # On définit les limites de passages aux horaires jour et nuit
     date_lim_jour = datetime.strptime(str(annee_depart) + '-' + str(
@@ -119,7 +149,7 @@ def type_tarif(demande):
   # de trajet
     double_tarif = ['TarifD', 'TarifC']
 
-    return Type_tarif, intervalle, double_tarif
+    return Type_tarif, intervalle, double_tarif, temps_trajet_retourne, diff_minutes
 
 
 def feries(an):
