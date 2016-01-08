@@ -22,3 +22,6 @@ MAIL_PASSWORD = '464PK2wnSY774_K'
 ADMINS = ['noreply.taxisid@gmail.com']
 # Nombre de fois qu'un mot de passe est hashé
 BCRYPT_LOG_ROUNDS = 12
+# Identifiants Mapbox pour l'interface administrateur
+MAPBOX_MAP_ID = 'mapbox.streets'
+MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoibGVtYXgiLCJhIjoidnNDV1kzNCJ9.iH26jLhEuimYd6vLOO6v1g'

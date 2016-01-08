@@ -45,6 +45,9 @@ class VueUtilisateurCompte(VueModele):
 
     ''' Informations sur le compte de l'utilisateur. '''
 
+    can_create = False
+    can_edit = False
+    can_delete = False
 
     column_exclude_list = [
         '_mdp',

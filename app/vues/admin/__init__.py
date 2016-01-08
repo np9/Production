@@ -1,6 +1,6 @@
 from flask import request, Response
 from werkzeug.exceptions import HTTPException
-from flask.ext.admin.contrib.sqla import ModelView
+from flask_admin.contrib.geoa import ModelView
 from app import app
 
 

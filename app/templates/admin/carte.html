@@ -42,17 +42,9 @@
             null,
             {position: 'topleft'}
         ).addTo(map);
-        map.setView({{[48.8534100, 2.3488000]}}, 13);
+        map.setView({{[43.6042600, 1.4436700]}}, 13);
 
-        marker = [1, 1];
-
-        function afficher_taxi(position){
-            map.removeLayer(marker);
-
-            marker = L.marker(position);
-        
-            marker.addTo(map);
-        }
+        var marqueurs = L.layerGroup([]);
 
         function rafraichir(){
             $.ajax({
@@ -60,11 +52,17 @@
                 async: true,
                 url: "/admin/carte/rafraichir"
             }).done(function(reponse) {
-                console.log(reponse.conducteurs)
-                // pos = response.position;
-                // lat = pos[0];
-                // lon = pos[1];
-                // afficher_taxi([lat, lon]);
+                taxis = reponse.taxis;
+                // Retirer les anciens marqueurs
+                map.removeLayer(marqueurs);
+                points = [];
+                for (var i=0; i<taxis.length; i++) {
+                    taxi = taxis[i];
+                    point = L.marker(taxi.coordinates);
+                    points.push(point)
+                }
+                marqueurs = L.layerGroup(points).addTo(map);
+                map.addLayer(marqueurs);
             });
         }
 

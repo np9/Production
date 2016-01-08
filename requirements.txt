@@ -13,3 +13,5 @@ flask-admin
 sure
 pytest
 flask-babelex
+psycopg2
+shapely

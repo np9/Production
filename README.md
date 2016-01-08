@@ -45,12 +45,6 @@ Ce projet a été proposé par la société CapitoleTaxi. Notre équipe a pour b
 
 ## Installation de packages
 
-#### Installer geoalchemy2
-
-```sh
-# Installer la librairie
-pip install geoalchemy2
-```
 #### Installer shapely
 
 ##### Sur Linux
