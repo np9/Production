@@ -11,11 +11,12 @@ class Utilisateur(db.Model, UserMixin):
     __tablename__ = 'utilisateurs'
 
     telephone = db.Column(db.String, primary_key=True)
+    civilite = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     confirmation = db.Column(db.Boolean)
     prenom = db.Column(db.String)
     nom = db.Column(db.String)
-    civilite = db.Column(db.String)
+    fax = db.Column(db.String)
     notification_email = db.Column(db.Boolean)
     notification_sms = db.Column(db.Boolean)
     inscription = db.Column(db.DateTime)
@@ -109,7 +110,7 @@ class Conducteur(db.Model):
     position = db.Column(Geometry('POINT'))
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     inscription = db.Column(db.DateTime)
-    penalite = db.Column(db.DateTime)
+    debut_penalite = db.Column(db.DateTime)
 
 
 class Message(db.Model):
@@ -165,23 +166,9 @@ class Vehicule(db.Model):
     attelage = db.Column(db.Boolean)
     vbreak = db.Column(db.Boolean)
     voiture_basse = db.Column(db.Boolean)
-    blacklist = db.Column(db.Boolean)
     mineur = db.Column(db.Boolean)
 
 
-class Privilege(db.Model):
-
-    ''' Un lien entre un utilisateur et un conducteur. '''
-
-    __tablename__ = 'privileges'
-
-    utilisateur = db.Column(db.String, db.ForeignKey('utilisateurs.telephone'))
-    conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('utilisateur', 'conducteur',
-                                name='pk_privileges'),
-    )
 
 
 class Adresse(db.Model):
@@ -236,8 +223,8 @@ class Course(db.Model):
     depart = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     arrivee = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     bagages = db.Column(db.Integer)
-    animaux_petits = db.Column(db.Integer)
-    animaux_gros = db.Column(db.Integer)
+    animaux = db.Column(db.Integer)
+    animaux_grand = db.Column(db.Boolean)
     gare = db.Column(db.Boolean)
     aeroport = db.Column(db.Boolean)
 
