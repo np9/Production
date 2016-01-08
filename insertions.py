@@ -5,11 +5,12 @@ from app import modeles
 import random
 
 # On vide les tables dans un ordre logique
-modeles.Proposition.query.delete()
 modeles.Facture.query.delete()
+modeles.Etape.query.delete()
 modeles.Course.query.delete()
 modeles.Vehicule.query.delete()
 modeles.Etape.query.delete()
+modeles.Position.query.delete()
 modeles.Conducteur.query.delete()
 modeles.Station.query.delete()
 modeles.Utilisateur.query.delete()
@@ -49,6 +50,7 @@ def inserer_utilisateur(ligne):
         nom=ligne['nom'].lower().capitalize(),
         email=ligne['email'],
         telephone=str(ligne['telephone']),
+        categorie=ligne['categorie'],
         confirmation=True,
         notification_sms=True,
         notification_email=True,
@@ -133,6 +135,7 @@ def inserer_course(ligne):
 		priorite=ligne['priorite'],
 		debut=ligne['debut'],
 		fin=ligne['fin'],
+		retour= False,
 		commentaire=ligne['commentaire'],
 		depart=ligne['depart'],
 		arrivee=ligne['arrivee'],
@@ -186,23 +189,20 @@ positions.apply(inserer_position, axis=1)
 
 print('Positions insérées.')
 
-def inserer_proposition(ligne):
-    prop = modeles.Proposition(
-        iteration = ligne['iteration'],
-        course = ligne['course'],
-        conducteur = str(ligne ['conducteur']),
-        proposition = ligne['proposition'],
-        reponse = ligne ['reponse'],
-        statut = str(ligne ['statut']),
-        raison = str(ligne ['raison']),
-        ordre = ligne ['ordre']
+########################################
+############# Etapes ################
+########################################
+
+def inserer_etape(ligne):
+    etape = modeles.Etape(
+        course=str(ligne['course']),
+        moment=ligne['moment'],
+        position='POINT({0} {1})'.format(ligne['lat'], ligne['lon']),
     )
-    
-    db.session.add(prop)
-    db.session.commit() 
+    db.session.add(etape)
+    db.session.commit()
 
-db.session.execute('TRUNCATE TABLE propositions RESTART IDENTITY CASCADE;')
-propositions = pd.read_csv('app/data/propositions.csv', encoding='utf8')
-propositions.apply(inserer_proposition, axis=1)
+etapes = pd.read_csv('app/data/etapes.csv')
+etapes.apply(inserer_etape, axis=1)
 
-print('Propositions insérées.')
+print('Etapes insérées.')
