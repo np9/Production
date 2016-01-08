@@ -19,8 +19,7 @@ def nettoyer(colonne):
     return colonne
 
 
-def to_json(table):
-    requete = db.session.execute("SELECT * FROM {}".format(table))
+def to_json(requete):
     attributs = requete.keys()
     lignes = requete.fetchall()
     table = pd.DataFrame(lignes, columns=attributs)
@@ -31,8 +30,9 @@ def to_json(table):
 
 @apibp.route('/<table>', methods=['GET'])
 def api_table(table):
+    requete = db.session.execute("SELECT * FROM {}".format(table))
     try:
-        json = to_json(table)
+        json = to_json(requete)
         return jsonify({'data': json, 'status': 'success'})
     except:
         return jsonify({'status': 'failure'})
@@ -40,8 +40,9 @@ def api_table(table):
 
 @apibp.route('/conducteurs/<numero>', methods=['GET'])
 def conducteur_numero(numero):
+    requete = db.session.execute("SELECT * FROM conducteurs WHERE telephone='{}'".format(numero))
     try:
-        json = to_json(numero)
+        json = to_json(requete)
         return jsonify({'data': json, 'status': 'success'})
     except:
         return jsonify({'status': 'failure'})
