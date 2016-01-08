@@ -108,14 +108,13 @@ def formatage_url(adresse):
     adresse = ' '.join(adresse.split())
     adresse = adresse.replace(' ','+')
    
-    '''On remplace les caractères spéciaux (accents, ponctuation ...)'''
+    # Remplace les caractères spéciaux (accents, ponctuation ...)
     texte = unicodedata.normalize('NFKD', adresse)
     octets = texte.encode('ascii', 'ignore')
     adresse = octets.decode('utf-8')
     list_sc = [";",":","!",",",".","-","?","'","[","]","(",")","{","}"]
     adresse = ''.join([i if i not in list_sc else '' for i in adresse ])
    
-    '''On met la première lettre de l'adresse en majuscule et le reste en 
-    minuscule'''   
+   # Première lettre de l'adresse en majuscule  
     adresse = adresse.capitalize()
     return adresse
