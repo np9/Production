@@ -5,11 +5,12 @@ from app import modeles
 import random
 
 # On vide les tables dans un ordre logique
-modeles.Proposition.query.delete()
 modeles.Facture.query.delete()
+modeles.Etape.query.delete()
 modeles.Course.query.delete()
 modeles.Vehicule.query.delete()
 modeles.Etape.query.delete()
+modeles.Position.query.delete()
 modeles.Conducteur.query.delete()
 modeles.Station.query.delete()
 modeles.Utilisateur.query.delete()
@@ -185,6 +186,24 @@ positions = pd.read_csv('app/data/positions.csv')
 positions.apply(inserer_position, axis=1)
 
 print('Positions insérées.')
+
+########################################
+############### Etapes #################
+########################################
+
+def inserer_etape(ligne):
+    etape = modeles.Etape(
+        course=str(ligne['course']),
+        moment=ligne['moment'],
+        position='POINT({0} {1})'.format(ligne['lat'], ligne['lon']),
+    )
+    db.session.add(etape)
+    db.session.commit()
+
+etapes = pd.read_csv('app/data/etapes.csv')
+etapes.apply(inserer_etape, axis=1)
+
+print('Etapes insérées.')
 
 def inserer_proposition(ligne):
     prop = modeles.Proposition(
