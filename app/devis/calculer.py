@@ -7,8 +7,8 @@ from app.calcul.distance import Parcours as Par
 
 def tarifs(demande):
 
-    supp = pd.read_csv('app/data/supplements.csv', encoding='utf8')
-    heures_tarif = pd.read_csv('app/data/tarifs.csv', encoding='utf8')
+    supp = pd.read_csv('app/devis/data/supplements.csv', encoding='utf8')
+    heures_tarif = pd.read_csv('app/devis/data/tarifs.csv', encoding='utf8')
 
     # On initialise les prix de départ et les suppléments
     prise_en_charge = supp[supp['Supplements'] == 'Prise_en_charge']
