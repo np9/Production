@@ -34,7 +34,6 @@ class VueVehicule(VueModele):
         'attelage', 
        	'vbreak',
        	'voiture_basse',
-       	'blacklist',
        	'mineur'
     ]
 

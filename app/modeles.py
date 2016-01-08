@@ -224,7 +224,7 @@ class Course(db.Model):
     arrivee = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     bagages = db.Column(db.Integer)
     animaux = db.Column(db.Integer)
-    animaux_grand = db.Column(db.Boolean)
+    animaux_grands = db.Column(db.Boolean)
     gare = db.Column(db.Boolean)
     aeroport = db.Column(db.Boolean)
 

@@ -5,6 +5,7 @@ from app import modeles
 import random
 
 # On vide les tables dans un ordre logique
+modeles.Proposition.query.delete()
 modeles.Facture.query.delete()
 modeles.Course.query.delete()
 modeles.Vehicule.query.delete()
@@ -184,3 +185,24 @@ positions = pd.read_csv('app/data/positions.csv')
 positions.apply(inserer_position, axis=1)
 
 print('Positions insérées.')
+
+def inserer_proposition(ligne):
+    prop = modeles.Proposition(
+        iteration = ligne['iteration'],
+        course = ligne['course'],
+        conducteur = str(ligne ['conducteur']),
+        proposition = ligne['proposition'],
+        reponse = ligne ['reponse'],
+        statut = str(ligne ['statut']),
+        raison = str(ligne ['raison']),
+        ordre = ligne ['ordre']
+    )
+    
+    db.session.add(prop)
+    db.session.commit() 
+
+db.session.execute('TRUNCATE TABLE propositions RESTART IDENTITY CASCADE;')
+propositions = pd.read_csv('app/data/propositions.csv', encoding='utf8')
+propositions.apply(inserer_proposition, axis=1)
+
+print('Propositions insérées.')
