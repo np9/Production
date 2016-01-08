@@ -24,3 +24,49 @@
     	</ul>
   	{% endif %}
 {% endmacro %}
+
+
+
+{% macro segment_devis_prix(texte, valeur, icon) %}
+
+<div class="ui right aligned grid">
+	<div class="left floated left aligned ten wide column">
+		<div class="content">
+			<div class="sub header">
+  				<i class="large {{ icon }}"></i> {{ texte }}
+  			</div>
+		</div>
+	</div>
+	<div class="right floated right aligned four wide column">
+		<div class="content">
+			<div class="sub header">
+  				{{ valeur }} €
+  			</div>
+		</div>
+	</div>
+</div>
+
+{% endmacro %}
+
+{% macro segment_devis(texte, valeur, icon) %}
+
+<div class="ui right aligned grid">
+	<div class="left floated left aligned ten wide column">
+		<div class="content">
+			<div class="sub header">
+  				<i class="large {{ icon }}"></i> {{ texte }}
+  			</div>
+		</div>
+	</div>
+	<div class="right floated right aligned four wide column">
+		<div class="content">
+			<div class="sub header">
+  				{{ valeur }} 
+  			</div>
+		</div>
+	</div>
+</div>
+
+{% endmacro %}
+
+
