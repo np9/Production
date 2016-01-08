@@ -6,7 +6,7 @@ from app.calcul.distance import Parcours as Par
 
 
 def type_tarif(demande):
-
+    tt_tarif='NULL'
     # On récupère la date et l'heure de départ
     date = demande['date_debut'].split('-')
     annee_depart = int(date[0])
@@ -20,27 +20,16 @@ def type_tarif(demande):
                     heure_depart, minutes_depart)
 
     # On concatenne les adresses de départ et d'arrivée
-    # depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
-    #     ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
-    # arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
-    #     ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
-
-    depart = demande['adresse_dep']
-    arrive = demande['adresse_arr']
+    depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
+        ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
+    arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
+        ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
 
     # Recherche du tarif: Jour ou Nuit/JourFerie/Dimanche
     # On calcule la date d'arrivée estimée du trajet
     temps_trajet = timedelta(minutes=Par(geo.geocoder(
         depart), geo.geocoder(arrive), str(date)).temps)
-
     date_arrive = date + temps_trajet
-
-    hours, remainder = divmod(temps_trajet.seconds,3600)
-    minutes, seconds = divmod(remainder, 60)
-    temps_trajet_retourne = '%s:%s:%s' % (hours, minutes, seconds)
-
-
-    
 
     # Comparer différence de temps de trajet entre temps estimé et temps de référence
     # Initialisation de la date de comparaison (jour de trajet + 7 jours à 10h)
@@ -82,7 +71,7 @@ def type_tarif(demande):
         # Si le trajet est seulement de nuit
         else:
             intervalle = [1, 0]
-            Type_tarif = 'TarifD'
+            tt_tarif = 'TarifD'
     # Si le départ est avant 19h
     elif date < date_lim_soir:
         # Si l'arrivée est après 19h et avant 8h le lendemain
@@ -100,7 +89,7 @@ def type_tarif(demande):
         # Si le trajet est seulement de jour
         elif date_arrive < date_lim_soir:
             intervalle = [0, 1]
-            Type_tarif = 'TarifC'
+            tt_tarif = 'TarifC'
     # Si le départ est après 19h
     elif date >= date_lim_soir:
         # Si l'arrivée est entre 8h et 19h le lendemain
@@ -120,7 +109,7 @@ def type_tarif(demande):
         # Si le trajet est seulement de nuit
         else:
             intervalle = [1, 0]
-            Type_tarif = 'TarifD'
+            tt_tarif = 'TarifD'
 
     # On concaténe le mois et le jour de façon a avoir une chaine de la forme
     # 'jour/mois'
@@ -143,13 +132,13 @@ def type_tarif(demande):
 
     if ferie == True or dimanche == 6:
         intervalle = [1, 0]
-        Type_tarif = 'TarifD'
+        tt_tarif = 'TarifD'
 
   # Initialise les tarifs à utiliser en cas de changement de tarifs en cours
   # de trajet
     double_tarif = ['TarifD', 'TarifC']
 
-    return Type_tarif, intervalle, double_tarif, temps_trajet_retourne, diff_minutes
+    return tt_tarif, intervalle, double_tarif, temps_trajet, diff_minutes
 
 
 def feries(an):
