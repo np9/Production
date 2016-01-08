@@ -2,7 +2,7 @@ import pandas as pd
 import app.devis.tarif as tt
 import app.outils.geographie as geo
 from datetime import datetime
-from app.calcul.distance import parcours as Par
+from app.calcul.distance import Parcours as Par
 
 
 def tarifs(demande):

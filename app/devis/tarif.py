@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import app.outils.geographie as geo
-from app.calcul.distance import parcours as Par
+from app.calcul.distance import Parcours as Par
 
 # On cherche à retourner le type de tarif (Jour ou Nuit/Dimanche/JoursFériés)
 
