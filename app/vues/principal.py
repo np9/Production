@@ -38,8 +38,10 @@ def index():
         donnees['aeroport'] = 'False'
         donnees['animaux'] = '0'
         donnees['categorie'] = 'particulier'
+
         # Calculs de la tarification provisoire - création du devis
         devis = calculer.tarifs(donnees)
+        print(donnees)
         print(devis)
 
         return render_template('devis.html', donnees=donnees, devis=devis, titre='Devis')

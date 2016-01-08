@@ -20,10 +20,8 @@ def type_tarif(demande):
                     heure_depart, minutes_depart)
 
     # On concatenne les adresses de départ et d'arrivée
-    depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
-        ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
-    arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
-        ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
+    depart = demande['adresse_dep']
+    arrive = demande['adresse_arr']
 
     # Recherche du tarif: Jour ou Nuit/JourFerie/Dimanche
     # On calcule la date d'arrivée estimée du trajet

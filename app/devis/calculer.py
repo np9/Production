@@ -76,10 +76,8 @@ def tarifs(demande):
         supplement += float(Aer['Prix'])
 
     # On concatenne les adresses de départ et d'arrivée
-    depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
-        ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
-    arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
-        ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
+    depart = demande['adresse_dep']
+    arrive = demande['adresse_arr']
 
     # On calcule le prix total
     # prix = coût de prise en charge + tarif par km * nombre de km + coût des
