@@ -5,11 +5,13 @@ from app.vues.admin import VueModele
 
 categorie = 'Conducteur'
 
+# Ajout penalité
+# + oui non penalite
 
 class VueConducteurContact(VueModele):
 
     ''' Informations de contact du conducteur. '''
-
+    
     can_create = True
     can_edit = True
     can_delete = True
@@ -20,8 +22,7 @@ class VueConducteurContact(VueModele):
         'prenom',
         'telephone',
         'email',
-        'adresse',
-        'categorie'
+        'adresse'
     ]
 
     column_searchable_list = [
@@ -46,9 +47,6 @@ class VueConducteurContact(VueModele):
         'inscription'
     ]
 
-    column_filters = [
-        'civilite'
-    ]
 
 admin.add_view(
     VueConducteurContact(
@@ -106,8 +104,7 @@ class VueConducteurSituation(VueModele):
 
     column_filters = [
         'statut',
-        'station',
-        'civilite'
+        'station'
     ]
 
 admin.add_view(
@@ -118,6 +115,34 @@ admin.add_view(
         category ='Conducteur',
         name='Situation',
         menu_icon_type='glyph',
-        menu_icon_value ='glyphicon-plane'
+        menu_icon_value ='glyphicon-road'
+    )
+)
+
+class VueConducteurPenalite(VueModele) :
+
+    # Rendre possible la création, la modification et la suppression
+    can_create = True
+    can_edit = True
+    can_delete = True
+   
+    #colonnes à afficher
+    colnum_list = ['civilite','nom','prenom','telephone','penalite']
+   
+    #Colonnes pour chercher
+    column_searchable_list = ['nom','prenom','telephone']
+   
+    #colonne à rentrer pour ajout d'un conducteur
+    form_columns = ['telephone','civilite','email','date_naissance','fax','prenom','nom','statut','station','station_entree','position','adresse','inscription']
+   
+admin.add_view(
+    VueConducteurPenalite(
+        modeles.Conducteur,
+        db.session,
+        endpoint='penalite',
+        category='Conducteur',
+        name='Penalite',
+        menu_icon_type='glyph',
+        menu_icon_value ='glyphicon-remove'
     )
 )

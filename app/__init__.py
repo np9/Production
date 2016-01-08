@@ -44,7 +44,8 @@ from app.vues.admin import (
 	factures,
 	adresses,
 	courses,
-	carte
+	carte,
+     aide
 )
 
 # Mettre en place la gestion de compte utilisateur

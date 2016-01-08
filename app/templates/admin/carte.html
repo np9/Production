@@ -9,18 +9,37 @@
     <!-- Leaflet CSS -->
     <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet'/>
     <!-- Map style -->
-    <style>
+    
+	<style>
     #map {
-        height: 600px;
+		width : 600px;
+        <!--height: 550px;-->
     }
+	#caseMap {
+		position : absolute;
+		right : 5%;
+	}
     </style>
+	
+
 {% endblock %}
 
-{% block body %}
 
+{% block body %}
+<!--
+<TABLE >
+<tr>
+<td>
+<div id="info" name="info"></div>
+</td>
+<td id="caseMap">
+ -->   
 <div id="map"></div>
-    
-    <script type="text/javascript">
+<!--
+</td>
+</TABLE>
+--> 
+	<script type="text/javascript">
 
         console.log({{ position }})
 
@@ -63,6 +82,9 @@
                 }
                 marqueurs = L.layerGroup(points).addTo(map);
                 map.addLayer(marqueurs);
+				
+				//div = document.getElementById('info')
+				//div.innerHTML = 'patate'
             });
         }
 
@@ -74,3 +96,6 @@
     </script>
 
 {% endblock %}
+
+
+

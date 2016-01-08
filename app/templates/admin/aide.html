@@ -1,0 +1,62 @@
+{% extends 'admin/master.html' %}
+
+{% block head_css %}
+    {{ super() }}
+{% endblock %}
+
+{% block body %}
+
+<!--Affichage du titre en gras-->
+<br><h1><b><center>Bienvenue dans l'aide</center></b></h1><br>
+
+<!--Détails de chaques vues-->
+
+<!--Vue utilisateur-->
+<h2><b>Vue utilisateur<br></b></h2>
+- Utilisateur contact<br>
+Informations essentielles liées au contact de chaque utilisateur.<br>
+- Utilisateur compte<br>
+Informations liées au compte de l'utilisateur.<br>
+Possibilité de créer, éditer et supprimer des utilisateurs.<br>
+
+<!--Vue conducteur-->
+<h2><b>Vue conducteur<br></b></h2>
+- Conducteur contact<br>
+Informations essentielles liées au contact de chaque conducteur.<br>
+- Conducteur situation<br>
+Informations liées au compte de l'utilisateur ainsi que sa position cartographiée.<br>
+Possibilité de créer, éditer et supprimer des conducteurs.<br>
+
+<!--Vue véhicule-->
+<h2><b>Vue véhicule<br></b></h2>
+Informations essentielles liées aux véhicules ainsi que le type de paiement qu'il utilise.<br>
+Informations sur la langue du conducteur ainsi que l'acceptation de mineurs et VIP.<br>
+Possibilité de créer, éditer et supprimer des véhicules.<br>
+
+<!--Vue station-->
+<h2><b>Vue station<br></b></h2>
+Informations, pour chaque station, de sa distance d'entrée et de sortie.<br>
+Possibilité de créer, éditer et supprimer des stations.<br>
+
+<!--Vue facture-->
+<h2><b>Vue facture<br></b></h2>
+Informations liées aux factures tel que le type de forfait, l'estimation, le montant, le rabais ainsi que le type de paiement effectué.<br>
+Possibilité de créer, éditer et supprimer des factures.<br>
+
+<!--Vue adresse-->
+<h2><b>Vue adresse<br></b></h2>
+Informations liées aux adresse de façon compacte et découpée ainsi que sa position cartographiée.<br>
+Possibilité de créer, éditer et supprimer des adresses.<br>
+
+<!--Vue course-->
+<h2><b>Vue course<br></b></h2>
+Informations essentielles liées à chaque course réalisée par un conducteur et pour un utilisateur.<br>
+Possibilité de créer, éditer et supprimer des courses.<br>
+
+<!--Vue carte-->
+<h2><b>Vue carte<br></b></h2>
+Indication de la position de chaque conducteurs.<br>
+
+<br><br><br><br>
+
+{% endblock %}

@@ -8,7 +8,8 @@ from app import db
 from app.vues.admin import VueModele
 
 class VueCarte(BaseView):
-
+    
+    # Données de la carte
     @expose('/')
     def index(self):
         return self.render('admin/carte.html')
@@ -26,11 +27,16 @@ class VueCarte(BaseView):
             )
             for conducteur in conducteurs
         ]
-        return jsonify({'taxis': geojson})
-
+        return jsonify({
+            'taxis': geojson,
+            #'conducteurs': conducteurs
+        })
+ 
+       
 admin.add_view(
     VueCarte(
         name='Carte',
         url='carte'
     )
 )
+

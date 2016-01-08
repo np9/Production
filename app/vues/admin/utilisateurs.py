@@ -8,13 +8,14 @@ class VueUtilisateurContact(VueModele):
 
     ''' Informations de contact de l'utilisateur. '''
 
-    can_create = False
-    can_edit = False
-    can_delete = False
-
+    can_create = True
+    can_edit = True
+    can_delete = True
+    
+    column_list = ['civilite','nom','prenom','telephone','email','adresse']    
+    
     column_exclude_list = [
         '_mdp',
-        'civilite',
         'confirmation',
         'notification_email',
         'notification_sms',
@@ -45,9 +46,9 @@ class VueUtilisateurCompte(VueModele):
 
     ''' Informations sur le compte de l'utilisateur. '''
 
-    can_create = False
-    can_edit = False
-    can_delete = False
+    can_create = True
+    can_edit = True
+    can_delete = True
 
     column_exclude_list = [
         '_mdp',
@@ -57,10 +58,6 @@ class VueUtilisateurCompte(VueModele):
         'fax'
     ]
 
-    column_include_list = [
-        'adresse'
-    ]
-
     column_searchable_list = [
         'prenom',
         'nom', 
@@ -68,7 +65,6 @@ class VueUtilisateurCompte(VueModele):
     ]
 
     column_filters = [
-        'confirmation',
         'notification_email',
         'notification_sms',
         'inscription'
@@ -83,6 +79,6 @@ admin.add_view(
         category='Utilisateur',
         name='Compte',
         menu_icon_type='glyph',
-        menu_icon_value='glyphicon-file'
+        menu_icon_value='glyphicon-user'
     )
 )
