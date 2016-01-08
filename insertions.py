@@ -50,7 +50,6 @@ def inserer_utilisateur(ligne):
         nom=ligne['nom'].lower().capitalize(),
         email=ligne['email'],
         telephone=str(ligne['telephone']),
-        categorie=ligne['categorie'],
         confirmation=True,
         notification_sms=True,
         notification_email=True,
@@ -135,7 +134,6 @@ def inserer_course(ligne):
 		priorite=ligne['priorite'],
 		debut=ligne['debut'],
 		fin=ligne['fin'],
-		retour= False,
 		commentaire=ligne['commentaire'],
 		depart=ligne['depart'],
 		arrivee=ligne['arrivee'],
@@ -190,7 +188,7 @@ positions.apply(inserer_position, axis=1)
 print('Positions insérées.')
 
 ########################################
-############# Etapes ################
+############### Etapes #################
 ########################################
 
 def inserer_etape(ligne):
@@ -206,3 +204,24 @@ etapes = pd.read_csv('app/data/etapes.csv')
 etapes.apply(inserer_etape, axis=1)
 
 print('Etapes insérées.')
+
+def inserer_proposition(ligne):
+    prop = modeles.Proposition(
+        iteration = ligne['iteration'],
+        course = ligne['course'],
+        conducteur = str(ligne ['conducteur']),
+        proposition = ligne['proposition'],
+        reponse = ligne ['reponse'],
+        statut = str(ligne ['statut']),
+        raison = str(ligne ['raison']),
+        ordre = ligne ['ordre']
+    )
+    
+    db.session.add(prop)
+    db.session.commit() 
+
+db.session.execute('TRUNCATE TABLE propositions RESTART IDENTITY CASCADE;')
+propositions = pd.read_csv('app/data/propositions.csv', encoding='utf8')
+propositions.apply(inserer_proposition, axis=1)
+
+print('Propositions insérées.')
