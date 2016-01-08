@@ -1,5 +1,5 @@
 {
-  "tests/test_calcul_tarif.py::test_calcul_tarif": true,
+  "tests/test_calcul_tarif.py": true,
   "tests/test_conducteur_dispo_ordonnee.py": true,
-  "tests/test_convert_date.py::test_convert_date": true
+  "tests/test_convert_date.py": true
 }
