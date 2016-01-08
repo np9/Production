@@ -24,7 +24,7 @@ class VueCourse(VueModele):
         'commentaire',
         'bagages',
         'animaux',
-	'animaux_grand',
+	'animaux_grands',
         'gare',
         'aeroport',
         'depart',
