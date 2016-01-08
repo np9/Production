@@ -7,7 +7,7 @@ DEBUG = True
 # Détail de la connexion à PostgreSQL
 bd_utilisateur = 'postgres'
 bd_mot_de_passe = 'houdini'
-bd_port = '5433'
+bd_port = '5432'
 bd_nom = 'taxisid'
 SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@localhost:{2}/{3}'.format(
     bd_utilisateur, bd_mot_de_passe, bd_port, bd_nom)
