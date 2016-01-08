@@ -13,30 +13,81 @@
 	  	<h2 class = "ui header">Bonjour {{ current_user.prenom }}!</h2>
 	{% endif %}
 
-	<div class = "ui centered grid">
-		<div class="left floated four wide column">
-			<table>
-			{% for key, value in donnees.items() %}
-			   <tr>
-			        <th> {{ key }} </th>
-			        <td> {{ value }} </td>
-			   </tr>
-			{% endfor %}
-			</table><br>
-			<button class="ui inverted red primary button">Décliner</button>
+		<div class="ui center raised text container pink segment">
+			<h2 class="ui center aligned icon header">
+  				<i class="tiny calculator icon"></i> Devis
+			</h2>
+			<div class="ui segments">
+				<!-- Tarifs -->
+				<div class="ui segment">
+					{{ m.segment_devis_prix("Prix de la course", devis.Prix_Total, "help circle icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prise en charge", devis.Prise_en_charge) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis("Kilomètres estimés", devis.Nombre_km) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par kilomètre", devis.Prix_par_km) }}
+					</div>
+				</div>
+				<!-- Suppléments -->
+				{% if devis.Gare == 'True' %}
+					<div class="ui segment">
+					{{ m.segment_devis("Prise en charge à la gare SNCF Matabiau", "Oui") }}
+					</div>
+				{% endif %}
+				{% if devis.Aeroport == 'True' %}
+					<div class="ui segment">
+					{{ m.segment_devis("Prise en charge à l'aéroport de Blagnac", "Oui") }}
+					</div>
+				{% endif %}
+
+				<!-- Bagages -->
+				<div class="ui orange segment">
+				{{ m.segment_devis_prix("Bagages", devis.prix_total_bagage, "suitcase icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis("Nombres de bagages", devis.Nombre_bagage) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par bagage", devis.Prix_1_bagage) }}
+					</div>
+				</div>
+				<!-- Animaux -->
+				<div class="ui orange segment">
+				{{ m.segment_devis_prix("Animaux", devis.prix_total_animal, "paw icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis("Nombres d'animaux", devis.animal) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par animal", devis.prix_animal) }}
+					</div>
+				</div>
+				<!-- Supplément -->
+				<div class="ui segment">
+				{{ m.segment_devis("Personnes supplémentaires", devis.Prix_personnes_sup, "plus icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis("Nombres de passagers supplémentaires", devis.Nombres_personnes_sup) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par passager supplémentaire", devis.Prix_par_personnes_sup) }}
+					</div>
+				</div>
+
+
+			</div>
+
+
+			<br>
+			<button class="ui inverted red primary button" onClick="refuserDevis();">Décliner</button>
 			<button class="ui inverted blue primary button" onClick="accepterDevis();">Accepter</button>
+
+			</br></br>
+			<button class="fluid ui inverted orange button active"><i class="download icon"></i> Télécharger la facture</button>
 		</div>
-		<div class="right floated eight wide column">
-			<table>
-			{% for key, value in devis.items() %}
-			   <tr>
-			        <th> {{ key }} </th>
-			        <td> {{ value }} </td>
-			   </tr>
-			{% endfor %}
-			</table><br>
-		</div>
-	</div>
+
+
+
 
 	<script type="text/javascript">
 
@@ -58,6 +109,11 @@
             }
 		});
 	}
+
+	function refuserDevis(){
+		window.location.href='/';
+	}
+
 
 	</script>
 

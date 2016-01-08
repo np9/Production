@@ -14,18 +14,16 @@ Il faut d'abord s'assurer que les valeurs dans ``config.py`` soient cohérentes 
 - ligne 9 : le mot de passe de PostgreSQL doit être le même que ceux de l'ordinateur d'où l'application est lancée
 - ligne 10 : le port doit être le même ce celui d'où l'application est lancée
 
-Si la base de données a déjà été créée elle peut être supprimée en lancant le script ``suppression.py``.
+Afin de pouvoir supprimer l'ancienne base de données, créer la nouvelle, la remplir et exécuter l'application, il suffit de lancer un unique fichier :
 
-```sh
-# Installer les librairies
-pip install -r requirements.txt
-# Créer la base de données
-python creation.py
-# Insérer les données de départ
-python insertions.py
-# Lancer le site web
-python run.py
-```
+- Pour Linux :
+Taper dans la console : ./testBD.sh
+
+- Pour Windows :
+Taper dans la console : .\testWindows.bat
+
+En ce qui concerne Linux, le fichier testBD.sh réalise tous les tests des groupes. Si la commande de test ne s'exécute pas correctement, il suffit de taper dans la console : export PYTHONPATH=${PYTHONPATH}:/[chemin jusqu'à production]/
+
 
 Ensuite il suffit de consulter l'URL ``localhost:5000`` dans le navigateur.
 
