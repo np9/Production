@@ -15,6 +15,7 @@ class Utilisateur(db.Model, UserMixin):
     confirmation = db.Column(db.Boolean)
     prenom = db.Column(db.String)
     nom = db.Column(db.String)
+    civilite = db.Column(db.String)
     notification_email = db.Column(db.Boolean)
     notification_sms = db.Column(db.Boolean)
     inscription = db.Column(db.DateTime)
