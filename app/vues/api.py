@@ -19,8 +19,8 @@ def nettoyer(colonne):
     return colonne
 
 
-def to_json(numero):
-    requete = db.session.execute("SELECT * FROM conducteurs WHERE telephone = {}".format(numero))
+def to_json(table):
+    requete = db.session.execute("SELECT * FROM {}".format(table))
     attributs = requete.keys()
     lignes = requete.fetchall()
     table = pd.DataFrame(lignes, columns=attributs)
@@ -29,8 +29,17 @@ def to_json(numero):
     return json
 
 
+@apibp.route('/<table>', methods=['GET'])
+def api_table(table):
+    try:
+        json = to_json(table)
+        return jsonify({'data': json, 'status': 'success'})
+    except:
+        return jsonify({'status': 'failure'})
+
+
 @apibp.route('/conducteurs/<numero>', methods=['GET'])
-def api_table(numero):
+def conducteur_numero(numero):
     try:
         json = to_json(numero)
         return jsonify({'data': json, 'status': 'success'})

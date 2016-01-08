@@ -57,6 +57,10 @@ class VueUtilisateurCompte(VueModele):
         'fax'
     ]
 
+    column_include_list = [
+        'adresse'
+    ]
+
     column_searchable_list = [
         'prenom',
         'nom', 
