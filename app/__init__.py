@@ -26,14 +26,20 @@ from app.vues import (
 	principal,
 	utilisateur,
 	erreur,
-	api,
 	conducteur
 )
 
-# Certaines des vues classiques utilisent des patrons (blueprints)
 app.register_blueprint(utilisateur.utilisateurbp)
-app.register_blueprint(api.apibp)
 app.register_blueprint(conducteur.conducteurbp)
+
+# Importer les vues de l'API
+from app.vues.api import (
+	base,
+	conducteur
+)
+
+app.register_blueprint(base.apibp)
+app.register_blueprint(conducteur.apiconducteurbp)
 
 # Importer les vues administrateurs
 from app.vues.admin import (
@@ -45,7 +51,7 @@ from app.vues.admin import (
 	adresses,
 	courses,
 	carte,
-     aide
+    aide
 )
 
 # Mettre en place la gestion de compte utilisateur

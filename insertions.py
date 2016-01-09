@@ -12,6 +12,7 @@ modeles.Vehicule.query.delete()
 modeles.Etape.query.delete()
 modeles.Position.query.delete()
 modeles.Conducteur.query.delete()
+modeles.Proposition.query.delete()
 modeles.Station.query.delete()
 modeles.Utilisateur.query.delete()
 modeles.Adresse.query.delete()
@@ -205,6 +206,10 @@ etapes.apply(inserer_etape, axis=1)
 
 print('Etapes insérées.')
 
+####################################
+########### Propositions ###########
+####################################
+
 def inserer_proposition(ligne):
     prop = modeles.Proposition(
         iteration = ligne['iteration'],
@@ -220,7 +225,6 @@ def inserer_proposition(ligne):
     db.session.add(prop)
     db.session.commit() 
 
-db.session.execute('TRUNCATE TABLE propositions RESTART IDENTITY CASCADE;')
 propositions = pd.read_csv('app/data/propositions.csv', encoding='utf8')
 propositions.apply(inserer_proposition, axis=1)
 

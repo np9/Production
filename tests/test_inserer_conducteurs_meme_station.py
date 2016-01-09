@@ -6,7 +6,7 @@ Objectif : Tester la fonction qui permet d'inserer dans la
 base de données tous les chauffeurs qui ne sont pas inactifs
 (meme_station = True or meme_station = False)
 """
-
+# C'est pas le bon chemin d'import!
 from app.calcul import insertion_propositions
 
 ##Tests

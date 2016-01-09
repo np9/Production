@@ -16,127 +16,40 @@
 
 {% block content %}
 
-    <h1>Bonjour {{ nom }}</h1>
-    <h1>{{ numero }}</h1>
-    <h1>{{ lat }}</h1>
-    <h1>{{ lon }}</h1>
-    <h1>{{ libre }}</h1>
-    <head>
-        <p> Voulez vous changer votre statut ? </p>
-        <script type="text/javascript">
+    <h1>Bonjour {{ conducteur.prenom }} {{ conducteur.nom }}</h1>
+    <h1 id="statut">{{ conducteur.statut }}</h1>
 
-        function libre () {
-            var info = {
-                    "lon": lon,
-                    "lat": lat,
-                    "numero" : "{{ numero }}"
-                }
-            var answer = confirm("Etes-vous libre?")
-            if (answer){
-                $.ajax({
-                type: "POST",
-                async: true,
-                url: "/libre",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(info),               
-                success: function(data) {
-                         statut = data.statut;
-                         console.log(statut);
-                    }
-                });	
-            alert("Votre statut a été mis à jour.")	
-            }
-        }
+    <p> Voulez vous changer votre statut ? </p>
 
-        function occupe () {
-            var info = {
-                    "lon": lon,
-                    "lat": lat,
-                    "numero" : "{{ numero }}"
-                }
-            var answer = confirm("Etes-vous occupé?")
-            if (answer){
-                $.ajax({
-                type: "POST",
-                async: true,
-                url: "/occupe",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(info),               
-                success: function(data) {
-                         statut = data.statut;
-                         console.log(statut);
-                    }
-                });	
-            alert("Votre statut a été mis à jour.")	
-            }
-        }
-
-        function pause () {
-            var info = {
-                    "lon": lon,
-                    "lat": lat,
-                    "numero" : "{{ numero }}"
-                }
-            var answer = confirm("Etes-vous en pause?")
-            if (answer){
-                $.ajax({
-                type: "POST",
-                async: true,
-                url: "/pause",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(info),               
-                success: function(data) {
-                         statut = data.statut;
-                         console.log(statut);
-                    }
-                });	
-            alert("Votre statut a été mis à jour.")	
-            }
-        }
-
-        function inactif () {
-            var info = {
-                    "lon": lon,
-                    "lat": lat,
-                    "numero" : "{{ numero }}"
-                }
-            var answer = confirm("Etes-vous incatif?")
-            if (answer){
-                $.ajax({
-                type: "POST",
-                async: true,
-                url: "/inactif",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(info),               
-                success: function(data) {
-                         statut = data.statut;
-                         console.log(statut);
-                    }
-                });	
-            alert("Votre statut a été mis à jour.")	
-            }
-        }
-        </script>
-    </head>
-
-    <body>
-        <form>
-            <input type="button" onclick="libre();location.reload()" value="Libre">
-            <input type="button" onclick="occupe();location.reload()" value="Occupé">
-            <input type="button" onclick="pause();location.reload()" value="Pause">
-            <input type="button" onclick="inactif();location.reload()" value="Inactif">
-        </form>
-    </body>
-
-    <h1 class="ui header">{{ titre }}</h1>
-
-    {% if current_user.is_authenticated %}
-    <h2 class="ui header">Bonjour {{ current_user.prenom }}!</h2>
-    {% endif %}
-
+    <form>
+        <input type="button" onclick="conducteur_maj_statut('Libre');" value="Libre">
+        <input type="button" onclick="conducteur_maj_statut('Occupé');" value="Occupé">
+        <input type="button" onclick="conducteur_maj_statut('En pause');" value="Pause">
+        <input type="button" onclick="conducteur_maj_statut('Inactif');" value="Inactif">
+    </form>
+        
     <div id="map"></div>
-   
+
+    
     <script type="text/javascript">
+
+        // Mettre à jour le statut
+        function conducteur_maj_statut(nouveau_statut) {
+            var answer = confirm("Etes vous sur de vouloir changer votre statut?");
+            if (answer) {
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/api/conducteur/maj_statut/telephone=" + "{{ conducteur.telephone }}" + "&statut=" + nouveau_statut,
+                    success: function(data) {
+                        var div = document.getElementById('statut');
+                        div.innerHTML = nouveau_statut;
+                    }
+                });
+            }
+        }
+
+        // Affichage de la carte
         L.mapbox.accessToken = 'pk.eyJ1IjoibGVtYXgiLCJhIjoidnNDV1kzNCJ9.iH26jLhEuimYd6vLOO6v1g';
         var map = L.mapbox.map('map', 'mapbox.outdoors', {
             maxZoom: 20,
@@ -155,8 +68,31 @@
             null,
             {position: 'topleft'}
         ).addTo(map);
-        // Centrer la carte sur la position de l'utilisateur
-        position = null;
+
+        // Position initiale du conducteur
+        map.setView([{{ conducteur.lat }}, {{ conducteur.lon }}], 13);
+        taxi = L.marker([{{ conducteur.lat }}, {{ conducteur.lon }}]);
+        taxi.addTo(map);
+
+        // Rafraîchir la position du conducteur
+        function conducteur_rafraichir_position(lat, lon) {
+            // Rafraîchir la position sur la carte
+            map.removeLayer(taxi);
+            map.setView([lat, lon], 13);
+            taxi = L.marker([lat, lon]);
+            taxi.addTo(map);
+            // Envoyer la nouvelle position à la base de données
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: "/api/conducteur/maj_position/telephone=" + {{ conducteur.telephone }} + "&lat=" + lat + "&lon=" + lon,
+                success: function(data) {
+                    statut = data.statut;
+                }
+            });
+        };
+
+        // Geolocalisation via le navigateur
         var geoOptions = {
             enableHighAccuracy: true,
             timeout: 5000
@@ -164,45 +100,17 @@
         function geoSuccess(pos) {
             var lat = pos.coords.latitude;
             var lon = pos.coords.longitude;
-            position = [lat, lon];
-
-            var info = {
-                    "lon": lon,
-                    "lat": lat,
-                    "numero" : "{{numero}}"
-                }
-    
-		$.ajax({
-        		type: "POST",
-        		async: true,
-        		contentType: "application/json; charset=utf-8",
-        		url: "/majlat",
-        		data: JSON.stringify(info),
-                 success: function(data) {
-                     statut = data.statut;
-                     console.log(statut);
-                 }
-            });
-       
-            marker = L.marker([lat, lon]);
-            marker.addTo(map);    
-            map.setView(position, 13);
+            conducteur_rafraichir_position(lat, lon)
         };
         function geoError(err) {
             navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
         };
         navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
 
-            lat = {{ lon }};
-            lon = {{ lat }};
-            map.setView({{[lon, lat]}}, 13  );
-            marker = L.marker([lat, lon]);
-            marker.addTo(map);
-
-        
+        // Mettre à jour la position périodiquement
         window.setInterval(function(){
-        navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
-        }, 1000);
+            navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+        }, 3000);
             
     </script>
 

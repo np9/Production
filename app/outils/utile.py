@@ -91,16 +91,8 @@ class MWT(object):
             return v[0]
         func.func_name = f.__name__
         return func
-
-
-def convert_date(date, date_format = "%Y-%m-%d %H:%M:%S"):
-    '''Fonction pour convertir la date en timestamp utilisé pour la fonction
-    distance'''
-
-    timestamp = time.mktime(datetime.strptime(
-                            date, date_format).timetuple())
-    return timestamp
     
+
 def formatage_url(adresse):
     '''Fonction permettant de formater la chaîne de caractère.
     On remplace plusieurs espaces par un seul, puis les espaces par des +'''

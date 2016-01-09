@@ -5,7 +5,7 @@ Auteur : Groupe 6
 Objectif : Tester la fonction qui permet de recuperer les informations des utilisateurs
 """
 
-
+# C'est pas le bon chemin d'import!
 from app.attribution import course
 ##Tests
 

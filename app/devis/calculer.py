@@ -1,146 +1,113 @@
-import pandas as pd
-import app.devis.tarif as tt
-import app.outils.geographie as geo
-from datetime import datetime
-from app.calcul.distance import Parcours as Par
+from datetime import datetime, timedelta
+from app.outils import calendrier
+from app.outils import utile
+from app.outils.distance import Parcours
 
 
-def tarifs(demande):
-
-    supp = pd.read_csv('app/devis/data/supplements.csv', encoding='utf8')
-    heures_tarif = pd.read_csv('app/devis/data/tarifs.csv', encoding='utf8')
-
-    # On initialise les prix de départ et les suppléments
-    prise_en_charge = supp[supp['Supplements'] == 'Prise_en_charge']
-
-    # On récupère la date et l'heure de départ
+def date_depart(demande):
+    '''
+    Extraire la date de départ d'une demande de course
+    et la rendre en format datetime.
+    '''
     date = demande['date_debut'].split('-')
     annee = int(date[0])
     mois = int(date[1])
-    jour = int(date[2])
-    heure = int(demande['heures'])
-    minutes = int(demande['minutes'])
+    jour = int(date[2][:2])
+    heure = demande['heures']
+    minutes = demande['minutes']
+    # Retourner la date en format datetime
+    return datetime(annee, mois, jour, heure, minutes)
 
-    # Mise en forme de la date
-    date = datetime(
-        annee,
-        mois,
-        jour,
-        heure,
-        minutes
-    )
 
- # On prend les lignes selon les types de tarifs et on en tire le prix associé
-    if tt.type_tarif(demande)[1] == [0, 1] or tt.type_tarif(demande)[1] == [1, 0]:
-        # Tout le trajet en jour ou en nuit
-        ligne = heures_tarif[heures_tarif['Type_Tarif'] == tt.type_tarif(demande)[
-            0]]
-        prix = float(ligne['tarif_par_km'])
-    else:
-        # Trajet en partie en jour et en nuit
-        # Récupération du tarif de nuit
-        ligne = heures_tarif[heures_tarif['Type_Tarif'] == tt.type_tarif(demande)[
-            2][0]]
-        # Récupération du tarif de jour
-        ligne2 = heures_tarif[heures_tarif['Type_Tarif'] == tt.type_tarif(demande)[
-            2][1]]
-        # Calcul du prix/km par pourcentage du temps passé en tarif jour et
-        # nuit
-        prix = round(float(ligne['tarif_par_km']) * tt.type_tarif(demande)[1][0] + float(ligne2[
-            'tarif_par_km']) * tt.type_tarif(demande)[1][1],2)  # avec pourcentage de jour et de nuit
-
-    # Calcul des suppléments
-    # On récupère les lignes selon les suppléments et leurs prix
-    an = supp[supp['Supplements'] == 'Animal']
-    bag = supp[supp['Supplements'] == 'Bagage']
-    PerS = supp[supp['Supplements'] == 'PersonneSup']
-    Gar = supp[supp['Supplements'] == 'Gare']
-    Aer = supp[supp['Supplements'] == 'Aeroport']
-    TaV = supp[supp['Supplements'] == 'Trajet_a_vide']
-    PtR = supp[supp['Supplements'] == 'Prix_trajet_ralenti']
-
-    # Calcul du montant total des suppléments
-    # Suppléments pour bagages et/ou animaux
-    supplement = float(demande['bagage']) * \
-        float(bag['Prix']) + float(demande['animaux']) * 1
-
-    # Suppléments pour un passager supplémentaire
-    if int(demande['nb_passagers']) > 4:
-        supplement += (float(demande['nb_passagers']
-                             ) - 4) * float(PerS['Prix'])
-
-    # Supplément trajet à vide
-    supplement += float(TaV['Prix'])
-
-    # Suppléments pour la prise en charge à la gare
-    if demande['gare'] == 'True':
-        supplement += float(Gar['Prix'])
-
-    # Suppléments pour la prise en charge à l'aéroport
-    if demande['aeroport'] == 'True':
-        supplement += float(Aer['Prix'])
-
-    # On concatenne les adresses de départ et d'arrivée
-    depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
-        ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
-    arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
-        ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
-
-    # On calcule le prix total
-    # On calcule le tarif supplémentaire appliqué à un trajet ralenti
-    Tarif_ralenti = float(tt.type_tarif(demande)[4]) * float(PtR['Prix'])/3600
-
-    # prix = coût de prise en charge + tarif par km * nombre de km + coût des suppléments 
-    prixTotal = float(prise_en_charge['Prix']) + prix * round(float(Par(geo.geocoder(depart),geo.geocoder(arrive),str(date)).distance),2) + supplement + Tarif_ralenti
-          
-
-    # On vérifie que le prix total soit supérieur au prix minimal
-    prixMinimal = float(supp[supp['Supplements'] == 'Tarif_minimum']['Prix'])
-
-    if prixTotal < prixMinimal:
-        prixTotal = prixMinimal
-
-# On retourne le prix total via un dictionnaire de données
-# Gestion des conditions
-
-    # Si le client est pris à l'aéroport
-    if demande['aeroport'] == 'True':
-        prixA = float(Aer['Prix'])
-    else:
-        prixA = 0
-
-    # Si le nombre de personne est supérieur à 4
-    if int(demande['nb_passagers']) > 4:
-        nbPersonnes = float(demande['nb_passagers']) - 4
-    else:
-        nbPersonnes = 0
-
-     # Si le client est pris à la gare
-    if demande['gare'] == 'True':
-        prixG = float(Gar['Prix'])
-    else:
-        prixG = 0
-
-    dico = {
-        'Prix_Total': str(round(prixTotal, 2)),
-        'Prise_en_charge': str(float(prise_en_charge['Prix'])),
-        'Prix_par_km': prix,
-        'Nombre_km': Par(geo.geocoder(depart), geo.geocoder(arrive), str(date)).distance,
-        'Nombre_bagage': str(demande['bagage']),
-        'Prix_1_bagage': str(float(bag['Prix'])),
-        'prix_total_bagage': str(float(demande['bagage']) * float(bag['Prix'])),
-        'animal': str(demande['animaux']),
-        'prix_animal': str(float(an['Prix'])),
-        'prix_total_animal': str(float(demande['animaux']) * float(an['Prix'])),
-        'Gare': str(demande['gare']),
-        'Prix_Gare': str(prixG),
-        'Nombres_personnes_sup': nbPersonnes,
-        'Prix_par_personnes_sup': str(float(PerS['Prix'])),
-        'Prix_personnes_sup': str((nbPersonnes) * float(PerS['Prix'])),
-        'Aeroport': str(demande['aeroport']),
-        'Prix_Aeroport': str(prixA),
-        'Temps_course': str(tt.type_tarif(demande)[3])
+def duree_trajet(depart, arrivee, debut):
+    ''' Calculer la durée d'un trajet. '''
+    # Initialiser un trajet
+    parcours = Parcours(depart, arrivee, debut)
+    # Calculer la durée du trajet
+    parcours.calculer()
+    # Obtenir l'estimation de la fin du trajet en datetime
+    duree = timedelta(minutes=parcours.duree) / 60
+    distance = parcours.distance / 1000
+    return {
+        'duree': duree,
+        'distance': distance
     }
 
-    # On retourne le prix total
-    return dico
+
+def seuil(date, heure):
+    ''' Retourne un seuil en format datetime. '''
+    seuil = datetime(
+        year=date.year,
+        month=date.month,
+        day=date.day,
+        hour=heure
+    )
+    return seuil
+
+
+def simuler(depart, arrivee, debut):
+    '''
+    Trouver la duree d'une course
+    et le temps passé pendant le jour ou la nuit
+    d'une course.
+    '''
+
+    # Calculer la durée du trajet
+    course = duree_trajet(depart, arrivee, debut)
+    duree = course['duree']
+    distance = course['distance']
+
+    # Choisir une date de départ de référence pour établir une fourchette
+    reference_debut = datetime(
+        year=debut.year,
+        month=debut.month,
+        day=debut.day,
+        hour=10
+    ) + timedelta(days=7)
+    
+    # Calculer la durée du trajet de référence
+    reference = duree_trajet(depart, arrivee, debut)
+    reference_duree = reference['duree']
+    reference_distance = reference['distance']
+
+    fin = debut + duree
+    # A utiliser...
+    ecart = abs(duree - reference_duree).seconds
+
+    # Obtenir les seuils de début et de fin
+    seuil_jour_debut = seuil(debut, heure=8).timestamp()
+    seuil_jour_fin = seuil(fin, heure=8).timestamp()
+    seuil_nuit_debut = seuil(debut, heure=19).timestamp()
+    seuil_nuit_fin = seuil(fin, heure=19).timestamp()
+
+    # Convertir les datetime en timestamp pour les comparer aux seuils
+    debut = debut.timestamp()
+    fin = fin.timestamp()
+
+    # On pourra obtenir le temps passé la nuit à partir de celui passé le jour
+    duree_jour = 0
+
+    # La course commence pendant la journée du jour de départ
+    if seuil_jour_debut < debut < seuil_nuit_debut:
+        # La course finit pendant la journée du jour de départ
+        if fin < seuil_nuit_debut:
+            duree_jour += fin - debut
+        # La course finit pendant la nuit du jour de départ
+        else:
+            duree_jour += seuil_jour_debut - debut
+    # La course finit durant la journée du lendemain du jour de départ
+    if seuil_jour_debut < seuil_jour_fin < fin:
+        duree_jour += fin - seuil_jour_fin
+
+    # Calculer les ratios jour/nuit
+    ratio_jour = duree_jour / duree.seconds
+    ratio_nuit = 1 - ratio_jour
+
+    return {
+        'duree': duree,
+        'distance': distance,
+        'ratios': {
+            'jour': ratio_jour,
+            'nuit': ratio_nuit
+        }
+    }

@@ -1,177 +1,112 @@
 from datetime import datetime, timedelta
-import app.outils.geographie as geo
-from app.calcul.distance import Parcours as Par
+from app.outils import geographie as geo
+from app.outils import utile
+from app.outils import calendrier
+from app.devis import calculer
 
-# On cherche à retourner le type de tarif (Jour ou Nuit/Dimanche/JoursFériés)
 
+def estimation(demande):
+    ''' Calculer le devis d'une demande. '''
 
-def type_tarif(demande):
-    tt_tarif='NULL'
-    # On récupère la date et l'heure de départ
-    date = demande['date_debut'].split('-')
-    annee_depart = int(date[0])
-    mois_depart = int(date[1])
-    jour_depart = int(date[2])
-    heure_depart = int(demande['heures'])
-    minutes_depart = int(demande['minutes'])
+    # On récupère les tarifs applicables
+    tarifs = utile.lire_json('app/devis/data/tarifs.json')
+    supplements = utile.lire_json('app/devis/data/supplements.json')
 
-    # Mise en forme de la date
-    date = datetime(annee_depart, mois_depart, jour_depart,
-                    heure_depart, minutes_depart)
+    # Prise en charge de départ
+    prise_en_charge = supplements['prise_en_charge']
 
-    # On concatenne les adresses de départ et d'arrivée
-    depart = demande['numero_dep'] + ' ' + demande['adresse_dep'] + \
-        ' ' + demande['cp_dep'] + ' ' + demande['ville_dep']
-    arrive = demande['numero_arr'] + ' ' + demande['adresse_arr'] + \
-        ' ' + demande['cp_arr'] + ' ' + demande['ville_arr']
+    # Extraction des information de départ
+    depart = geo.geocoder(demande['adresse_dep'])
+    arrivee = geo.geocoder(demande['adresse_arr'])
+    debut = calculer.date_depart(demande)
 
-    # Recherche du tarif: Jour ou Nuit/JourFerie/Dimanche
-    # On calcule la date d'arrivée estimée du trajet
-    temps_trajet = timedelta(minutes=Par(geo.geocoder(
-        depart), geo.geocoder(arrive), str(date)).temps)
-    date_arrive = date + temps_trajet
+    # Simulation de la course
+    simulation = calculer.simuler(depart, arrivee, debut)
+    duree = simulation['duree']
+    distance = simulation['distance']
+    jour = simulation['ratios']['jour']
+    nuit = simulation['ratios']['nuit']
 
-    # Comparer différence de temps de trajet entre temps estimé et temps de référence
-    # Initialisation de la date de comparaison (jour de trajet + 7 jours à 10h)
-    heure_comparaison = datetime.strptime(str(annee_depart) + '-' + str(mois_depart) + '-' + str(jour_depart) + ' 10:00:00', '%Y-%m-%d %H:%M:%S')
-    date_comparaison = heure_comparaison + timedelta(days=7)
-    
-    # Calcul du temps de trajet de référence
-    temps_trajet_reference = timedelta(minutes=Par(geo.geocoder(depart),geo.geocoder(arrive),str(date_comparaison)).temps)
-    
-    # Calcul en minute entre trajet estimé et trajet de référence
-    diff_temps = abs(temps_trajet - temps_trajet_reference)
-    diff_temps = diff_temps.seconds
-    
-    if diff_temps > 0:
-        diff_minutes = diff_temps
+    # Savoir si c'est un jour ferié ou un dimanche
+    date = '{0}/{1}'.format(debut.day, debut.month)
+    jours_feries = calendrier.feries(debut.year)
+    ferie = date in jours_feries
+    dimanche = debut.weekday() == 6
+
+    # Décider du tarif à appliquer
+    if ferie or dimanche:
+        prix_par_km = tarifs['D']
     else:
-        diff_minutes = 0
+        prix_par_km = jour * tarifs['C'] + nuit * tarifs['D']
 
-    # On définit les limites de passages aux horaires jour et nuit
-    date_lim_jour = datetime.strptime(str(annee_depart) + '-' + str(
-        mois_depart) + '-' + str(jour_depart) + ' 08:00:00', '%Y-%m-%d %H:%M:%S')
-    date_lim_soir = datetime.strptime(str(annee_depart) + '-' + str(
-        mois_depart) + '-' + str(jour_depart) + ' 19:00:00', '%Y-%m-%d %H:%M:%S')
+    # Calculer le prix de la course
+    montant = distance * prix_par_km
 
-    # On calcule le pourcentage de temps passé avec chaque tarif (nuit/jour) lorsqu'il y a un changement de tarif en cours de trajet
-    # Si le départ est avant 8h
-    if date < date_lim_jour:
-        # Si l'arrivée est entre 8h et 19h
-        if date_arrive >= date_lim_jour and date_arrive < date_lim_soir:
-            temps_nuit = (date_lim_jour - date) / temps_trajet
-            temps_jour = (date_arrive - date_lim_jour) / temps_trajet
-            intervalle = [round(temps_nuit, 2), round(temps_jour, 2)]
-        # Si l'arrivée est après 19h
-        elif date_arrive >= date_lim_soir:
-            temps_nuit = ((date_lim_jour - date) +
-                          (date_arrive - date_lim_soir)) / temps_trajet
-            temps_jour = (date_lim_soir - date_lim_jour) / temps_trajet
-            intervalle = [round(temps_nuit, 2), round(temps_jour, 2)]
-        # Si le trajet est seulement de nuit
-        else:
-            intervalle = [1, 0]
-            tt_tarif = 'TarifD'
-    # Si le départ est avant 19h
-    elif date < date_lim_soir:
-        # Si l'arrivée est après 19h et avant 8h le lendemain
-        if date_arrive >= date_lim_soir and date_arrive < date_lim_jour + timedelta(days=1):
-            temps_jour = (date_lim_soir - date) / temps_trajet
-            temps_nuit = (date_arrive - date_lim_soir) / temps_trajet
-            intervalle = [round(temps_nuit, 2), round(temps_jour, 2)]
-        # Si l'arrivée est après 8h le lendemain
-        elif date_arrive >= date_lim_jour + timedelta(days=1):
-            temps_nuit = ((date_lim_jour + timedelta(days=1)) -
-                          date_lim_soir) / temps_trajet
-            temps_jour = ((date_lim_soir - date) + (date_arrive -
-                                                    date_lim_jour + timedelta(days=1))) / temps_trajet
-            intervalle = [round(temps_nuit, 2), round(temps_jour, 2)]
-        # Si le trajet est seulement de jour
-        elif date_arrive < date_lim_soir:
-            intervalle = [0, 1]
-            tt_tarif = 'TarifC'
-    # Si le départ est après 19h
-    elif date >= date_lim_soir:
-        # Si l'arrivée est entre 8h et 19h le lendemain
-        if date_arrive >= date_lim_jour + timedelta(days=1) and date_arrive < date_lim_soir + timedelta(days=1):
-            temps_nuit = ((date_lim_jour + timedelta(days=1)) -
-                          date) / temps_trajet
-            temps_jour = (date_arrive - date_lim_jour +
-                          timedelta(day=1)) / temps_trajet
-            intervalle = [round(temps_nuit, 2), round(temps_jour, 2)]
-        # Si l'arrivée est après 19h le lendemain
-        elif date_arrive >= date_lim_soir + timedelta(days=1):
-            temps_nuit = (date + (date_lim_jour + timedelta(days=1)) +
-                          (date_arrive - (date_lim_soir + timedelta(days=1)))) / temps_trajet
-            temps_jour = ((date_lim_soir + timedelta(days=1)) -
-                          (date_lim_jour + timedelta(days=1))) / temps_trajet
-            intervalle = [round(temps_nuit, 2), round(temps_jour, 2)]
-        # Si le trajet est seulement de nuit
-        else:
-            intervalle = [1, 0]
-            tt_tarif = 'TarifD'
-
-    # On concaténe le mois et le jour de façon a avoir une chaine de la forme
-    # 'jour/mois'
-    dateC = str(date.day) + '/' + str(date.month)
-
-    # On vérifie si la date en entrée est un jour ferie
-    ferie = dateC in [
-        '1/1',
-        '1/5',
-        '8/5',
-        '14/7',
-        '15/8',
-        '1/11',
-        '11/11',
-        '25/12'
-    ] + feries(date.year)
-
-    # On vérifie si le jour est un dimanche
-    dimanche = date.weekday()
-
-    if ferie == True or dimanche == 6:
-        intervalle = [1, 0]
-        tt_tarif = 'TarifD'
-
-  # Initialise les tarifs à utiliser en cas de changement de tarifs en cours
-  # de trajet
-    double_tarif = ['TarifD', 'TarifC']
-
-    return tt_tarif, intervalle, double_tarif, temps_trajet, diff_minutes
+    # Calcul des suppléments
+    supplement = 0
+    # Bagages
+    supplement += int(demande['bagages']) * supplements['bagage']
+    # Animaux
+    supplement += int(demande['animaux']) * supplements['animal']
+    # Passagers supplémentaires
+    supplement += max(0, demande['nb_passagers'] - 4) * supplements['personne_sup']
+    # Trajet à vide (ça ne m'a pas l'air bon, à discuter)
+    #supplement += supplements['trajet_a_vide']
+    # Prise en charge à la gare
+    if demande['gare'] is True:
+        supplement += supplements['gare']
+    # Prise en charge à l'aéroport
+    if demande['aeroport'] is True:
+        supplement += supplements['aeroport']
+    # Tarif supplémentaire appliqué à un trajet ralenti (pas sur de ce que vous essayez de faire)
+    #estimation = float(tarif.type_tarif(demande)[4]) * float(PtR['Prix'])/3600
 
 
-def feries(an):
-    # on calcule les dates des jours fériés variables selon les années (lundi de paques, lundi de pentecote et jeudi de l'ascension)
-    # Calcule la date de Pâques d'une année donnée an (=nombre entier)
-    a = an // 100
-    b = an % 100
-    c = (3 * (a + 25)) // 4
-    d = (3 * (a + 25)) % 4
-    e = (8 * (a + 11)) // 25
-    f = (5 * a + b) % 19
-    g = (19 * f + c - e) % 30
-    h = (f + 11 * g) // 319
-    j = (60 * (5 - d) + b) // 4
-    k = (60 * (5 - d) + b) % 4
-    m = (2 * j - k - g + h) % 7
+    # Calcul du total
+    total = montant + supplement
+    # Prise en compte du tarif minimum
+    total = max(total, supplements['tarif_minimum'])
 
-    # lundi de paques
-    n2 = (g - h + m + 115) // 31
-    p2 = (g - h + m + 115) % 31
-    jourLundiPaques = p2 + 1
-    moisLundiPaques = n2
-
-    # lundi de pentecote
-    n3 = (g - h + m + 165) // 31
-    p3 = (g - h + m + 165) % 31
-    jourLundiPentecote = p3 + 1
-    moisLundiPentecote = n3
-
-    # jeudi de l'ascension
-    n4 = (g - h + m + 154) // 31
-    p4 = (g - h + m + 154) % 31
-    jourJeudiAscension = p4 + 1
-    moisJeudiAscension = n4
-
-    return [str(jourLundiPaques) + '/' + str(moisLundiPaques), str(jourLundiPentecote) + '/' + str(moisLundiPentecote), str(jourJeudiAscension) + '/' + str(moisJeudiAscension)]
+    # On retourne l'estimation à travers un dictionnaire de données
+    # Je pense qu'il y'a des choses qui ont été oubliées, par exemple
+    # le passage à vide et la tarif pour un trajet ralenti, faites
+    # attention
+    estimation = {
+        'prix': {
+            'montant': round(montant, 2),
+            'supplement': round(supplement, 2),
+            'total': round(total, 2)
+        },
+        'details': {
+            'parcours': {
+                'duree': duree,
+                'distance': distance,
+                'prix_par_km': prix_par_km
+            },
+            'bagages': {
+                'nb': demande['bagages'],
+                'prix': supplements['bagage']
+            },
+            'animaux': {
+                'nb': demande['animaux'],
+                'prix': supplements['animal']
+            },
+            'personnes': {
+                'nb': demande['nb_passagers'],
+                'supplementaires': {
+                    'nb': min(0, demande['nb_passagers'] - 4),
+                    'prix': supplements['personne_sup']
+                }
+            },
+            'gare': {
+                'prise_en_charge': demande['gare'],
+                'prix': 0 if not demande['gare'] else supplements['gare']
+            },
+            'aeroport': {
+                'prise_en_charge': demande['aeroport'],
+                'prix': 0 if not demande['aeroport'] else supplements['aeroport']
+            },
+            'prise_en_charge': supplements['prise_en_charge']
+        }
+    }
+    return estimation

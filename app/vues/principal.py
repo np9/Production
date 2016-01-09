@@ -1,15 +1,12 @@
 from flask import render_template, jsonify, flash, redirect, url_for, request
 from flask.ext.login import current_user
+import json
 from app import app, db, modeles
-import random
 from app.outils import utile
 from app.formulaires import reservation as rs
 from app.outils import geographie
-import json
-from app.devis import calculer
+from app.devis import tarif
 
-
-# Redirection des pages web
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -32,15 +29,16 @@ def index():
             donnees['mail'] = current_user.email
 
         # Données de test
-        donnees['A-R'] = 'False'
-        donnees['bagage'] = '0'
-        donnees['gare'] = 'False'
-        donnees['aeroport'] = 'False'
+        donnees['A-R'] = False
+        donnees['bagages'] = '0'
+        donnees['gare'] = False
+        donnees['aeroport'] = False
         donnees['animaux'] = '0'
         donnees['categorie'] = 'particulier'
 
         # Calculs de la tarification provisoire - création du devis
-        devis = calculer.tarifs(donnees)
+        devis = tarif.estimation(donnees)
+
         print(donnees)
         print(devis)
 
@@ -139,11 +137,23 @@ def carte():
     return render_template('carte.html', titre='Carte')
 
 
-@app.route('/rafraichir_carte', methods=['POST'])
-def rafraichir_carte():
-    lat = random.uniform(48.8434100, 48.8634100)
-    lon = random.uniform(2.3388000, 2.3588000)
-    return jsonify({'position': [lat, lon]})
+@app.route('/carte_rafraichir', methods=['POST'])
+def carte_rafraichir(self):
+    conducteurs = modeles.Conducteur.query.all()
+    geojson = [
+        json.loads(
+            db.session.scalar(
+                ST_AsGeoJSON(
+                    conducteur.position
+                )
+            )
+        )
+        for conducteur in conducteurs
+    ]
+    return jsonify({
+        'positions': geojson,
+        'conducteurs': conducteurs
+    })
 
 
 @app.route('/tarifs')
@@ -156,7 +166,7 @@ def informations():
     return render_template('informations.html', titre='Informations')
 
 
-@app.route('/FAQ')
+@app.route('/faq')
 def faq():
     faq_data = utile.lire_json('app/static/data/faq.json')
     return render_template('faq.html', titre='FAQ', faq_data=faq_data)
@@ -165,8 +175,3 @@ def faq():
 @app.route('/contact')
 def contact():
     return render_template('contact.html', titre='Contact')
-
-
-@app.route('/api')
-def api():
-    return render_template('api.html', titre='API')

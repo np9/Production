@@ -1,56 +1,44 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jan  5 13:53:40 2016
-Last Update on Wed 7 14:00:00 2016
-@author: Groupe 6
-Last Update author : Groupe 6
-Objectif : Calculer les distances et le temps entre deux points en fonction
-du traffic
-
-Commentaire : A voir pour rassembler Parours et ListParcours
-                ListParcours fonctionnne aussi pour un seul parcours.
-"""
-
-
-# -*- coding: utf-8 -*-
-#Librairies
-from app.outils import utile
 import json
+from app.outils import utile
+
 
 class Parcours:
-    ''' Classe définissant un parcours :
-    - départ : coordonnées du lieu de départ {"lat"= valeur , "lon" = valeur} 
-        (Dictionnaire de donnée)
-    - arrive : coordonnées du lieu d'arrivée {"lat"= valeur , "lon" = valeur} 
-        (Dictionnaire de donnée)
-    - heure_debut : heure du départ
-    - distance : distance en km
-    - temps : durée du trajet en minutes
     '''
-    ''' !! Penser à rendre la clef secrete pour l'application finale '''
+    - depart : coordonnées du lieu de départ {"lat"= valeur , "lon" = valeur}
+    - arrivee : coordonnées du lieu d'arrivée {"lat"= valeur , "lon" = valeur}
+    - debut : heure du départ
+    '''
     
-    def __init__(self,depart, arrivee, heure_debut, 
-                     date_format = "%Y-%m-%d %H:%M:%S"):
-        ''' Instantie la classe Parcours'''
+    def __init__(self, depart, arrivee, debut):
         self.depart = depart
         self.arrivee = arrivee
-        self.heure_debut = heure_debut
-        
-        # Préparation de l'URL pour l'API
-        base = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
-        origine = 'origins=' + str(depart["lat"]) + "," + str(depart["lon"])
-        destination = '&destinations=' + str(arrivee["lat"]) + "," + str(arrivee["lon"])
-        departure_time = '&departure_time=' + str(round(utile.convert_date(heure_debut,date_format)))
-        fin_url = '&traffic_model=best_guess&mode=driving&language=fr-FR&key=AIzaSyCQnaoaMu6GVo3AwRzN62l0onao2TPN_u0'
+        self.debut = debut
+        self.base = 'https://maps.googleapis.com/maps/api/distancematrix/json'
+        self.parametres = '&traffic_model=best_guess&mode=driving&language=fr-FR'
+        self.cle = 'key=AIzaSyCQnaoaMu6GVo3AwRzN62l0onao2TPN_u0'
+
+    def construire(self):
+        ''' Préparation de l'URL pour l'API. '''
+        origine = 'origins={0},{1}'.format(self.depart['lat'], self.depart['lon'])
+        destination = 'destinations={0},{1}'.format(self.arrivee['lat'], self.arrivee['lon'])
+        depart = 'departure_time={0}'.format(int(self.debut.timestamp()))
+        self.url = '{0}?{1}&{2}&{3}&{4}&{5}'.format(self.base, origine, destination, depart,
+                                                    self.parametres, self.cle)
     
-        # Concaténation des éléments de l'URL
-        url = base + origine + destination + departure_time + fin_url
-        response = utile.requete_http(url)
-        json_response = json.loads(response)
-    
-        # Récupération de la distance et du temps de parcous
-        self.distance=  round(json_response['rows'][0]['elements'][0]['distance']['value'] / 1000,2)
-        self.temps= round(json_response['rows'][0]['elements'][0]['duration_in_traffic']['value'] / 60,2)
+    def calculer(self):
+        '''
+        Calculer la durée et la distance d'un parcours
+        à partir d'une URL.
+        '''
+        # Construire l'URL de trajet
+        self.construire()
+        # Requêter l'URL
+        reponse = utile.requete_http(self.url)
+        informations = json.loads(reponse)
+        # Extraction de la distance
+        self.distance = informations['rows'][0]['elements'][0]['distance']['value']
+        # Extraction de la durée
+        self.duree = informations['rows'][0]['elements'][0]['duration_in_traffic']['value']
 
 
 class ListParcours:

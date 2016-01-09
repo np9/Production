@@ -1,5 +1,9 @@
 {
   "tests/test_calcul_tarif.py": true,
   "tests/test_conducteur_dispo_ordonnee.py": true,
-  "tests/test_convert_date.py": true
+  "tests/test_convert_date.py": true,
+  "tests/test_information_course.py": true,
+  "tests/test_inserer_conducteurs_meme_station.py": true,
+  "tests/test_inserer_conducteurs_toutes_station.py": true,
+  "tests/test_stations_proches.py": true
 }

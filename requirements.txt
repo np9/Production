@@ -1,17 +1,30 @@
+# Site web
 flask
+# Lien entre SQLAlchemy et Flask
 flask-sqlalchemy
+# Lien entre SQLAlchemy et PostGIS
 geoalchemy2
-sqlalchemy-utils
-flask-wtf
+# Génération de formulaires web
 wtforms
+# Lien entre Flask et WTForms
+flask-wtf
+# Création de comptes utilisateurs
 flask-login
+# Envoyer un mail avec Flask
 flask-mail
+# Générer des clés secrètes
 itsdangerous
+# Protocole de cryptage de mots de passe
 flask-bcrypt
-flask-socketio
+# Interface administrateur
 flask-admin
-sure
-pytest
+# Framework des tests
+nose
+# Changer de langue dans l'application
 flask-babelex
+# Lien entre Python et PostgreSQL
 psycopg2
+# Génération de polygones
 shapely
+# Distance sur un globe
+haversine
