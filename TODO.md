@@ -14,3 +14,6 @@
 - Faire passer la facturation en classe pour améliorer le suivi dans l'application.
 - Faire passer les requêtes SQL en requêtes SQLAlchemy.
 - Uniformiser le nom des variables dans l'application entière.
+- Automatiser le déploiement.
+- Poser des index sur les tables.
+- Briser les fonctions pour pouvoir faire plus de tests unitaires.

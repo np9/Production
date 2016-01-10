@@ -7,7 +7,7 @@ base de données tous les chauffeurs qui ne sont pas inactifs
 (meme_station = True or meme_station = False)
 '''
 # C'est pas le bon chemin d'import!
-from app.calcul import insertion_propositions
+from app.attribution import insertion_propositions
 
 ##Tests
 def test_insertion_proposition:

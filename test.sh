@@ -1,5 +1,3 @@
-#!/bin/sh
-
 # On installe les packages nécessaire
 pip install -r requirements.txt
 # On supprime l'ancienne BD

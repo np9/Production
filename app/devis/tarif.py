@@ -5,6 +5,28 @@ from app.outils import calendrier
 from app.devis import calculer
 
 
+def calculer_supplement(demande):
+    ''' Calcul des suppléments. '''
+    supplement = 0
+    # Bagages
+    supplement += int(demande['bagages']) * supplements['bagage']
+    # Animaux
+    supplement += int(demande['animaux']) * supplements['animal']
+    # Passagers supplémentaires
+    supplement += max(0, demande['nb_passagers'] - 4) * supplements['personne_sup']
+    # Trajet à vide (ça ne m'a pas l'air bon, à discuter)
+    supplement += supplements['trajet_a_vide']
+    # Prise en charge à la gare
+    if demande['gare'] is True:
+        supplement += supplements['gare']
+    # Prise en charge à l'aéroport
+    if demande['aeroport'] is True:
+        supplement += supplements['aeroport']
+    # Tarif supplémentaire appliqué à un trajet ralenti (pas sur de ce que vous essayez de faire)
+    #estimation = float(tarif.type_tarif(demande)[4]) * float(PtR['Prix'])/3600
+    return supplement
+
+
 def estimation(demande):
     ''' Calculer le devis d'une demande. '''
 
@@ -42,25 +64,8 @@ def estimation(demande):
     # Calculer le prix de la course
     montant = distance * prix_par_km
 
-    # Calcul des suppléments
-    supplement = 0
-    # Bagages
-    supplement += int(demande['bagages']) * supplements['bagage']
-    # Animaux
-    supplement += int(demande['animaux']) * supplements['animal']
-    # Passagers supplémentaires
-    supplement += max(0, demande['nb_passagers'] - 4) * supplements['personne_sup']
-    # Trajet à vide (ça ne m'a pas l'air bon, à discuter)
-    #supplement += supplements['trajet_a_vide']
-    # Prise en charge à la gare
-    if demande['gare'] is True:
-        supplement += supplements['gare']
-    # Prise en charge à l'aéroport
-    if demande['aeroport'] is True:
-        supplement += supplements['aeroport']
-    # Tarif supplémentaire appliqué à un trajet ralenti (pas sur de ce que vous essayez de faire)
-    #estimation = float(tarif.type_tarif(demande)[4]) * float(PtR['Prix'])/3600
-
+    # Calculer le supplément
+    supplement = calculer_supplement(demande)
 
     # Calcul du total
     total = montant + supplement

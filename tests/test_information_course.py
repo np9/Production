@@ -5,10 +5,9 @@ Auteur : Groupe 6
 Objectif : Tester la fonction qui permet de recuperer les informations des utilisateurs
 """
 
-# C'est pas le bon chemin d'import!
 from app.attribution import course
 ##Tests
 
 def test_info_client():
     #Test de la fonction info_course
-    assert  course.information_course(2) == {'numero': 2, 'animaux_petit': None, 'animaux_gros': None, 'nb_place': 2}
+    assert course.information_course(2) == {'numero': 2, 'animaux_petit': None, 'animaux_gros': None, 'nb_place': 2}

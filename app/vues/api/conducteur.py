@@ -3,7 +3,7 @@ from app.vues.api import outils
 from app import db
 
 
-apiconducteurbp = Blueprint('apiconducteurbp', __name__, url_prefix='/api/conducteur')
+apiconducteurbp = Blueprint('apiconducteurbp', __name__, url_prefix='/api/conducteurs')
 
 
 @apiconducteurbp.route('/<telephone>', methods=['GET'])
