@@ -1,3 +1,4 @@
+from flask import Markup, url_for
 from app import admin
 from app import modeles
 from app import db
@@ -28,6 +29,20 @@ class VueStation(VueModele):
     	'distance_entree',
     	'distance_sortie'
     ]
+
+    def _lien_adresse(view, context, model, name):
+        ''' Renvoyer le lien d'édition de l'adresse. '''
+        lien = Markup(
+            "<a href='{0}'>{1}</a>".format(
+                url_for('adresse.edit_view', id=model.adresse),
+                model.adresse
+            )
+        )
+        return lien 
+
+    column_formatters = {
+        'adresse': _lien_adresse
+    }
 
 admin.add_view(
 	VueStation(
