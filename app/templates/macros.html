@@ -13,6 +13,18 @@
 	{% endif %}
 {% endmacro %}
 
+{% macro nav_link_mobile(endpoint, text) %}
+	{% if request.endpoint is not none %}
+		{% if request.endpoint.endswith(endpoint) %}
+		    <a class="active teal item" href="{{ url_for(endpoint) }}">{{ text | upper }}</a>
+		{% else %}
+		    <a class="item" href="{{ url_for(endpoint) }}">{{ text | upper }}</a>
+		{% endif %}
+	{% else %}
+    	<a class="item" href="{{ url_for(endpoint) }}">{{ text | upper }}</a>
+	{% endif %}
+{% endmacro %}
+
 <!-- Générer un form avec WTForms (et ses erreurs) -->
 {% macro render_field(field, valeur) %}
 	{{ field(name_=field.name, id=field.name, placeholder=field.description, class_="input", value=valeur) }}

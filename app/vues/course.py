@@ -17,6 +17,8 @@ def index():
     else:
         form = rs.Demande_Auth()
 
+    print(form.data)
+
     if form.validate_on_submit():
         flash('Le formulaire de réservation a été validé.', 'positive')
 

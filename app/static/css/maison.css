@@ -66,6 +66,8 @@ div.centre
 }
 
 /* Barre de navigation pour mobile */
+
+
 .mobile.row{
   padding-top: 0px !important;
   margin-top: 0px !important;
@@ -77,18 +79,26 @@ div.centre
 
 
 .ui.message{
-  padding: 40px !important;
+  padding: 20px !important;
 }
 
 @media (max-width: 767px) {
   .ui.vertical.menu.navbar{
     margin-top: 0px !important;
   }
+
+  body {
+   margin:0;
+   padding:0;
+   margin-top: 40px;
+   height:100%;
+   overflow-x: hidden;
+  }
 }
 
 .ui.vertical.menu{
   margin-top: 0px !important;
-  padding-top: 52px;
+  padding-top: 14px;
   width: 100%;
   display: none;
 }
