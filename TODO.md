@@ -17,3 +17,4 @@
 - Automatiser le déploiement.
 - Poser des index sur les tables.
 - Briser les fonctions pour pouvoir faire plus de tests unitaires.
+- Optimiser les calcules de l'API.
