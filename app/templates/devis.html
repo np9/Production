@@ -20,67 +20,71 @@
 			<div class="ui segments">
 				<!-- Tarifs -->
 				<div class="ui segment">
-					{{ m.segment_devis_prix("Prix de la course", devis.Prix_Total, "help circle icon") }}
+					{{ m.segment_devis_prix("Prix de la course", data.devis.prix.total, "help circle icon") }}
 					<div class="ui segment">
-					{{ m.segment_devis_prix("Prise en charge", devis.Prise_en_charge) }}
+					{{ m.segment_devis_prix("Prise en charge", data.devis.prise_en_charge) }}
 					</div>
 					<div class="ui segment">
-					{{ m.segment_devis("Kilomètres estimés", devis.Nombre_km) }}
+					{{ m.segment_devis("Kilomètres estimés", data.devis.detail.parcours.distance) }}
 					</div>
 					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par kilomètre", devis.Prix_par_km) }}
+					{{ m.segment_devis_prix("Prix par kilomètre", data.devis.prix.prix_par_km) }}
 					</div>
 				</div>
+				<br>
 				<!-- Suppléments -->
-				{% if devis.Gare == 'True' %}
+				{% if data.devis.detail.gare.prise_charge == True %}
 					<div class="ui segment">
 					{{ m.segment_devis("Prise en charge à la gare SNCF Matabiau", "Oui") }}
 					</div>
 				{% endif %}
-				{% if devis.Aeroport == 'True' %}
+				{% if data.devis.detail.aeroport.prise_charge == True %}
 					<div class="ui segment">
 					{{ m.segment_devis("Prise en charge à l'aéroport de Blagnac", "Oui") }}
 					</div>
 				{% endif %}
-
+				<br>
 				<!-- Bagages -->
 				<div class="ui orange segment">
-				{{ m.segment_devis_prix("Bagages", devis.prix_total_bagage, "suitcase icon") }}
+				{{ m.segment_devis_prix("Bagages", data.devis.detail.bagages.total, "suitcase icon") }}
 					<div class="ui segment">
-					{{ m.segment_devis("Nombres de bagages", devis.Nombre_bagage) }}
+					{{ m.segment_devis("Nombres de bagages", data.devis.detail.bagages.nb) }}
 					</div>
 					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par bagage", devis.Prix_1_bagage) }}
+					{{ m.segment_devis_prix("Prix par bagage", data.devis.detail.bagages.prix) }}
 					</div>
 				</div>
+				<br>
 				<!-- Animaux -->
 				<div class="ui orange segment">
-				{{ m.segment_devis_prix("Animaux", devis.prix_total_animal, "paw icon") }}
+				{{ m.segment_devis_prix("Animaux", data.devis.detail.animaux.total, "paw icon") }}
 					<div class="ui segment">
-					{{ m.segment_devis("Nombres d'animaux", devis.animal) }}
+					{{ m.segment_devis("Nombres d'animaux", data.devis.detail.animaux.nb) }}
 					</div>
 					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par animal", devis.prix_animal) }}
+					{{ m.segment_devis_prix("Prix par animal", data.devis.detail.animaux.prix) }}
 					</div>
 				</div>
+				<br>
 				<!-- Supplément -->
 				<div class="ui segment">
-				{{ m.segment_devis("Personnes supplémentaires", devis.Prix_personnes_sup, "plus icon") }}
+				{{ m.segment_devis("Personnes supplémentaires", data.devis.detail.personnes.supplementaires.total, "plus icon") }}
 					<div class="ui segment">
-					{{ m.segment_devis("Nombres de passagers supplémentaires", devis.Nombres_personnes_sup) }}
+					{{ m.segment_devis("Nombres de passagers supplémentaires", data.devis.detail.personnes.supplementaires.nb) }}
 					</div>
 					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par passager supplémentaire", devis.Prix_par_personnes_sup) }}
+					{{ m.segment_devis_prix("Prix par passager supplémentaire", data.devis.detail.personnes.supplementaires.prix) }}
 					</div>
 				</div>
-
-
 			</div>
 
-
 			<br>
-			<button class="ui inverted red primary button" onClick="refuserDevis();">Décliner</button>
-			<button class="ui inverted blue primary button" onClick="accepterDevis();">Accepter</button>
+
+			<div class="ui buttons">
+				<button class="ui button" onClick="devis_refuser();">Décliner</button>
+				<div class="or" data-text="ou"></div>
+				<button class="ui positive button" onClick="devis_accepter();">Accepter</button>
+			</div>
 
 			</br></br>
 			<button class="fluid ui inverted orange button active"><i class="download icon"></i> Télécharger la facture</button>
@@ -91,9 +95,10 @@
 
 	<script type="text/javascript">
 
-	function accepterDevis(){
+	function devis_accepter(){
 
-		var dict = "{{ donnees }}";
+		var dict = "{{ data }}";
+		console.log(dict)
 
 		$.ajax({
 			url: "/accepter",
@@ -110,7 +115,7 @@
 		});
 	}
 
-	function refuserDevis(){
+	function devis_refuser(){
 		window.location.href='/';
 	}
 

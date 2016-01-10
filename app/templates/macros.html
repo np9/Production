@@ -1,128 +1,70 @@
-{% extends "layout.html" %}
+{# myapp/templates/macros.html #}
 
-{% block head %}
-    {{ super() }}
-{% endblock %}
-
-{% block content %}
-
-
-	<h1 class = "ui header">{{ titre }}</h1>
-
-	{% if current_user.is_authenticated %}
-	  	<h2 class = "ui header">Bonjour {{ current_user.prenom }}!</h2>
+<!-- Mettre en valeur l'onglet courant -->
+{% macro nav_link(endpoint, text) %}
+	{% if request.endpoint is not none %}
+		{% if request.endpoint.endswith(endpoint) %}
+		    <a class="active teal item" href="{{ url_for(endpoint) }}">{{ text }}</a>
+		{% else %}
+		    <a class="item" href="{{ url_for(endpoint) }}">{{ text }}</a>
+		{% endif %}
+	{% else %}
+    	<a class="item" href="{{ url_for(endpoint) }}">{{ text }}</a>
 	{% endif %}
+{% endmacro %}
 
-		<div class="ui center raised text container pink segment">
-			<h2 class="ui center aligned icon header">
-  				<i class="tiny calculator icon"></i> Devis prévisionnel
-			</h2>
-			<div class="ui segments">
-				<!-- Tarifs -->
-				<div class="ui orange segment">
-					{{ m.segment_devis_prix("Prix de la course", data.devis.Prix_Total, "help circle icon") }}
-					<div class="ui segment">
-					{{ m.segment_devis_prix("Prise en charge", data.devis.Prise_en_charge) }}
-					</div>
-					<div class="ui segment">
-					{{ m.segment_devis("Kilomètres estimés", data.devis.Nombre_km) }}
-					</div>
-					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par kilomètre", data.devis.Prix_par_km) }}
-					</div>
-				</div>
-				<br>
-				<!-- Suppléments -->
-				{% if data.devis.Gare == 'True' %}
-					<div class="ui segment">
-					{{ m.segment_devis("Prise en charge à la gare SNCF Matabiau", "Oui") }}
-					</div>
-				{% endif %}
-				{% if data.devis.Aeroport == 'True' %}
-					<div class="ui segment">
-					{{ m.segment_devis("Prise en charge à l'aéroport de Blagnac", "Oui") }}
-					</div>
-				{% endif %}
-				<br>
-				<!-- Bagages -->
-				<div class="ui orange segment">
-				{{ m.segment_devis_prix("Bagages", data.devis.prix_total_bagage, "suitcase icon") }}
-					<div class="ui segment">
-					{{ m.segment_devis("Nombres de bagages", data.devis.Nombre_bagage) }}
-					</div>
-					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par bagage", data.devis.Prix_1_bagage) }}
-					</div>
-				</div>
-				<br>
-				<!-- Animaux -->
-				<div class="ui orange segment">
-				{{ m.segment_devis_prix("Animaux", data.devis.prix_total_animal, "paw icon") }}
-					<div class="ui segment">
-					{{ m.segment_devis("Nombres d'animaux", data.devis.animal) }}
-					</div>
-					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par animal", data.devis.prix_animal) }}
-					</div>
-				</div>
-				<br>
-				<!-- Supplément -->
-				<div class="ui orange segment">
-				{{ m.segment_devis("Personnes supplémentaires", data.devis.Prix_personnes_sup, "plus icon") }}
-					<div class="ui segment">
-					{{ m.segment_devis("Nombres de passagers supplémentaires", data.devis.Nombres_personnes_sup) }}
-					</div>
-					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par passager supplémentaire", data.devis.Prix_par_personnes_sup) }}
-					</div>
-				</div>
+<!-- Générer un form avec WTForms (et ses erreurs) -->
+{% macro render_field(field, valeur) %}
+	{{ field(name_=field.name, id=field.name, placeholder=field.description, class_="input", value=valeur) }}
+  	{% if field.errors %}
+    	<ul>
+	    	{% for error in field.errors %}
+	      		<li class="formulaire-erreur">{{ error }}</li>
+	    	{% endfor %}
+    	</ul>
+  	{% endif %}
+{% endmacro %}
 
 
-			</div>
 
+{% macro segment_devis_prix(texte, valeur, icon) %}
 
-			<br>
-
-			<div class="ui buttons">
-				<button class="ui button" onClick="refuserDevis();">Décliner</button>
-				<div class="or" data-text="ou"></div>
-				<button class="ui positive button" onClick="accepterDevis();">Accepter</button>
-			</div>
-
-			</br></br>
-			<button class="fluid ui inverted orange button active"><i class="download icon"></i> Télécharger la facture</button>
+<div class="ui right aligned grid">
+	<div class="left floated left aligned ten wide column">
+		<div class="content">
+			<div class="sub header">
+  				<i class="large blue {{ icon }}"></i> {{ texte }}
+  			</div>
 		</div>
+	</div>
+	<div class="right floated right aligned four wide column">
+		<div class="content">
+			<div class="sub header">
+  				{{ valeur }} €
+  			</div>
+		</div>
+	</div>
+</div>
 
+{% endmacro %}
 
+{% macro segment_devis(texte, valeur, icon) %}
 
+<div class="ui right aligned grid">
+	<div class="left floated left aligned ten wide column">
+		<div class="content">
+			<div class="sub header">
+  				<i class="large blue {{ icon }}"></i> {{ texte }}
+  			</div>
+		</div>
+	</div>
+	<div class="right floated right aligned four wide column">
+		<div class="content">
+			<div class="sub header">
+  				{{ valeur }} 
+  			</div>
+		</div>
+	</div>
+</div>
 
-	<script type="text/javascript">
-
-	function accepterDevis(){
-
-		var dict = "{{ data }}";
-		console.log(dict)
-
-		$.ajax({
-			url: "/accepter",
-			type: "POST",
-			async: true,
-			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify(dict),
-			success: function(data) {
-                 statut = data.statut
-                 if (statut == 'succes') {	
-                 	window.location.href='/';
-                 }
-            }
-		});
-	}
-
-	function refuserDevis(){
-		window.location.href='/';
-	}
-
-
-	</script>
-
-{% endblock %}
+{% endmacro %}

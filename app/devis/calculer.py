@@ -47,7 +47,7 @@ def seuil(date, heure):
     return seuil
 
 
-def ratios(debut, fin):
+def ratios(debut, fin, duree):
     ''' Calcul des ratios jour/nuit. '''
 
     # Obtenir les seuils de début et de fin
@@ -118,5 +118,5 @@ def simuler(depart, arrivee, debut):
     return {
         'duree': duree,
         'distance': distance,
-        'ratios': ratios(debut, fin)
+        'ratios': ratios(debut, fin, duree)
     }

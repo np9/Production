@@ -26,7 +26,8 @@ from app.vues import (
 	principal,
 	utilisateur,
 	erreur,
-	conducteur
+	conducteur,
+	course
 )
 
 app.register_blueprint(utilisateur.utilisateurbp)

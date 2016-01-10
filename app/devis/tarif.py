@@ -5,7 +5,7 @@ from app.outils import calendrier
 from app.devis import calculer
 
 
-def calculer_supplement(demande):
+def calculer_supplement(demande, supplements):
     ''' Calcul des suppléments. '''
     supplement = 0
     # Bagages
@@ -65,7 +65,7 @@ def estimation(demande):
     montant = distance * prix_par_km
 
     # Calculer le supplément
-    supplement = calculer_supplement(demande)
+    supplement = calculer_supplement(demande, supplements)
 
     # Calcul du total
     total = montant + supplement
@@ -82,7 +82,7 @@ def estimation(demande):
             'supplement': round(supplement, 2),
             'total': round(total, 2)
         },
-        'details': {
+        'detail': {
             'parcours': {
                 'duree': duree,
                 'distance': distance,
@@ -90,17 +90,20 @@ def estimation(demande):
             },
             'bagages': {
                 'nb': demande['bagages'],
-                'prix': supplements['bagage']
+                'prix': supplements['bagage'],
+                'total': demande['bagages'] * supplements['bagage']
             },
             'animaux': {
                 'nb': demande['animaux'],
-                'prix': supplements['animal']
+                'prix': supplements['animal'],
+                'total': demande['animaux'] * supplements['animal']
             },
             'personnes': {
                 'nb': demande['nb_passagers'],
                 'supplementaires': {
-                    'nb': min(0, demande['nb_passagers'] - 4),
-                    'prix': supplements['personne_sup']
+                    'nb': max(0, demande['nb_passagers'] - 4),
+                    'prix': supplements['personne_sup'],
+                    'total': max(0, demande['nb_passagers'] - 4) * supplements['personne_sup']
                 }
             },
             'gare': {
