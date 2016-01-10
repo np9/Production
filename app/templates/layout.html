@@ -61,6 +61,22 @@
 							{{ m.nav_link_mobile('tarifs', 'Tarifs') }}
 							{{ m.nav_link_mobile('faq', 'FAQ') }}
 							{{ m.nav_link_mobile('contact', 'Contact') }}
+							{% if current_user.is_authenticated %}
+					      		<div class="item">
+					        		<a class="ui primary button" href="/utilisateur/compte"><i class="settings icon"></i>{{ current_user.prenom }} {{ current_user.nom }}</a>
+					    		</div>
+					    		<div class="item">
+					        		<a class="ui default button" href="/utilisateur/deconnexion"><i class="sign out icon"></i>Se déconnecter</a>
+					    		</div>
+				          	<!-- Utilisateur non-connecté -->
+				          	{% else %}
+				          		<div class="item">
+					        		<a class="ui primary button" href="/utilisateur/connexion"><i class="sign in icon"></i>Se connecter</a>
+					    		</div>
+					    		<div class="item">
+					        		<a class="ui default button" href="/utilisateur/enregistrement"><i class="add user icon"></i>S'enregistrer</a>
+					    		</div>
+							{% endif %}
 						</div>
 					</div>
 				</div>

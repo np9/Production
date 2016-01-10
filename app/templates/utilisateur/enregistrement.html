@@ -2,7 +2,11 @@
 
 {% block content %}
 
+{% if request.MOBILE %}
+	<div class="ui center raised text container pink segment">
+{% else %}
 	<div class="ui formulaire-utilisateur center raised text container pink segment">
+{% endif %}
 		<!--div class="ui ui green segment"></div-->
 		<form class="ui form" action="/utilisateur/enregistrement" method="post">
 			<h4 class="ui dividing header">S'enregistrer</h4>

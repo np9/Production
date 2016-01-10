@@ -6,7 +6,11 @@
 
 {% block content %}
 
+{% if request.MOBILE %}
+	<div class="ui center raised very padded text container pink segment">
+{% else %}
 	<div class="ui formulaire-utilisateur center raised very padded text container pink segment">
+{% endif %}
 		<form class="ui form" action="/utilisateur/connexion" method="post">
 			<h4 class="ui dividing header">Se connecter</h4>
 			<div class="two fields">
