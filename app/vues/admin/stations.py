@@ -11,6 +11,13 @@ class VueStation(VueModele):
     can_edit = True
     can_delete = True
 
+    column_list = [
+        'nom',
+        'adresse',
+        'distance_entree',
+        'distance_sortie'
+    ]
+
     column_searchable_list = [
     	'nom'
     ]

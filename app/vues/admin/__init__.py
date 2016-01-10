@@ -10,16 +10,17 @@ class VueModele(ModelView):
     HTTP. Toutes les autres vues héritent de celle-ci.
     '''
 
-    # Edition des données dans une fenête modale
-    create_modal = True
-    edit_modal = True
+    # Edition des données dans une fenêtre modale
+    #create_modal = True
+    #edit_modal = True
 
     # Afficher la clé primaire dans les vues
     column_display_pk = True
 
-    # Configuration pour affichier les liens
+    # Configuration pour afficher les liens
     column_hide_backrefs = False
     column_display_all_relations = True
+    column_auto_select_related = True
 
     def is_accessible(self):
         auth = request.authorization or request.environ.get(

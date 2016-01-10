@@ -1,11 +1,10 @@
 # TaxiSID
 
-Ce dossier contient l'application finale, celle qui doit marcher sans faille.
+![Logo](app/static/img/taxisid.jpg)
 
 ## Architecture
 
-![Architecture](doc/architecture.png)
-
+- [Visuel](doc/architecture.png)
 
 ## Utilisation
 
@@ -137,18 +136,8 @@ pip install psycopg2
 
 ## API
 
-L'API renvoit des données au format json, l'URL d'accès de celle-ci est ``http://localhost:5000/api``.
+L'API renvoit des données au format JSON, l'URL d'accès de celle-ci est ``~/api/``. Les tables de la base de données sont directement accessibles via l'API, il suffit d'accéder à ``~/api/<table>``. Les tables sont automatiquement traitées pour ne pas afficher les attributs commencant avec un ``_`` (par exemple un mot de passe). De plus, l'API transforme les objets PostGIS en données longitunidales.
 
-Les différentes commandes sont:
-
-- ~/api/utilisateurs
-- ~/api/conducteurs
-- ~/api/adresses
-- ~/api/stations
-- ~/api/vehicules
-- ~/api/courses
-- ~/api/factures
-- ~/api/positions
 
 ## Contributeurs
 
