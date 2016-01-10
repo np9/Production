@@ -169,8 +169,6 @@ class Vehicule(db.Model):
     mineur = db.Column(db.Boolean)
 
 
-
-
 class Adresse(db.Model):
 
     ''' Un adresse géographique. '''

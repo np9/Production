@@ -1,11 +1,10 @@
 # TaxiSID
 
-Ce dossier contient l'application finale, celle qui doit marcher sans faille.
+![Logo](app/static/img/taxisid.jpg)
 
 ## Architecture
 
-![Architecture](doc/architecture.png)
-
+- [Visuel](doc/architecture.png)
 
 ## Utilisation
 
@@ -35,9 +34,9 @@ python run.py
 
 Ces opérations sont automatisées grâce aux scripts ``test.sh`` sur une machine UNIX et ``test.bat`` sur Windows.
 
-En ce qui concerne Linux, le fichier testBD.sh réalise tous les tests des groupes. Si la commande de test ne s'exécute pas correctement, il suffit de taper dans la console : export PYTHONPATH=${PYTHONPATH}:/[chemin jusqu'à production]/
+Si la commande de test ne s'exécute pas correctement, il suffit de taper dans la console : export PYTHONPATH=${PYTHONPATH}:/[chemin jusqu'à production]/
 
-Par défault l'application est accessible à l'URL ``localhost:5000`` dans le navigateur.
+Par défaut l'application est accessible à l'URL ``localhost:5000`` dans le navigateur.
 
 #### Partage du localhost
 
@@ -48,10 +47,6 @@ Ceci est extrêmement pratique pour, par exemple, développer une application po
 #### Déploiement sur un serveur
 
 Se référer au dossier ``setup/``.
-
-## Motivation
-
-Ce projet a été proposé par la société [CapitoleTaxi](http://www.capitole-taxi.com/reserver-un-taxi-toulouse-midi-pyrenees-50.html). Notre équipe a pour but de créer une application web et mobile. Celle-ci doit permettre à des utilisateurs de réserver un taxi et doit permettre aux taxis d'accepter ou non les courses qu'on leur propose. Une demande de course doit être proposé aux taxis les plus proches de l'adresse de départ de l'utilisateur.
 
 ## Installation de packages
 
@@ -137,18 +132,13 @@ pip install psycopg2
 
 ## API
 
-L'API renvoit des données au format json, l'URL d'accès de celle-ci est ``http://localhost:5000/api``.
+L'API renvoit des données au format JSON, l'URL d'accès de celle-ci est ``~/api/``. Les tables de la base de données sont directement accessibles via l'API, il suffit d'accéder à ``~/api/<table>``. Les tables sont automatiquement traitées pour ne pas afficher les attributs commencant avec un ``_`` (par exemple un mot de passe). De plus, l'API transforme les objets PostGIS en données longitunidales.
 
-Les différentes commandes sont:
 
-- ~/api/utilisateurs
-- ~/api/conducteurs
-- ~/api/adresses
-- ~/api/stations
-- ~/api/vehicules
-- ~/api/courses
-- ~/api/factures
-- ~/api/positions
+## Motivation
+
+Ce projet a été proposé par la société [CapitoleTaxi](http://www.capitole-taxi.com/reserver-un-taxi-toulouse-midi-pyrenees-50.html). Notre équipe a pour but de créer une application web et mobile. Celle-ci doit permettre à des utilisateurs de réserver un taxi et doit permettre aux taxis d'accepter ou non les courses qu'on leur propose. Une demande de course doit être proposé aux taxis les plus proches de l'adresse de départ de l'utilisateur.
+
 
 ## Contributeurs
 

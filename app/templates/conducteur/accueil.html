@@ -40,7 +40,7 @@
                 $.ajax({
                     type: "POST",
                     async: true,
-                    url: "/api/conducteur/maj_statut/telephone=" + "{{ conducteur.telephone }}" + "&statut=" + nouveau_statut,
+                    url: "/api/conducteurs/maj_statut/telephone=" + "{{ conducteur.telephone }}" + "&statut=" + nouveau_statut,
                     success: function(data) {
                         var div = document.getElementById('statut');
                         div.innerHTML = nouveau_statut;
@@ -85,7 +85,7 @@
             $.ajax({
                 type: "POST",
                 async: true,
-                url: "/api/conducteur/maj_position/telephone=" + {{ conducteur.telephone }} + "&lat=" + lat + "&lon=" + lon,
+                url: "/api/conducteurs/maj_position/telephone=" + {{ conducteur.telephone }} + "&lat=" + lat + "&lon=" + lon,
                 success: function(data) {
                     statut = data.statut;
                 }

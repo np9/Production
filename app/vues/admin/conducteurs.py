@@ -74,7 +74,7 @@ class VueConducteurSituation(VueModele):
         'nom',
         'prenom',
         'telephone',
-        'situation',
+        'statut',
         'station',
         'station_entree',
         'position'
