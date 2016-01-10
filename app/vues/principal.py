@@ -12,6 +12,7 @@ from app.devis import tarif
 @app.route('/index', methods=['GET', 'POST'])
 def index():
 
+
     if current_user.is_authenticated == False:
         form = rs.Demande_NonAuth()
     else:
@@ -20,29 +21,31 @@ def index():
     if form.validate_on_submit():
         flash('Le formulaire de réservation a été validé.', 'positive')
 
-        donnees = form.data
+        demande = form.data
 
         if current_user.is_authenticated:
-            donnees['prenom'] = current_user.prenom
-            donnees['nom'] = current_user.nom
-            donnees['telephone'] = current_user.telephone
-            donnees['mail'] = current_user.email
+            demande['prenom'] = current_user.prenom
+            demande['nom'] = current_user.nom
+            demande['telephone'] = current_user.telephone
+            demande['mail'] = current_user.email
 
         # Données de test
-        donnees['A-R'] = False
-        donnees['bagages'] = '0'
-        donnees['gare'] = False
-        donnees['aeroport'] = False
-        donnees['animaux'] = '0'
-        donnees['categorie'] = 'particulier'
+        demande['A-R'] = False
+        demande['bagage'] = 0
+        demande['gare'] = False
+        demande['aeroport'] = False
+        demande['animaux'] = 0
+
+        print(demande)
 
         # Calculs de la tarification provisoire - création du devis
-        devis = tarif.estimation(donnees)
-
-        print(donnees)
+        devis = tarif.estimation(demande)
         print(devis)
 
-        return render_template('devis.html', donnees=donnees, devis=devis, titre='Devis')
+        data = {'demande': demande,
+                'devis': devis}
+
+        return render_template('devis.html', data=data, titre='Devis')
     return render_template('index.html', form=form, titre='Réserver un taxi')
 
 
@@ -50,30 +53,31 @@ def index():
 def accepter():
 
     # Récupération des données et formatage du JSON
-    donnees = str(json.loads(request.data.decode()))
-    donnees = donnees.replace('&#39;', '"')
-    donnees = json.loads(donnees)
+    data = str(json.loads(request.data.decode()))
+    data = data.replace('&#39;', '"')
+    data = json.loads(data)
+    demande = data['demande']
 
     # Formattage de la date
-    date_course = str(donnees['date_debut']) + " " + \
-        str(donnees['heures']) + ":" + str(donnees['minutes']) + ":00"
+    date_course = str(demande['date_debut']) + " " + \
+        str(demande['heures']) + ":" + str(demande['minutes']) + ":00"
 
     # On insère l'utilisateur s'il n'est pas dans la base
     if current_user.is_authenticated == False:
         utilisateur = modeles.Utilisateur(
-            telephone=donnees['telephone'],
-            prenom=donnees['prenom'],
-            nom=donnees['nom'],
-            email=donnees['mail'],
-            civilite=donnees['civilite'],
+            telephone=demande['telephone'],
+            prenom=demande['prenom'],
+            nom=demande['nom'],
+            email=demande['mail'],
+            civilite=demande['civilite'],
         )
         db.session.add(utilisateur)
         db.session.commit()
 
     # Géocalisation des adressses de départ et d'arrivée
     positions = {
-        'depart': geographie.geocoder(donnees['adresse_dep']),
-        'arrivee': geographie.geocoder(donnees['adresse_arr'])
+        'depart': geographie.geocoder(demande['adresse_dep']),
+        'arrivee': geographie.geocoder(demande['adresse_arr'])
     }
 
     # Adresse de départ
@@ -100,8 +104,8 @@ def accepter():
     nouvelle_course = modeles.Course(
         depart=adresse_dep.identifiant,
         arrivee=adresse_arr.identifiant,
-        places=donnees['nb_passagers'],
-        commentaire=donnees['commentaire'],
+        places=demande['nb_passagers'],
+        commentaire=demande['commentaire'],
         debut=date_course,
         trouvee=False,
         finie=False
@@ -111,7 +115,7 @@ def accepter():
         # Pas sur de ça
         nouvelle_course.utilisateur = current_user.telephone
     else:
-        nouvelle_course.utilisateur = donnees['telephone']
+        nouvelle_course.utilisateur = demande['telephone']
 
     db.session.add(nouvelle_course)
     db.session.commit()
@@ -119,7 +123,7 @@ def accepter():
     # Création d'une nouvelle facture
     facture = modeles.Facture(
         course=nouvelle_course.numero,
-        paiement=donnees['paiement'],
+        paiement=demande['paiement'],
         estimation=0,
         montant=0,
         rabais=0
@@ -128,8 +132,23 @@ def accepter():
     db.session.add(facture)
     db.session.commit()
 
+    # Envoi d'un email
+    if current_user.is_authenticated == False:
+        adresse_mail = demande['mail']
+    else:
+        adresse_mail = current_user.email
+
+    devis = data['devis']
+    # Sujet du mail à envoyer
+    sujet = 'Votre demande de réservation a été effectuée.'
+    # Le corps du mail est un template écrit en HTML
+    html = render_template('email/facture.html', devis=devis)
+    # Envoyer le mail à l'utilisateur
+    email.envoyer(adresse_mail, sujet, html)
+
     flash('La demande de réservation a été prise en compte.', 'positive')
     return jsonify({'statut': 'succes'})
+
 
 
 @app.route('/carte')

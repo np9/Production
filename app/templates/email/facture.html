@@ -1,0 +1,117 @@
+{% import "macros.html" as m %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<div id="container">
+   		<div id="header">
+   			{% block head %}
+				<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+				<meta charset="UTF-8">
+				<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+				<!-- jQuery -->
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+				<!-- Semantic principal -->
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+			    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/components/form.min.js"></script>
+				<!-- CSS maison -->
+				<link rel="stylesheet" href="{{ url_for('static', filename='css/maison.css') }}">
+			{% endblock %}
+   		</div>
+   		
+   		<div id="body" class="body">
+			{% block content %}
+
+<div class="ui center raised text container pink segment">
+	<h2 class="ui center aligned icon header">
+			<i class="tiny calculator icon"></i> Devis
+	</h2>
+	<div class="ui segments">
+		<!-- Tarifs -->
+		<div class="ui segment">
+			{{ m.segment_devis_prix("Prix de la course", devis.Prix_Total, "help circle icon") }}
+			<div class="ui segment">
+			{{ m.segment_devis_prix("Prise en charge", devis.Prise_en_charge) }}
+			</div>
+			<div class="ui segment">
+			{{ m.segment_devis("Kilomètres estimés", devis.Nombre_km) }}
+			</div>
+			<div class="ui segment">
+			{{ m.segment_devis_prix("Prix par kilomètre", devis.Prix_par_km) }}
+			</div>
+		</div>
+		<br>
+		<!-- Suppléments -->
+		{% if devis.Gare == 'True' %}
+			<div class="ui segment">
+			{{ m.segment_devis("Prise en charge à la gare SNCF Matabiau", "Oui") }}
+			</div>
+		{% endif %}
+		{% if devis.Aeroport == 'True' %}
+			<div class="ui segment">
+			{{ m.segment_devis("Prise en charge à l'aéroport de Blagnac", "Oui") }}
+			</div>
+		{% endif %}
+		<br>
+		<!-- Bagages -->
+		<div class="ui orange segment">
+		{{ m.segment_devis_prix("Bagages", devis.prix_total_bagage, "suitcase icon") }}
+			<div class="ui segment">
+			{{ m.segment_devis("Nombres de bagages", devis.Nombre_bagage) }}
+			</div>
+			<div class="ui segment">
+			{{ m.segment_devis_prix("Prix par bagage", devis.Prix_1_bagage) }}
+			</div>
+		</div>
+		<br>
+		<!-- Animaux -->
+		<div class="ui orange segment">
+		{{ m.segment_devis_prix("Animaux", devis.prix_total_animal, "paw icon") }}
+			<div class="ui segment">
+			{{ m.segment_devis("Nombres d'animaux", devis.animal) }}
+			</div>
+			<div class="ui segment">
+			{{ m.segment_devis_prix("Prix par animal", devis.prix_animal) }}
+			</div>
+		</div>
+		<br>
+		<!-- Supplément -->
+		<div class="ui segment">
+		{{ m.segment_devis("Personnes supplémentaires", devis.Prix_personnes_sup, "plus icon") }}
+			<div class="ui segment">
+			{{ m.segment_devis("Nombres de passagers supplémentaires", devis.Nombres_personnes_sup) }}
+			</div>
+			<div class="ui segment">
+			{{ m.segment_devis_prix("Prix par passager supplémentaire", devis.Prix_par_personnes_sup) }}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+			{% endblock %}
+		</div>
+
+		<div id="footer" class="footer">
+			<div class="ui center aligned divider"></div>
+	    		<div class="ui divided horizontal footer link list">
+			      	<div class="item">
+			        	TaxiSID
+			      	</div>
+			      	<div class="item">
+			        	<a href="https://github.com/TaxiSID/"><i class="github icon"></i></a>
+			      	</div>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+</html>
+
+
+
+
+
+

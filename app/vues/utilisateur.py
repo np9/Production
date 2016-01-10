@@ -45,7 +45,6 @@ def enregistrement():
             email=form.email.data,
             confirmation=False,
             civilite=form.civilite.data,
-            categorie='Normal',
             prenom=form.prenom.data,
             nom=form.nom.data,
             notification_email=True,
@@ -134,16 +133,11 @@ def compte():
     adresse = modeles.Adresse.query.filter_by(
         identifiant=current_user.adresse).first()
 
-    ''' Requête comptant le nombre de courses effectuées par l'utilisateur
-    Il faut ajouter la notion de comptage avec func.count()
+    # Requête comptant le nombre de courses effectuées par l'utilisateur
 
-    nbCourses = db.session.query(modeles.Utilisateur, modeles.Course).\
-        filter(modeles.Utilisateur.telephone == modeles.Course.utilisateur).\
-        filter(modeles.Utilisateur.telephone == current_user.telephone).\
-        all()
-
-    print(nbCourses)
-    '''
+    lignes = db.session.execute(
+        "SELECT COUNT(*) FROM utilisateurs U, courses C WHERE U.telephone = C.utilisateur").fetchall()
+    nbCourses = len(lignes)
 
     form = fu.Modification()
     if form.validate_on_submit():
@@ -161,7 +155,7 @@ def compte():
             "<i class='thumbs outline up icon'></i>Vos informations personnelles ont bien été modifiées.")
         flash(signUpMsg, 'positive')
         return redirect(url_for('utilisateurbp.compte'))
-    return render_template('utilisateur/compte.html', titre='Compte', form=form, adresse=adresse)
+    return render_template('utilisateur/compte.html', titre='Compte', form=form, adresse=adresse, nbCourses=nbCourses)
 
 
 @utilisateurbp.route('/oubli', methods=['GET', 'POST'])
