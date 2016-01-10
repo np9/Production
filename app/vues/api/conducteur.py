@@ -30,6 +30,6 @@ def conducteur_maj_statut(telephone, statut):
 @apiconducteurbp.route('/maj_position/telephone=<telephone>&lat=<lat>&lon=<lon>', methods=['POST'])
 def conducteur_maj_position(telephone, lat, lon):
     ''' Met à jour la position d'un conducteur dans la base de données. '''
+    print('Salut')
     requete = "UPDATE conducteurs SET position = 'POINT({0} {1})' WHERE telephone = '{2}' ".format(lat, lon, telephone)
-    print(requete)
     return outils.executer(requete)
