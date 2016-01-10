@@ -1,4 +1,24 @@
 import pandas as pd
+import json
+from geoalchemy2.functions import ST_AsGeoJSON
+from app import db
+
+
+def convertir_position(tableau, noms_colonnes=['position']):
+    ''' Convertit un string PostGIS en latitude/longitude. '''
+    for colonne in tableau:
+        if colonne in noms_colonnes:
+            geojson = [
+                json.loads(db.session.scalar(
+                    ST_AsGeoJSON(
+                        position
+                    )
+                )) for position in tableau[colonne]
+            ]
+            tableau['lat'] = [position['coordinates'][0] for position in geojson]
+            tableau['lon'] = [position['coordinates'][1] for position in geojson]
+            tableau.drop(colonne, axis=1, inplace=True)
+    return tableau
 
 
 def securiser(tableau):
@@ -30,6 +50,7 @@ def to_dict(requete):
     lignes = requete.fetchall()
     tableau = pd.DataFrame(lignes, columns=attributs)
     tableau = securiser(tableau)
+    tableau = convertir_position(tableau)
     tableau = tableau.apply(nettoyer)
     json = tableau.to_dict(orient='records')
     return json
