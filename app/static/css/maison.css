@@ -47,6 +47,12 @@ div.centre
    color: #E50000 !important;
 }
 
+
+.contenu-centre {
+   width: 66% !important;
+   margin: 0 auto !important;
+   margin-top: 10% !important;
+}
 /* Flask flashes */
 
 .flash {
@@ -57,4 +63,32 @@ div.centre
 
 .erreur-boite {
    margin-top: 8%;
+}
+
+/* Barre de navigation pour mobile */
+.mobile.row{
+  padding-top: 0px !important;
+  margin-top: 0px !important;
+}
+
+.mobile.row .ui.inverted.menu{
+  border-radius: 0px !important;
+}
+
+
+.ui.message{
+  padding: 40px !important;
+}
+
+@media (max-width: 767px) {
+  .ui.vertical.menu.navbar{
+    margin-top: 0px !important;
+  }
+}
+
+.ui.vertical.menu{
+  margin-top: 0px !important;
+  padding-top: 52px;
+  width: 100%;
+  display: none;
 }

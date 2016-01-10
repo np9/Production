@@ -21,6 +21,10 @@ bcrypt = Bcrypt(app)
 from flask_admin import Admin
 admin = Admin(app, name='Admin', template_mode='bootstrap3')
 
+# Mobiliser l'application
+from flask.ext.mobility import Mobility
+mobile = Mobility(app)
+
 # Importer les vues classiques
 from app.vues import (
 	principal,
