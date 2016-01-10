@@ -44,7 +44,7 @@ from app.vues.api import (
 )
 
 app.register_blueprint(base.apibp)
-app.register_blueprint(conducteur.apiconducteurbp)
+app.register_blueprint(conducteurs.apiconducteurbp)
 
 # Importer les vues administrateurs
 from app.vues.admin import (
