@@ -6,20 +6,23 @@
 
 {% block content %}
 
-
 	<h1 class = "ui header">{{ titre }}</h1>
 
 	{% if current_user.is_authenticated %}
 	  	<h2 class = "ui header">Bonjour {{ current_user.prenom }}!</h2>
 	{% endif %}
 
+		{% if request.MOBILE %}
 		<div class="ui center raised text container pink segment">
+		{% else %}
+		<div class="ui contenu-centre center raised text container pink segment">
+		{% endif %}
 			<h2 class="ui center aligned icon header">
-  				<i class="tiny calculator icon"></i> Devis
+  				<i class="tiny calculator icon"></i> Devis prévisionnel
 			</h2>
 			<div class="ui segments">
 				<!-- Tarifs -->
-				<div class="ui segment">
+				<div class="ui blue segment">
 					{{ m.segment_devis_prix("Prix de la course", data.devis.prix.total, "help circle icon") }}
 					<div class="ui segment">
 					{{ m.segment_devis_prix("Prise en charge", data.devis.prise_en_charge) }}
@@ -30,8 +33,7 @@
 					<div class="ui segment">
 					{{ m.segment_devis_prix("Prix par kilomètre", data.devis.prix.prix_par_km) }}
 					</div>
-				</div>
-				<br>
+				
 				<!-- Suppléments -->
 				{% if data.devis.detail.gare.prise_charge == True %}
 					<div class="ui segment">
@@ -43,9 +45,11 @@
 					{{ m.segment_devis("Prise en charge à l'aéroport de Blagnac", "Oui") }}
 					</div>
 				{% endif %}
-				<br>
+
+				</div>
+
 				<!-- Bagages -->
-				<div class="ui orange segment">
+				<div class="ui segment">
 				{{ m.segment_devis_prix("Bagages", data.devis.detail.bagages.total, "suitcase icon") }}
 					<div class="ui segment">
 					{{ m.segment_devis("Nombres de bagages", data.devis.detail.bagages.nb) }}
@@ -54,9 +58,9 @@
 					{{ m.segment_devis_prix("Prix par bagage", data.devis.detail.bagages.prix) }}
 					</div>
 				</div>
-				<br>
+
 				<!-- Animaux -->
-				<div class="ui orange segment">
+				<div class="ui segment">
 				{{ m.segment_devis_prix("Animaux", data.devis.detail.animaux.total, "paw icon") }}
 					<div class="ui segment">
 					{{ m.segment_devis("Nombres d'animaux", data.devis.detail.animaux.nb) }}
@@ -65,7 +69,7 @@
 					{{ m.segment_devis_prix("Prix par animal", data.devis.detail.animaux.prix) }}
 					</div>
 				</div>
-				<br>
+				
 				<!-- Supplément -->
 				<div class="ui segment">
 				{{ m.segment_devis("Personnes supplémentaires", data.devis.detail.personnes.supplementaires.total, "plus icon") }}

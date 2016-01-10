@@ -13,6 +13,15 @@
  });
 </script>
 
+<script type="text/javascript">
+    function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+    }
+</script>
 
 <!-- Date -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -75,17 +84,23 @@ $( "#datepicker" ).datepicker(
         </div>
         <div class="two fields">
             <div class="ten wide field">
-            {{ m.render_field(form.telephone)}}
+                <div class="ui left icon input">
+                    <i class="call icon"></i>
+                    {{ m.render_field(form.telephone)}}
+                </div>
             </div>
             <div class="ten wide field">
-            {{ m.render_field(form.mail)}}
+                <div class="ui left icon input">
+                    <i class="mail outline icon"></i>
+                    {{ m.render_field(form.mail)}}
+                </div>
             </div>
         </div>
         {% endif %}
             <h4 class="ui pink dividing header">Itinéraire</h4>
             <div class="field">
                 <div class="two fields">
-                    <div class="ten wide field">
+                    <div class="fourteen wide field">
                     {{ m.render_field(form.adresse_dep) }}
                     </div> 
                 </div> 
@@ -93,46 +108,50 @@ $( "#datepicker" ).datepicker(
                 <div class="four wide field">
                     <input type="text" name="date_debut" id="datepicker" placeholder='Départ le' autocomplete="off">
                 </div>
-                <label> à </label>
-                <div class="two wide field">
+                <label> Heure </label>
+                <div class="four wide field">
                     {{ m.render_field(form.heures) }}
                 </div>
-                <label> Heure </label>
-                <div class="two wide field">
+                <label> Minutes </label>
+                <div class="four wide field">
                     {{ m.render_field(form.minutes) }}
                 </div>
             </div>
             </div>
             <div class="field">
                 <div class="two fields">
-                    <div class="ten wide field">
+                    <div class="fourteen wide field">
                     {{ m.render_field(form.adresse_arr) }}
                     </div> 
                 </div> 
             </div>
-            <h4 class="ui pink dividing header">Informations complémentaires</h4>
-            <div class="field">
-                <label>Type de paiement</label>
-                <div class="two fields">
-                    <div class="four wide field">
-                        {{ m.render_field(form.paiement) }} 
+            <!-- <h4 class="ui pink dividing header">Informations complémentaires</h4> -->
+            <a href="#" onclick="toggle_visibility('extracontent');"><i class="chevron circle right icon"></i> Informations complémentaires</a>
+            <br><br>
+            <div id="extracontent" style="display:none;">
+                <div class="field">
+                    <label>Type de paiement</label>
+                    <div class="two fields">
+                        <div class="four wide field">
+                            {{ m.render_field(form.paiement) }} 
+                        </div> 
+                    </div>  
+                    <label>Nombre de passagers</label>
+                    <div class="two fields">
+                        <div class="four wide field">
+                            {{ m.render_field(form.nb_passagers) }} 
+                        </div> 
                     </div> 
-                </div>  
-                <label>Nombre de passagers</label>
-                <div class="two fields">
-                    <div class="four wide field">
-                        {{ m.render_field(form.nb_passagers) }} 
-                    </div> 
-                </div> 
-                <label>Commentaire</label>
-                <div class="two fields">
-                    <div class="ten wide field">
-                        {{ m.render_field(form.commentaire) }} 
-                    </div> 
-                </div>           
+                    <label>Commentaire</label>
+                    <div class="two fields">
+                        <div class="ten wide field">
+                            {{ m.render_field(form.commentaire) }} 
+                        </div> 
+                    </div>           
+                </div>
             </div>
             {{ form.csrf_token }}
-            <button class="ui inverted blue primary button" type="submit">Valider</button>
+            <br><button class="fluid ui inverted blue button" type="submit">Établir un devis prévisionnel</button>
         </form>
     </div>
 </div>

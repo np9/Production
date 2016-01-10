@@ -87,3 +87,26 @@ class Modification(Form):
     nom = TextField(validators=[Required(), Length(min=2)], description='Nom')
     telephone = TextField(validators=[Required(), Length(
         min=6)], description='Numéro de téléphone')
+
+class Contact(Form):
+
+    ''' Envoi d'un email. '''
+
+    prenom = TextField(
+        validators=[Required(), Length(min=2)],
+        description='Prénom')
+
+    nom = TextField(
+        validators=[Required(), Length(min=2)],
+        description='Nom')
+
+    email = TextField(
+        validators=[Required(), Email()], description='Adresse email')
+
+    objet = TextField(
+        validators=[Required(), Length(min=2)],
+        description='Objet de votre message')
+
+    sujet = TextField(
+        validators=[Required(), Length(min=2)],
+        description='Entrez ici le corps de votre message')

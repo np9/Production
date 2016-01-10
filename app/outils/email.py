@@ -15,7 +15,6 @@ def envoyer(destinataire, sujet, corps):
     # Create a new thread
     thr = Thread(target=envoyer_asynchrone, args=[app, message])
     thr.start()
-    
 
 
 def envoyer_asynchrone(app, message):

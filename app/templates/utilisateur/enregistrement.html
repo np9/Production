@@ -9,7 +9,7 @@
 {% endif %}
 		<!--div class="ui ui green segment"></div-->
 		<form class="ui form" action="/utilisateur/enregistrement" method="post">
-			<h4 class="ui dividing header">S'enregistrer</h4>
+			<h4 class="ui dividing header">Enregistrement</h4>
 			<div class="two fields">
                 <div class="sixteen wide field">
 			    	{{ m.render_field(form.prenom) }}
@@ -28,12 +28,18 @@
 	    	</div>	   	    	
 			<div class="two fields">
                 <div class="sixteen wide field">
-			    	{{ m.render_field(form.telephone) }}
+			    	<div class="ui left icon input">
+	                    <i class="call icon"></i>
+	                    {{ m.render_field(form.telephone)}}
+                </div>
 	    		</div>
 	    	</div>	    
 			<div class="two fields">
                 <div class="sixteen wide field">
-			    	{{ m.render_field(form.email) }}
+			    	<div class="ui left icon input">
+	                    <i class="mail outline icon"></i>
+	                    {{ m.render_field(form.email)}}
+                	</div>
 	    		</div>
 	    	</div>
 			<div class="two fields">
@@ -56,12 +62,18 @@
 	    	</div>
 			<div class="two fields">
                 <div class="sixteen wide field">
-			    	{{ m.render_field(form.mdp) }}
+			    	<div class="ui left icon input">
+	            		<i class="lock icon"></i>
+				    	{{ m.render_field(form.mdp) }}
+				    </div>
 	    		</div>
 	    	</div>
 			<div class="two fields">
                 <div class="sixteen wide field">
-			    	{{ m.render_field(form.confirmation) }}
+			    	<div class="ui left icon input">
+	            		<i class="lock icon"></i>
+				    	{{ m.render_field(form.confirmation) }}
+				    </div>
 	    		</div>
 	    	</div>
 		  	{{ form.csrf_token }}
