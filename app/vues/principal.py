@@ -49,8 +49,6 @@ def faq():
 def contact():
     form = fu.Contact()
 
-    print(form.data)
-
     if form.validate_on_submit():
 
         msg = form.data
