@@ -3,7 +3,7 @@ from wtforms import TextField, SelectField
 from wtforms.validators import (Required, Length, Email, ValidationError,
                                 EqualTo)
 from app.formulaires import validateurs as vd
-from app.modeles import Adresse
+from app.modeles import Adresse, Course
 
 
 class Demande_NonAuth(Form):
@@ -36,7 +36,7 @@ class Demande_NonAuth(Form):
     ])
 
     date_debut = TextField(validators=[
-        Required(message='Veuillez renseigner une date de début')
+        Required(message='Veuillez renseigner une date de début'), vd.DateValide(Course, Course.debut)
     ], description='Date de début')
 
     nb_passagers = SelectField('Nombre de passagers', choices=[
@@ -65,8 +65,8 @@ class Demande_Auth(Form):
         validators=[vd.AdresseValide(Adresse, Adresse.adr_complete)], description="Adresse d'arrivée")
 
     date_debut = TextField(validators=[
-        Required(message='Veuillez renseigner une date de début')
-    ], description='Date de début')
+        Required(message='Veuillez renseigner une date de début'), vd.DateValide(Course, Course.debut)
+    ], description='Départ le')
 
     nb_passagers = SelectField('Nombre de passagers', choices=[
         (str(i), str(i))
