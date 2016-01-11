@@ -30,5 +30,6 @@ CREATE OR REPLACE FUNCTION suppr_propositions() RETURNS TRIGGER AS $suppr_propos
 			
 $suppr_propositions$ LANGUAGE plpgsql;
 			
-CREATE TRIGGER suppr_propositions AFTER UPDATE ON courses
+CREATE TRIGGER suppr_propositions 
+	AFTER UPDATE ON courses
 	FOR EACH ROW EXECUTE PROCEDURE suppr_propositions();
