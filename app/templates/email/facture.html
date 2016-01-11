@@ -21,78 +21,73 @@
    		<div id="body" class="body">
 			{% block content %}
 
-<div class="ui center raised text container pink segment">
-	<h2 class="ui center aligned icon header">
-			<i class="tiny calculator icon"></i> Devis
-	</h2>
-	<div class="ui segments">
-	<!-- Tarifs -->
-	<div class="ui blue segment">
-		{{ m.segment_devis_prix("Prix de la course", devis.prix.total, "help circle icon") }}
-		<div class="ui segment">
-		{{ m.segment_devis_prix("Prise en charge", devis.detail.prise_en_charge) }}
-		</div>
-		<div class="ui segment">
-		{{ m.segment_devis("Kilomètres estimés", devis.detail.parcours.distance) }}
-		</div>
-		<div class="ui segment">
-		{{ m.segment_devis_prix("Prix par kilomètre", devis.detail.parcours.prix_par_km) }}
-		</div>
-	
-	<!-- Suppléments -->
-	{% if devis.detail.gare.prise_charge == True %}
-		<div class="ui segment">
-		{{ m.segment_devis("Prise en charge à la gare SNCF Matabiau", "Oui") }}
-		</div>
-	{% endif %}
-	{% if devis.detail.aeroport.prise_charge == True %}
-		<div class="ui segment">
-		{{ m.segment_devis("Prise en charge à l'aéroport de Blagnac", "Oui") }}
-		</div>
-	{% endif %}
+			<div class="ui center raised text container pink segment">
+				<h2 class="ui center aligned icon header">
+						<i class="tiny calculator icon"></i> Devis
+				</h2>
+				<div class="ui segments">
+				<!-- Tarifs -->
+				<div class="ui blue segment">
+					{{ m.segment_devis_prix("Prix de la course", devis.prix.total, "help circle icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prise en charge", devis.detail.prise_en_charge) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis("Kilomètres estimés", devis.detail.parcours.distance) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par kilomètre", devis.detail.parcours.prix_par_km) }}
+					</div>
+				
+				<!-- Suppléments -->
+				{% if devis.detail.gare.prise_charge == True %}
+					<div class="ui segment">
+					{{ m.segment_devis("Prise en charge à la gare SNCF Matabiau", "Oui") }}
+					</div>
+				{% endif %}
+				{% if devis.detail.aeroport.prise_charge == True %}
+					<div class="ui segment">
+					{{ m.segment_devis("Prise en charge à l'aéroport de Blagnac", "Oui") }}
+					</div>
+				{% endif %}
 
-	</div>
+				</div>
 
-	<!-- Bagages -->
-	<div class="ui segment">
-	{{ m.segment_devis_prix("Bagages", devis.detail.bagages.total, "suitcase icon") }}
-		<div class="ui segment">
-		{{ m.segment_devis("Nombres de bagages", devis.detail.bagages.nb) }}
-		</div>
-		<div class="ui segment">
-		{{ m.segment_devis_prix("Prix par bagage", devis.detail.bagages.prix) }}
-		</div>
-	</div>
+				<!-- Bagages -->
+				<div class="ui segment">
+				{{ m.segment_devis_prix("Bagages", devis.detail.bagages.total, "suitcase icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis("Nombres de bagages", devis.detail.bagages.nb) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par bagage", devis.detail.bagages.prix) }}
+					</div>
+				</div>
 
-	<!-- Animaux -->
-	<div class="ui segment">
-	{{ m.segment_devis_prix("Animaux", devis.detail.animaux.total, "paw icon") }}
-		<div class="ui segment">
-		{{ m.segment_devis("Nombres d'animaux", devis.detail.animaux.nb) }}
-		</div>
-		<div class="ui segment">
-		{{ m.segment_devis_prix("Prix par animal", devis.detail.animaux.prix) }}
-		</div>
-	</div>
-	
-	<!-- Supplément -->
-	<div class="ui segment">
-	{{ m.segment_devis("Personnes supplémentaires", devis.detail.personnes.supplementaires.total, "plus icon") }}
-		<div class="ui segment">
-		{{ m.segment_devis("Nombres de passagers supplémentaires", devis.detail.personnes.supplementaires.nb) }}
-		</div>
-		<div class="ui segment">
-		{{ m.segment_devis_prix("Prix par passager supplémentaire", devis.detail.personnes.supplementaires.prix) }}
-		</div>
-	</div>
-</div>
-</div>
-
-
-
-
-
-
+				<!-- Animaux -->
+				<div class="ui segment">
+				{{ m.segment_devis_prix("Animaux", devis.detail.animaux.total, "paw icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis("Nombres d'animaux", devis.detail.animaux.nb) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par animal", devis.detail.animaux.prix) }}
+					</div>
+				</div>
+				
+				<!-- Supplément -->
+				<div class="ui segment">
+				{{ m.segment_devis("Personnes supplémentaires", devis.detail.personnes.supplementaires.total, "plus icon") }}
+					<div class="ui segment">
+					{{ m.segment_devis("Nombres de passagers supplémentaires", devis.detail.personnes.supplementaires.nb) }}
+					</div>
+					<div class="ui segment">
+					{{ m.segment_devis_prix("Prix par passager supplémentaire", devis.detail.personnes.supplementaires.prix) }}
+					</div>
+				</div>
+			</div>
+			</div>
+			
 			{% endblock %}
 		</div>
 

@@ -2,6 +2,8 @@
 {% block head %} 
 	{{ super() }} 
 
+{% if request.MOBILE %}
+{% else %}
 <script language='javascript'>
  $(document).ready(function(){
     $('.cookie.nag')
@@ -12,6 +14,7 @@
     ;
  });
 </script>
+{% endif %}
 
 <script type="text/javascript">
     function toggle_visibility(id) {
@@ -23,26 +26,14 @@
     }
 </script>
 
+<!-- Géolocalisation de l'addresse -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 
 <!-- Date -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
-<!-- JavaScript pout récupérer la date -->
-<script>
-$(function() {
-$( "#datepicker" ).datepicker(
-    {
-        dateFormat: "yy-mm-dd",
-        dayNamesMin: [ "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa" ],
-        monthNames: [ "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre" ]
-    }
-     );
-
-});
-</script>
-
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/datetimepicker/latest/DateTimePicker.min.css"></link>
+<script type="text/javascript" src="//cdn.jsdelivr.net/datetimepicker/latest/DateTimePicker.min.js"></script>
+ 
+<!-- Division cookie -->
 <div class="ui inline cookie nag">
   <span class="title">
     En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de cookies.
@@ -53,6 +44,46 @@ $( "#datepicker" ).datepicker(
 {% endblock %} 
 
 {% block content %}
+
+<script type='text/javascript'>
+function initializeAdresseDep() {
+    var input = document.getElementById('adresse_dep');
+    var options = {
+        types: ['geocode'],
+        componentRestrictions: {country: 'fr'}
+    };
+    autocomplete = new google.maps.places.Autocomplete(input, options);
+}
+google.maps.event.addDomListener(window, 'load', initializeAdresseDep);
+function initializeAdresseArr() {
+    var input = document.getElementById('adresse_arr');
+    var options = {
+        types: ['geocode'],
+        componentRestrictions: {country: 'fr'}
+    };
+    autocomplete = new google.maps.places.Autocomplete(input, options);
+}
+google.maps.event.addDomListener(window, 'load', initializeAdresseArr);
+</script>
+
+<script type='text/javascript'>
+ $(document).ready(function()
+ {
+    // Paramètres du DateTimePicker
+    $("#dtBox").DateTimePicker({
+        fullMonthNames : ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"],
+        shortDayNames: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+        fullDayNames : ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"],
+        shortMonthNames : ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"],
+        titleContentDateTime : "Choissisez la date et l'horaire de départ",
+        setButtonContent : "Appliquer",
+        clearButtonContent : "Effacer",
+        minuteInterval : 5,
+        buttonsToDisplay : ["HeaderCloseButton", "SetButton"],
+        dateTimeFormat : "dd-MM-yyyy HH:mm"
+    });
+ });
+</script>
 
 
 <h1 class="ui header">{{ titre }}</h1>
@@ -105,19 +136,14 @@ $( "#datepicker" ).datepicker(
                     {{ m.render_field(form.adresse_dep) }}
                     </div> 
                 </div> 
-            <div class="three fields">
-                <div class="four wide field">
-                    <input type="text" name="date_debut" id="datepicker" placeholder='Départ le' autocomplete="off">
-                </div>
-                <label> Heure </label>
-                <div class="four wide field">
-                    {{ m.render_field(form.heures) }}
-                </div>
-                <label> Minutes </label>
-                <div class="four wide field">
-                    {{ m.render_field(form.minutes) }}
-                </div>
             </div>
+            <div class="field">
+                <div class="two fields">
+                    <div class="fourteen wide field">
+                        <input type="text" id="datepicker" data-field="datetime" name="date_debut" placeholder="Départ le" autocomplete="off">
+                        <div id="dtBox"></div>
+                    </div> 
+                </div> 
             </div>
             <div class="field">
                 <div class="two fields">

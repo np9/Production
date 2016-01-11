@@ -53,16 +53,6 @@ class Demande_NonAuth(Form):
 
     commentaire = TextField(description="Commentaire")
 
-    heures = SelectField('Heures', choices=[
-        (str(i), str(i))
-        for i in range(24)
-    ])
-
-    minutes = SelectField('Minutes', choices=[
-        (str(i), str(i))
-        for i in range(0, 60, 5)
-    ])
-
 
 class Demande_Auth(Form):
 
@@ -91,13 +81,3 @@ class Demande_Auth(Form):
     ])
 
     commentaire = TextField(description="Commentaire")
-
-    heures = SelectField('Heures', choices=[
-        (str(i), str(i))
-        for i in range(24)
-    ])
-
-    minutes = SelectField('Minutes', choices=[
-        (str(i), str(i))
-        for i in range(0, 60, 5)
-    ])

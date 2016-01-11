@@ -5,6 +5,7 @@ from app.formulaires import reservation as rs
 from app.outils import geographie, email, utile
 from app import modeles
 from app import app, db
+import datetime
 import json
 
 
@@ -16,6 +17,8 @@ def index():
         form = rs.Demande_NonAuth()
     else:
         form = rs.Demande_Auth()
+
+    print(form.data)
 
     if form.validate_on_submit():
         flash('Le formulaire de réservation a été validé.', 'positive')
@@ -33,6 +36,8 @@ def index():
         demande['gare'] = True
         demande['aeroport'] = True
         demande['animaux'] = 0
+
+        demande['debut'] = datetime.datetime.strptime(demande['date_debut'], '%d-%m-%Y %H:%M')
 
         # Convertir les valeurs
         for key in demande.keys():
@@ -57,15 +62,13 @@ def index():
 def accepter():
 
     # Récupération des données et formatage du JSON
-    data = utile.nettoyerRequete(request.data.decode())
+    data = request.get_json()
 
-    print(data)
-    data = json.loads(data)
+    data = data.replace('&#39;', '"')
+
+    data = eval(data)
+
     demande = data['demande']
-
-    # Formattage de la date
-    date_course = str(demande['date_debut']) + " " + \
-        str(demande['heures']) + ":" + str(demande['minutes']) + ":00"
 
     # On insère l'utilisateur s'il n'est pas dans la base
     if current_user.is_authenticated == False:
@@ -111,7 +114,7 @@ def accepter():
         arrivee=adresse_arr.identifiant,
         places=demande['nb_passagers'],
         commentaire=demande['commentaire'],
-        debut=date_course,
+        debut=demande['debut'],
         trouvee=False,
         finie=False
     )
@@ -145,7 +148,7 @@ def accepter():
 
     devis = data['devis']
     # Sujet du mail à envoyer
-    sujet = 'Votre demande de réservation a été effectuée.'
+    sujet = 'Votre demande de réservation a été prise en compte.'
     # Le corps du mail est un template écrit en HTML
     html = render_template('email/facture.html', devis=devis)
     # Envoyer le mail à l'utilisateur

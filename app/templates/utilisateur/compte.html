@@ -11,7 +11,7 @@
   <h1 class="ui header">Bonjour {{ current_user.prenom }} {{ current_user.nom }}!</h1>
 
 <div class="ui two column centered grid">
-  <div class="column">
+  <div class="left floated six wide column">
     <div class="ui card">
       <div class="image">
         <img src="{{ url_for('static', filename='img/matthew.png') }}">
@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div class="column">
+  <div class="right floated ten wide column">
     <h2 class="ui header"><i class="list icon"></i>Historique des trajets</h1>
 
     <table class="ui pink table">

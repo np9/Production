@@ -60,7 +60,7 @@ def lire_json(filename):
 
 
 class MWT(object):
-    ''' Memoize With Timeout. '''
+    ''' Memorize With Timeout. '''
     _caches = {}
     _timeouts = {}
 
@@ -110,11 +110,3 @@ def formatage_url(adresse):
    # Première lettre de l'adresse en majuscule  
     adresse = adresse.capitalize()
     return adresse
-
-def nettoyerRequete(request_data):
-    ''' Fonction permettant de nettoyer une requête obtenue depuis un POST via AJAX. '''
-    data = str(json.loads(request_data))
-    data = data.replace('&#39;', '"')
-    data = data.replace("True", "true")
-    data = data.replace("False", "false")
-    return data
