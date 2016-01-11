@@ -178,7 +178,7 @@ def inserer_position(ligne):
     position = modeles.Position(
         conducteur=str(ligne['conducteur']),
         moment=ligne['moment'],
-        positions='POINT({0} {1})'.format(ligne['lat'], ligne['lon']),
+        position='POINT({0} {1})'.format(ligne['lat'], ligne['lon']),
     )
     db.session.add(position)
     db.session.commit()
