@@ -136,7 +136,7 @@ def inserer_entreprise(ligne):
         email = ligne['email'],
         tel = str(ligne['tel']),
         majoration= ligne['majoration'],
-        montant_en_cour = float(ligne['montant_en_cour']),
+        montant_en_cours = float(ligne['montant_en_cours']),
         adresse = ligne['adresse']
     )
         

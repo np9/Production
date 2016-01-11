@@ -307,7 +307,7 @@ class Entreprise(db.Model):
     email = db.Column(db.String)
     tel = db.Column(db.String)
     majoration = db.Column(db.Float)
-    montant_en_cour = db.Column(db.Float)
+    montant_en_cours = db.Column(db.Float)
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
 
 class Paiement(db.Model):
