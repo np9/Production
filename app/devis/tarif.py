@@ -5,7 +5,6 @@ from app.outils import calendrier
 from app.devis import calculer
 
 
-
 def calculer_supplement(demande, supplements):
     ''' Calcul des suppléments. '''
     supplement = 0

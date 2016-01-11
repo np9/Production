@@ -69,25 +69,7 @@ class Bannissement(db.Model):
     raison = db.Column(db.String)
 
     __table_args__ = (
-        db.PrimaryKeyConstraint('utilisateur', 'debut',
-                                name='pk_bannissements'),
-    )
-
-
-class Habitude(db.Model):
-
-    '''
-    Une adresse que l'utilisateur a l'habitude de choisir comme point de
-    départ.
-    '''
-
-    __tablename__ = 'habitudes'
-
-    utilisateur = db.Column(db.String, db.ForeignKey('utilisateurs.telephone'))
-    adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('utilisateur', 'adresse', name='pk_habitudes'),
+        db.PrimaryKeyConstraint('utilisateur', 'debut', name='pk_bannissements'),
     )
 
 
@@ -296,8 +278,10 @@ class Forfait(db.Model):
     montant = db.Column(db.Float)
     
     __table_args__ = (
-    db.PrimaryKeyConstraint('entreprise', 'destination_1','destination_2','tarif', name='pk_forfait'),
+        db.PrimaryKeyConstraint('entreprise', 'destination_1', 'destination_2',
+                                'tarif', name='pk_forfait'),
     )
+
 
 class Entreprise(db.Model):
 
@@ -305,18 +289,21 @@ class Entreprise(db.Model):
 
     nom = db.Column(db.String, primary_key=True)
     email = db.Column(db.String)
-    tel = db.Column(db.String)
+    telephone = db.Column(db.String)
     majoration = db.Column(db.Float)
     montant_en_cours = db.Column(db.Float)
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
 
+
 class Paiement(db.Model):
-    __tablename__='paiements'
-    entreprises = db.Column(db.String, db.ForeignKey('entreprises.nom'))
+
+    __tablename__ = 'paiements'
+
+    entreprise = db.Column(db.String, db.ForeignKey('entreprises.nom'))
     mois = db.Column(db.String)
     annee = db.Column(db.Integer)
     montant = db.Column(db.Float)
 
     __table_args__ = (
-    db.PrimaryKeyConstraint('entreprises', 'mois','annee' , name='pk_paiement'),
+        db.PrimaryKeyConstraint('entreprise', 'mois', 'annee', name='pk_paiement'),
     )

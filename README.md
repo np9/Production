@@ -58,13 +58,6 @@ Le fichier ``requirements.txt`` liste toutes les librairies Python à installer,
 
 ```sh
 sudo apt-get build-dep python-shapely
-```
-
-##### Sur MacOS
-
-```sh
-
-```
 
 ##### Sur Windows
   

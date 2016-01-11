@@ -3,22 +3,11 @@ from datetime import datetime
 from app import db
 from app import modeles
 import random
+from sqlalchemy import MetaData
 
-# On vide les tables dans un ordre logique
-modeles.Facture.query.delete()
-modeles.Etape.query.delete()
-modeles.Proposition.query.delete()
-modeles.Course.query.delete()
-modeles.Vehicule.query.delete()
-modeles.Etape.query.delete()
-modeles.Position.query.delete()
-modeles.Conducteur.query.delete()
-modeles.Station.query.delete()
-modeles.Forfait.query.delete()
-modeles.Entreprise.query.delete()
-modeles.Utilisateur.query.delete()
-modeles.Adresse.query.delete()
-
+# Vider toutes les tables
+for table in MetaData().tables:
+    db.session.execute(table.delete())
 
 print('Tables vidées.')
 
@@ -134,8 +123,8 @@ def inserer_entreprise(ligne):
     entreprise = modeles.Entreprise(
         nom = ligne['nom'],
         email = ligne['email'],
-        tel = str(ligne['tel']),
-        majoration= ligne['majoration'],
+        telephone = str(ligne['tel']),
+        majoration = ligne['majoration'],
         montant_en_cours = float(ligne['montant_en_cours']),
         adresse = ligne['adresse']
     )

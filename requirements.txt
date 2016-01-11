@@ -30,3 +30,5 @@ shapely
 haversine
 # Savoir si on est sur un téléphone
 flask-mobility
+# Planificateur de tâches
+apscheduler
