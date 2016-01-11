@@ -10,7 +10,7 @@ base de données tous les chauffeurs qui ne sont pas inactifs
 from app.attribution import insertion_propositions
 
 ##Tests
-def test_insertion_proposition:
+def test_insertion_proposition():
     '''Test de la  fonction inserer_conducteurs_toutes_station'''
     #Ici, on compare le nombre de ligne que l'on va ajouter dans la base de données avec le nombre de ligne attendu 
     assert insertion_proposition.inserer_conducteurs_toutes_station(1,[{'telephone': '33699428430', 'station': 'Esquirol'}],'Esquirol') == 1
