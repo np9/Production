@@ -1,7 +1,7 @@
 ﻿Test du trigger verif_banni
 
 On bannit d''abord un utilisateur. Puis on essaye de lui ajouter une course !
-INSERT INTO banissements values('33628251338','05/01/2016','06/01/2016','Impolitesse')
+INSERT INTO bannissements values('33628251338','05/01/2016','06/01/2016','Impolitesse')
 INSERT INTO courses(utilisateur, conducteur, places, priorite, debut, fin, retour, commentaire, depart, arrivee) VALUES ('33628251338','33699428430', 4, 'high', '2016-01-05 02:03:04.3256', '2016-01-05 04:03:04.3256', FALSE, 'Haha', 1,2)
 
 ERREUR:  l''utilisateur est actuellement bannit

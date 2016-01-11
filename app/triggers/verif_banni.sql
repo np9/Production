@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION verif_banni() RETURNS TRIGGER AS $verif_banni$
         -- Vérifie qu'un utilisateur n'est pas bannit
         
         SELECT count(*) INTO ComptBan 
-        FROM banissements B
+        FROM bannissements B
         WHERE B.utilisateur = NEW.utilisateur
 		AND B.fin >= CURRENT_DATE;
         
@@ -25,5 +25,5 @@ CREATE TRIGGER verif_banni
     FOR EACH ROW EXECUTE PROCEDURE verif_banni();
     
 -- Test verif_banni
--- Insert into banissements values('+33628251338','05/01/2016','06/01/2016','Impolitesse')
+-- Insert into bannissements values('+33628251338','05/01/2016','06/01/2016','Impolitesse')
 -- Insert into Courses values(')
