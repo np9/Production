@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify
 from app.vues.api import outils
 from app import db
 
@@ -13,11 +13,33 @@ def conducteur(telephone):
     return outils.transformer_json(requete)
 
 
+#@apiconducteurbp.route('/propositions/<telephone>', methods=['GET'])
+#def conducteur_propositions(telephone):
+#    ''' Retourne les propositions pour un certain conducteur. '''
+#    requete = db.session.execute("SELECT * FROM propositions P WHERE P.conducteur = '{}' AND p.ordre = 1".format(telephone))
+#    return outils.transformer_json(requete)
+
 @apiconducteurbp.route('/propositions/<telephone>', methods=['GET'])
 def conducteur_propositions(telephone):
     ''' Retourne les propositions pour un certain conducteur. '''
-    requete = db.session.execute("SELECT * FROM propositions P WHERE P.conducteur = '{}' AND p.ordre = 1".format(telephone))
-    return outils.transformer_json(requete)
+    # Selection d'une course disponible pour le conducteur
+    requete = db.session.execute("SELECT course FROM propositions WHERE conducteur = '{0}' AND statut IS NULL ".format(telephone))
+    # Selection de la première course de la liste
+    first_course_liste = requete.first()
+    if not first_course_liste:
+        return jsonify({'status': 'Pas de propositions'})
+    else:
+        first_course_var = first_course_liste[0]
+        # Création d'une variable "nombre" pour savoir si le conducteur est prioritaire sur la course
+        requete_2 = db.session.execute("SELECT COUNT(statut IS NULL) FROM propositions WHERE ordre < (SELECT ordre FROM propositions WHERE conducteur = '{0}' AND course = '{1}') AND course = '{1}'".format(telephone, first_course_var))
+        # Transformation de la requete en variable exploitable
+        nombre_liste = requete_2.first()
+        nombre = nombre_liste[0]
+        if nombre == 0:
+            detail_course = db.session.execute("SELECT * FROM courses WHERE numero = {}".format(first_course_var))
+            return outils.transformer_json(detail_course)
+        else:
+            return jsonify({'status': 'Pas prioritaire sur cette course'})
 
 
 @apiconducteurbp.route('/maj_statut/telephone=<telephone>&statut=<statut>', methods=['POST'])
