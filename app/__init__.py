@@ -40,11 +40,13 @@ app.register_blueprint(conducteur.conducteurbp)
 # Importer les vues de l'API
 from app.vues.api import (
 	base,
-	conducteurs
+	conducteurs,
+      stations
 )
 
 app.register_blueprint(base.apibp)
 app.register_blueprint(conducteurs.apiconducteurbp)
+app.register_blueprint(stations.apistationbp)
 
 # Importer les vues administrateurs
 from app.vues.admin import (
