@@ -2,9 +2,24 @@
 
 {% block head_css %}
     {{ super() }}
+    <style>
+    h1{
+        color : rgb(84,0,168)
+    }
+    body{
+	   height : 100%;
+	   color : rgb(128,0,128);
+	   <!--background-image : url("C:/Users/Valentine/Documents/L3 SID/TaxiSID/docProduction/app/static/img/bisounours.jpg")-->;
+    }
+    <!-- div{
+        background-color : rgb(255,255,255)
+    } -->
+    </style>
 {% endblock %}
 
 {% block body %}
+
+<div>
 
 <!--Affichage du titre en gras-->
 <br><h1><b><center>Bienvenue dans l'aide</center></b></h1><br>
@@ -13,25 +28,36 @@
 
 <!--Vue utilisateur-->
 <h2><b>Vue utilisateur<br></b></h2>
-- Utilisateur contact<br>
+<ul><li>Utilisateur contact<br></li></ul>
 Informations essentielles liées au contact de chaque utilisateur.<br>
-- Utilisateur compte<br>
+Possibilité de créer, éditer et supprimer des utilisateurs ainsi que de faire une recherche.<br>
+<ul><br><li>Utilisateur compte<br></li></ul>
 Informations liées au compte de l'utilisateur.<br>
-Possibilité de créer, éditer et supprimer des utilisateurs.<br>
+Possibilité de créer, éditer et supprimer des utilisateurs ainsi que de faire une recherche et d'appliquer un filtre.<br>
 
 <!--Vue conducteur-->
 <h2><b>Vue conducteur<br></b></h2>
-- Conducteur contact<br>
+<ul><li>Conducteur contact<br></li></ul>
 Informations essentielles liées au contact de chaque conducteur.<br>
-- Conducteur situation<br>
-Informations liées au compte de l'utilisateur ainsi que sa position cartographiée.<br>
-Possibilité de créer, éditer et supprimer des conducteurs.<br>
+Possibilité de créer, éditer et supprimer des utilisateurs ainsi que de faire une recherche.<br>
+<ul><br><li>Conducteur situation<br></li></ul>
+Informations liées au compte du conducteur ainsi que sa position cartographiée.<br>
+Possibilité de créer, éditer et supprimer des conducteurs ainsi que de faire une recherche et d'appliquer un filtre.<br>
+<ul><br><li>Conducteur pénalité<br></li></ul>
+Informations liées aux possibles pénalités des conducteurs ainsi que sa position cartographiée.<br>
+Possibilité de créer, éditer et supprimer des pénalités ainsi que de faire une recherche.<br>
 
 <!--Vue véhicule-->
 <h2><b>Vue véhicule<br></b></h2>
-Informations essentielles liées aux véhicules ainsi que le type de paiement qu'il utilise.<br>
-Informations sur la langue du conducteur ainsi que l'acceptation de mineurs et VIP.<br>
-Possibilité de créer, éditer et supprimer des véhicules.<br>
+<ul><li>Type de véhicule<br></li></ul>
+Informations essentielles liées aux véhicules.<br>
+Possibilité de créer, éditer et supprimer des utilisateurs ainsi que de faire une recherche et d'appliquer un filtre.<br>
+<ul><br><li>Client admis<br></li></ul>
+Informations liées à l'admissibilité des clients tels que les VIP ou les mineurs par exemple par le conducteur.<br>
+Possibilité de créer, éditer et supprimer des conducteurs ainsi que de faire une recherche.<br>
+<ul><br><li>Mode de paiement<br></li></ul>
+Informations liées au mode de paiement accepté par le véhicule.<br>
+Possibilité de créer, éditer et supprimer des pénalités ainsi que de faire une recherche.<br>
 
 <!--Vue station-->
 <h2><b>Vue station<br></b></h2>
@@ -56,6 +82,8 @@ Possibilité de créer, éditer et supprimer des courses.<br>
 <!--Vue carte-->
 <h2><b>Vue carte<br></b></h2>
 Indication de la position de chaque conducteurs.<br>
+
+</div>
 
 <br><br><br><br>
 
