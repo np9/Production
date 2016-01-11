@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION verif_banni() RETURNS TRIGGER AS $verif_banni$
         
         SELECT count(*) INTO ComptBan 
         FROM banissements B
-        WHERE B.telephone = NEW.telephone 
+        WHERE B.utilisateur = NEW.utilisateur
 		AND B.fin >= CURRENT_DATE;
         
 		IF ComptBan > 0 THEN
