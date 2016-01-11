@@ -5,6 +5,7 @@ from app import modeles
 import random
 
 # On vide les tables dans un ordre logique
+modeles.Message.query.delete()
 modeles.Facture.query.delete()
 modeles.Etape.query.delete()
 modeles.Proposition.query.delete()
@@ -41,6 +42,7 @@ adresses.apply(inserer_adresse, axis=1)
 
 print('Adresses insérées.')
 
+
 ####################
 ### Utilisateurs ###
 ####################
@@ -73,7 +75,7 @@ print('Utilisateurs insérés.')
 def inserer_station(ligne):
     station = modeles.Station(
         nom=ligne['nom'],
-        adresse=random.randint(1, len(adresses)),
+        adresse=ligne['adresse'],
         distance_entree=ligne['entree'],
         distance_sortie=ligne['sortie']
     )
@@ -229,3 +231,21 @@ propositions = pd.read_csv('app/data/propositions.csv', encoding='utf8')
 propositions.apply(inserer_proposition, axis=1)
 
 print('Propositions insérées.')
+
+########################################
+############# Messages #################
+########################################
+
+def inserer_message(ligne):
+    message = modeles.Message(
+        conducteur=str(ligne['conducteur']),
+        moment=ligne['moment'],
+        sujet=ligne['sujet'],
+    )
+    db.session.add(message)
+    db.session.commit()
+
+messages = pd.read_csv('app/data/messages.csv')
+messages.apply(inserer_message, axis=1)
+
+print('Messages insérés.')

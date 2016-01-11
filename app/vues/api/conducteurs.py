@@ -6,20 +6,19 @@ from app import db
 apiconducteurbp = Blueprint('apiconducteurbp', __name__, url_prefix='/api/conducteurs')
 
 
-@apiconducteurbp.route('/<telephone>', methods=['GET'])
+@apiconducteurbp.route('/<telephone>', methods=['GET','POST'])
 def conducteur(telephone):
     ''' Retourne les informations pour un certain conducteur. '''
     requete = db.session.execute("SELECT * FROM conducteurs WHERE telephone='{}'".format(telephone))
     return outils.transformer_json(requete)
-
-
+    
 #@apiconducteurbp.route('/propositions/<telephone>', methods=['GET'])
 #def conducteur_propositions(telephone):
 #    ''' Retourne les propositions pour un certain conducteur. '''
 #    requete = db.session.execute("SELECT * FROM propositions P WHERE P.conducteur = '{}' AND p.ordre = 1".format(telephone))
 #    return outils.transformer_json(requete)
 
-@apiconducteurbp.route('/propositions/<telephone>', methods=['GET'])
+@apiconducteurbp.route('/propositions/<telephone>', methods=['GET','POST'])
 def conducteur_propositions(telephone):
     ''' Retourne les propositions pour un certain conducteur. '''
     # Selection d'une course disponible pour le conducteur
@@ -27,11 +26,11 @@ def conducteur_propositions(telephone):
     # Selection de la première course de la liste
     first_course_liste = requete.first()
     if not first_course_liste:
-        return jsonify({'status': 'Pas de propositions'})
+        return jsonify({'status': 'echec'})
     else:
         first_course_var = first_course_liste[0]
         # Création d'une variable "nombre" pour savoir si le conducteur est prioritaire sur la course
-        requete_2 = db.session.execute("SELECT COUNT(statut IS NULL) FROM propositions WHERE ordre < (SELECT ordre FROM propositions WHERE conducteur = '{0}' AND course = '{1}') AND course = '{1}'".format(telephone, first_course_var))
+        requete_2 = db.session.execute("SELECT COUNT(statut) FROM propositions WHERE statut IS NULL AND ordre < (SELECT ordre FROM propositions WHERE conducteur = '{0}' AND course = '{1}') AND course = '{1}'".format(telephone, first_course_var))
         # Transformation de la requete en variable exploitable
         nombre_liste = requete_2.first()
         nombre = nombre_liste[0]
@@ -39,7 +38,7 @@ def conducteur_propositions(telephone):
             detail_course = db.session.execute("SELECT * FROM courses WHERE numero = {}".format(first_course_var))
             return outils.transformer_json(detail_course)
         else:
-            return jsonify({'status': 'Pas prioritaire sur cette course'})
+            return jsonify({'status': 'echec'})
 
 
 @apiconducteurbp.route('/maj_statut/telephone=<telephone>&statut=<statut>', methods=['POST'])
@@ -56,7 +55,7 @@ def conducteur_maj_position(telephone, lat, lon):
     return outils.executer(requete)
 
 
-@apiconducteurbp.route('/accepter/numero=<numero>&course=<course>', methods=['GET'])
+@apiconducteurbp.route('/accepter/numero=<numero>&course=<course>', methods=['GET','POST'])
 def rep_oui(numero, course):
     ''' Le conducteur répond 'OUI' à la proposition de la course détaillée. '''
     try:
@@ -72,7 +71,7 @@ def rep_oui(numero, course):
         return jsonify({'status': 'failure'})
 
    
-@apiconducteurbp.route('/refuser1/numero=<numero>&course=<course>', methods=['GET'])
+@apiconducteurbp.route('/refuser1/numero=<numero>&course=<course>', methods=['GET','POST'])
 def rep_non_1(numero, course):
     '''
     Le conducteur répond 'NON' à une proposition de course.
@@ -91,7 +90,7 @@ def rep_non_1(numero, course):
         return jsonify({'status': 'failure'})
 
      
-@apiconducteurbp.route('/refuser2/numero=<numero>&course=<course>', methods=['GET'])
+@apiconducteurbp.route('/refuser2/numero=<numero>&course=<course>', methods=['GET','POST'])
 def rep_non_2(numero, course):
     ''' Le conducteur répond 'NON' à la proposition de la course détaillée. '''
     try:
