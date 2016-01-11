@@ -7,12 +7,12 @@ import random
 # On vide les tables dans un ordre logique
 modeles.Facture.query.delete()
 modeles.Etape.query.delete()
+modeles.Proposition.query.delete()
 modeles.Course.query.delete()
 modeles.Vehicule.query.delete()
 modeles.Etape.query.delete()
 modeles.Position.query.delete()
 modeles.Conducteur.query.delete()
-modeles.Proposition.query.delete()
 modeles.Station.query.delete()
 modeles.Utilisateur.query.delete()
 modeles.Adresse.query.delete()
