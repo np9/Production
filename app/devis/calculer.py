@@ -4,6 +4,7 @@ from app.outils import utile
 from app.outils.distance import Parcours
 
 
+
 def date_depart(demande):
     '''
     Extraire la date de départ d'une demande de course
@@ -13,8 +14,8 @@ def date_depart(demande):
     annee = int(date[0])
     mois = int(date[1])
     jour = int(date[2][:2])
-    heure = demande['heures']
-    minutes = demande['minutes']
+    heure = int(demande['heures'])
+    minutes = int(demande['minutes'])
     # Retourner la date en format datetime
     return datetime(annee, mois, jour, heure, minutes)
 
@@ -96,20 +97,20 @@ def simuler(depart, arrivee, debut):
     duree = course['duree']
     distance = course['distance']
 
-    # Choisir une date de départ de référence pour établir une fourchette
+    # Choisir une date de départ de référence (avec peu de trafic) pour calculer le temps passé en tarif ralenti
 
-    # Qu'est-ce que vous essayez de faire? A discuter.
     reference_debut = datetime(
         year=debut.year,
         month=debut.month,
         day=debut.day,
         hour=10
     ) + timedelta(days=7)
+
     
     # Calculer la durée du trajet de référence
-    reference = duree_trajet(depart, arrivee, debut)
+    reference = duree_trajet(depart, arrivee, reference_debut)
     reference_duree = reference['duree']
-    reference_distance = reference['distance']
+
 
     fin = debut + duree
     # A utiliser...
@@ -118,5 +119,6 @@ def simuler(depart, arrivee, debut):
     return {
         'duree': duree,
         'distance': distance,
-        'ratios': ratios(debut, fin, duree)
+        'ratios': ratios(debut, fin, duree),
+        'ecart': ecart
     }
