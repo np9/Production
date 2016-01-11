@@ -25,13 +25,13 @@
 				<div class="ui blue segment">
 					{{ m.segment_devis_prix("Prix de la course", data.devis.prix.total, "help circle icon") }}
 					<div class="ui segment">
-					{{ m.segment_devis_prix("Prise en charge", data.devis.prise_en_charge) }}
+					{{ m.segment_devis_prix("Prise en charge", data.devis.detail.prise_en_charge) }}
 					</div>
 					<div class="ui segment">
 					{{ m.segment_devis("Kilomètres estimés", data.devis.detail.parcours.distance) }}
 					</div>
 					<div class="ui segment">
-					{{ m.segment_devis_prix("Prix par kilomètre", data.devis.prix.prix_par_km) }}
+					{{ m.segment_devis_prix("Prix par kilomètre", data.devis.detail.parcours.prix_par_km) }}
 					</div>
 				
 				<!-- Suppléments -->

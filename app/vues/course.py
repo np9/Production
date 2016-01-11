@@ -1,11 +1,11 @@
-from flask import render_template, flash, jsonify
+from flask import render_template, flash, jsonify, request
 from flask.ext.login import current_user
 from app.devis import tarif
 from app.formulaires import reservation as rs
-from app.outils import geographie
-from app.outils import email
+from app.outils import geographie, email, utile
 from app import modeles
 from app import app, db
+import json
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -30,8 +30,8 @@ def index():
 
         # Données de test
         demande['bagages'] = 0
-        demande['gare'] = False
-        demande['aeroport'] = False
+        demande['gare'] = True
+        demande['aeroport'] = True
         demande['animaux'] = 0
 
         # Convertir les valeurs
@@ -57,8 +57,9 @@ def index():
 def accepter():
 
     # Récupération des données et formatage du JSON
-    data = str(json.loads(request.data.decode()))
-    data = data.replace('&#39;', '"')
+    data = utile.nettoyerRequete(request.data.decode())
+
+    print(data)
     data = json.loads(data)
     demande = data['demande']
 

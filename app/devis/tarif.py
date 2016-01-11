@@ -84,7 +84,7 @@ def estimation(demande):
         },
         'detail': {
             'parcours': {
-                'duree': duree,
+                'duree': str(duree),
                 'distance': distance,
                 'prix_par_km': prix_par_km
             },
