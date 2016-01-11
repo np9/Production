@@ -12,19 +12,14 @@ class VueCourse(VueModele):
     can_delete = True
 
     form_columns = [
-    	'numero',
-    	'trouvee',
-    	'finie',
     	'utilisateur',
-    	'conducteur',
     	'places',
     	'priorite',
         'debut',
-        'fin',
         'commentaire',
         'bagages',
         'animaux',
-	'animaux_grands',
+	    'animaux_grands',
         'gare',
         'aeroport',
         'depart',

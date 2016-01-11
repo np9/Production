@@ -37,9 +37,76 @@ class VueVehicule(VueModele):
        	'mineur'
     ]
 
+
+class VueVehiculeType(VueVehicule) :
+    column_list = [
+        'immatriculation',
+        'conducteur',
+        'marque',
+        'modele',
+        'places',
+        'couleur',
+        'attelage',
+        'vbreak',
+        'voiture_basse'
+    ]
+
 admin.add_view(
-	VueVehicule(
-		modeles.Vehicule,
-		db.session
-	)
+    VueVehiculeType(
+        modeles.Vehicule,
+        db.session,
+        endpoint = 'VehiculeType',
+        category = 'Vehicule',
+        name = 'Types de Véhicule',
+        menu_icon_type='glyph',
+        menu_icon_value ='glyphicon-wrench'
+    )
 )
+
+
+class VueVehiculeClient(VueVehicule) :
+    column_list = [
+        'immatriculation',
+        'conducteur',
+        'vip',
+        'mineur',
+        'animaux',
+        'anglais',
+        'espagnol',
+        'allemand'
+    ]
+
+admin.add_view(
+    VueVehiculeClient(
+        modeles.Vehicule,
+        db.session,
+        endpoint = 'VehiculeClient',
+        category = 'Vehicule',
+        name = 'Client admis',
+        menu_icon_type='glyph',
+        menu_icon_value ='glyphicon-ok'
+    )
+)
+
+
+class VueVehiculePaiement(VueVehicule) :
+    column_list = [
+    'immatriculation',
+    'conducteur',
+    'carte_bleue',
+    'american_express',
+    'cheque'
+    ]
+
+admin.add_view(
+    VueVehiculePaiement(
+        modeles.Vehicule,
+        db.session,
+        endpoint = 'VehiculePaiement',
+        category = 'Vehicule',
+        name = 'Mode de Paiement',
+        menu_icon_type='glyph',
+        menu_icon_value ='glyphicon-eur'
+    )
+)
+

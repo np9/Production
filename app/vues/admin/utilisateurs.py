@@ -3,31 +3,53 @@ from app import modeles
 from app import db
 from app.vues.admin import VueModele
 
-
-class VueUtilisateurContact(VueModele):
-
-    ''' Informations de contact de l'utilisateur. '''
+class VueUtilisateur(VueModele) :
 
     can_create = True
     can_edit = True
     can_delete = True
     
-    column_list = ['civilite','nom','prenom','telephone','email','adresse']    
-    
-    column_exclude_list = [
-        '_mdp',
-        'confirmation',
-        'notification_email',
-        'notification_sms',
-        'inscription'
-    ]
-
     column_searchable_list = [
         'prenom',
         'nom',
         'telephone'
     ]
 
+
+    column_exclude_list = [
+        '_mdp'
+    ]
+
+    form_columns = [
+        'civilite',
+        'nom',
+        'prenom',
+        'telephone',
+        'email',
+        'fax',
+        'notification_email',
+        'notification_sms',
+        'confirmation',
+        'inscription',
+        'adresse'
+        #'_mdp'
+    ]
+
+
+class VueUtilisateurContact(VueUtilisateur):
+
+    ''' Informations de contact de l'utilisateur. '''
+
+    column_list = [
+        'civilite',
+        'nom',
+        'prenom',
+        'telephone',
+        'fax',
+        'email',
+        'adresse'
+    ]    
+    
 
 admin.add_view(
     VueUtilisateurContact(
@@ -42,27 +64,20 @@ admin.add_view(
 )
 
 
-class VueUtilisateurCompte(VueModele):
+class VueUtilisateurCompte(VueUtilisateur):
 
     ''' Informations sur le compte de l'utilisateur. '''
 
-    can_create = True
-    can_edit = True
-    can_delete = True
-
-    column_exclude_list = [
-        '_mdp',
-        'civilite',
-        'email',
-        'categorie',
-        'fax'
-    ]
-
-    column_searchable_list = [
+    column_list = [
+        'nom',
         'prenom',
-        'nom', 
-        'telephone'
+        'telephone',
+        'confirmation',
+        'notification_email',
+        'notification_sms',
+        'inscription'
     ]
+
 
     column_filters = [
         'notification_email',

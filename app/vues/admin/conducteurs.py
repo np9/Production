@@ -8,22 +8,12 @@ categorie = 'Conducteur'
 # Ajout penalité
 # + oui non penalite
 
-class VueConducteurContact(VueModele):
 
-    ''' Informations de contact du conducteur. '''
-    
+class VueConducteur(VueModele) :
+
     can_create = True
     can_edit = True
     can_delete = True
-
-    column_list = [
-        'civilite',
-        'nom',
-        'prenom',
-        'telephone',
-        'email',
-        'adresse'
-    ]
 
     column_searchable_list = [
         'nom',
@@ -45,6 +35,21 @@ class VueConducteurContact(VueModele):
         'position',
         'adresse',
         'inscription'
+    ]
+
+
+class VueConducteurContact(VueConducteur):
+
+    ''' Informations de contact du conducteur. '''
+    
+    
+    column_list = [
+        'civilite',
+        'nom',
+        'prenom',
+        'telephone',
+        'email',
+        'adresse'
     ]
 
 
@@ -61,13 +66,9 @@ admin.add_view(
 )
 
 
-class VueConducteurSituation(VueModele):
+class VueConducteurSituation(VueConducteur):
 
     ''' Informations sur la situation des conducteurs. '''
-
-    can_create = True
-    can_edit = True
-    can_delete = True
 
     column_list = [
         'civilite',
@@ -78,28 +79,6 @@ class VueConducteurSituation(VueModele):
         'station',
         'station_entree',
         'position'
-    ]
-
-    column_searchable_list = [
-        'nom',
-        'prenom',
-        'telephone'
-    ]
-
-    form_columns = [
-        'telephone',
-        'civilite',
-        'email',
-        'date_naissance',
-        'fax',
-        'prenom',
-        'nom',
-        'statut',
-        'station',
-        'station_entree',
-        'position',
-        'adresse',
-        'inscription'
     ]
 
     column_filters = [
@@ -119,22 +98,13 @@ admin.add_view(
     )
 )
 
-class VueConducteurPenalite(VueModele) :
 
-    # Rendre possible la création, la modification et la suppression
-    can_create = True
-    can_edit = True
-    can_delete = True
-   
+class VueConducteurPenalite(VueConducteur) :
+
     #colonnes à afficher
     colnum_list = ['civilite','nom','prenom','telephone','penalite']
-   
-    #Colonnes pour chercher
-    column_searchable_list = ['nom','prenom','telephone']
-   
-    #colonne à rentrer pour ajout d'un conducteur
-    form_columns = ['telephone','civilite','email','date_naissance','fax','prenom','nom','statut','station','station_entree','position','adresse','inscription']
-   
+      
+
 admin.add_view(
     VueConducteurPenalite(
         modeles.Conducteur,
