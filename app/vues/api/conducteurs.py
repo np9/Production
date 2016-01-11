@@ -12,7 +12,12 @@ def conducteur(telephone):
     requete = db.session.execute("SELECT * FROM conducteurs WHERE telephone='{}'".format(telephone))
     return outils.transformer_json(requete)
 
-
+@apiconducteurbp.route('/adresses/<identifiant>', methods=['GET'])
+def adresse(identifiant):
+    ''' Retourne les informations pour une certaine adresse. '''
+    requete = db.session.execute("SELECT * FROM adresses WHERE identifiant='{}'".format(identifiant))
+    return outils.transformer_json(requete)
+    
 #@apiconducteurbp.route('/propositions/<telephone>', methods=['GET'])
 #def conducteur_propositions(telephone):
 #    ''' Retourne les propositions pour un certain conducteur. '''
