@@ -15,12 +15,16 @@ class Demande_NonAuth(Form):
     adresse_arr = TextField(
         validators=[vd.AdresseValide(Adresse, Adresse.adr_complete)], description="Adresse d'arrivée")
 
-    nom = TextField(description='Nom')
+    nom = TextField(validators=[
+        Required(message='Veuillez renseigner votre nom')
+    ], description='Nom')
 
-    prenom = TextField(description='Prénom')
+    prenom = TextField(validators=[
+        Required(message='Veuillez renseigner votre prénom')
+    ], description='Prénom')
 
     telephone = TextField(validators=[
-        Required(message='Veuillez renseigner votre numéro de téléphone.')
+        Required(message='Veuillez renseigner votre numéro de téléphone')
     ], description='Numéro de téléphone')
 
     mail = TextField(validators=[Email(
