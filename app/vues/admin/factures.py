@@ -13,11 +13,8 @@ class VueFacture(VueModele):
 
     form_columns = [
     	'course',
-    	'forfait',
-    	'estimation',
     	'montant',
-    	'rabais',
-    	'paiement'
+    	'type_paiement'
     ]
 
 admin.add_view(

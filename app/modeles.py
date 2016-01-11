@@ -59,9 +59,9 @@ class Notification(db.Model):
 
 class Bannissement(db.Model):
 
-    ''' Un banissement d'un utilisateur. '''
+    ''' Un bannissement d'un utilisateur. '''
 
-    __tablename__ = 'banissements'
+    __tablename__ = 'bannissements'
 
     utilisateur = db.Column(db.String, db.ForeignKey('utilisateurs.telephone'))
     debut = db.Column(db.DateTime)
@@ -98,6 +98,7 @@ class Conducteur(db.Model):
     __tablename__ = 'conducteurs'
 
     telephone = db.Column(db.String, primary_key=True)
+    numero_imei = db.Column(db.String)
     civilite = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     date_naissance = db.Column(db.Date)
@@ -225,6 +226,9 @@ class Course(db.Model):
     animaux_grands = db.Column(db.Boolean)
     gare = db.Column(db.Boolean)
     aeroport = db.Column(db.Boolean)
+    entreprise = db.Column(db.String, db.ForeignKey('entreprises.nom'))
+    distance_estimee = db.Column(db.Float)
+
 
     __table_args__ = (
         db.CheckConstraint('debut < fin', name='debut_inf_fin_check'),
@@ -275,9 +279,44 @@ class Facture(db.Model):
 
     course = db.Column(db.Integer, db.ForeignKey('courses.numero'),
                        primary_key=True)
-    forfait = db.Column(db.String)
-    estimation = db.Column(db.Float, db.CheckConstraint('0 <= estimation'))
     montant = db.Column(db.Float, db.CheckConstraint('0 <= montant'))
-    rabais = db.Column(db.Float, db.CheckConstraint(
-        '0 <= rabais AND rabais <= 1'))
-    paiement = db.Column(db.String)
+    type_paiement = db.Column(db.String)
+    estimation_1 = db.Column(db.Float)
+    estimation_2 = db.Column(db.Float)
+
+
+class Forfait(db.Model):
+
+    __tablename__ = 'forfaits'
+
+    entreprise = db.Column(db.String, db.ForeignKey('entreprises.nom'))
+    destination_1 = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
+    destination_2 = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
+    tarif = db.Column(db.String)
+    montant = db.Column(db.Float)
+    
+    __table_args__ = (
+    db.PrimaryKeyConstraint('entreprise', 'destination_1','destination_2','tarif', name='pk_forfait'),
+    )
+
+class Entreprise(db.Model):
+
+    __tablename__ = 'entreprises'
+
+    nom = db.Column(db.String, primary_key=True)
+    email = db.Column(db.String)
+    tel = db.Column(db.String)
+    majoration = db.Column(db.Float)
+    montant_en_cour = db.Column(db.Float)
+    adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
+
+class Paiement(db.Model):
+    __tablename__='paiements'
+    entreprises = db.Column(db.String, db.ForeignKey('entreprises.nom'))
+    mois = db.Column(db.String)
+    annee = db.Column(db.Integer)
+    montant = db.Column(db.Float)
+
+    __table_args__ = (
+    db.PrimaryKeyConstraint('entreprises', 'mois','annee' , name='pk_paiement'),
+    )
