@@ -30,19 +30,19 @@ print('Tables créées.')
 
 # Création des triggers
 
-# # Détection de l'OS
-# systeme = platform.system()
-# # Les slashs changent si on sur Windows
-# dossier = 'app\triggers\*.sql' if systeme == 'Windows' else 'app/triggers/*.sql'
+# Détection de l'OS
+systeme = platform.system()
+# Les slashs changent si on sur Windows
+dossier = 'app\\triggers\*.sql' if systeme == 'Windows' else 'app/triggers/*.sql'
 
-# # Essayer d'exécuter tous les triggers dans le dossier qui les contient
-# for trigger in glob.glob(dossier):
-# 	sql = open(trigger).read()
-# 	try:
-# 		db.session.execute(sql)
-# 		db.session.commit()
-# 		print('Trigger {} crée sans erreurs.'.format(trigger))
-# 	except:
-# 		print('Erreur sur le trigger {}.'.format(trigger))
+# Essayer d'exécuter tous les triggers dans le dossier qui les contient
+for trigger in glob.glob(dossier):
+	sql = open(trigger).read()
+	try:
+		db.session.execute(sql)
+		db.session.commit()
+		print('Trigger {} crée sans erreurs.'.format(trigger))
+	except:
+		print('Erreur sur le trigger {}.'.format(trigger))
 
-# print('Triggers crées.')
+print('Triggers crées.')
