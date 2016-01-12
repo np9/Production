@@ -51,13 +51,17 @@ class VueVehiculeType(VueVehicule) :
         'voiture_basse'
     ]
 
+    column_filters = [
+        'places'
+    ]
+
 admin.add_view(
     VueVehiculeType(
         modeles.Vehicule,
         db.session,
         endpoint = 'VehiculeType',
         category = 'Vehicule',
-        name = 'Types de Véhicule',
+        name = 'Types de véhicules',
         menu_icon_type='glyph',
         menu_icon_value ='glyphicon-wrench'
     )
@@ -76,13 +80,22 @@ class VueVehiculeClient(VueVehicule) :
         'allemand'
     ]
 
+    column_filters = [
+        'vip',
+        'mineur',
+        'animaux',
+        'anglais',
+        'espagnol',
+        'allemand'
+    ]
+
 admin.add_view(
     VueVehiculeClient(
         modeles.Vehicule,
         db.session,
         endpoint = 'VehiculeClient',
         category = 'Vehicule',
-        name = 'Client admis',
+        name = 'Clients admis',
         menu_icon_type='glyph',
         menu_icon_value ='glyphicon-ok'
     )
@@ -104,7 +117,7 @@ admin.add_view(
         db.session,
         endpoint = 'VehiculePaiement',
         category = 'Vehicule',
-        name = 'Mode de Paiement',
+        name = 'Modes de paiement',
         menu_icon_type='glyph',
         menu_icon_value ='glyphicon-eur'
     )

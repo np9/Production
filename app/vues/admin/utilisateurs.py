@@ -29,8 +29,6 @@ class VueUtilisateur(VueModele) :
         'fax',
         'notification_email',
         'notification_sms',
-        'confirmation',
-        'inscription',
         'adresse'
         #'_mdp'
     ]
@@ -81,8 +79,7 @@ class VueUtilisateurCompte(VueUtilisateur):
 
     column_filters = [
         'notification_email',
-        'notification_sms',
-        'inscription'
+        'notification_sms'
     ]
 
 

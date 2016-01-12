@@ -10,9 +10,8 @@ class VueAdresse(VueModele):
     can_delete = True
 
     form_columns = [
-    	'identifiant',
+        'numero',
     	'nom_rue',
-    	'numero',
     	'cp',
     	'ville',
     	'position'

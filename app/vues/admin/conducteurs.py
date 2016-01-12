@@ -22,19 +22,15 @@ class VueConducteur(VueModele) :
     ]
 
     form_columns = [
-        'telephone',
         'civilite',
-        'email',
-        'date_naissance',
-        'fax',
-        'prenom',
         'nom',
-        'statut',
-        'station',
-        'station_entree',
-        'position',
-        'adresse',
-        'inscription'
+        'prenom',
+        'telephone',
+        'numero_imei',
+        'email',
+        'fax',
+        'date_naissance',
+        'adresse'
     ]
 
 
@@ -48,6 +44,7 @@ class VueConducteurContact(VueConducteur):
         'nom',
         'prenom',
         'telephone',
+        'numero_imei',
         'email',
         'adresse'
     ]
@@ -75,6 +72,7 @@ class VueConducteurSituation(VueConducteur):
         'nom',
         'prenom',
         'telephone',
+        'numero_imei',
         'statut',
         'station',
         'station_entree',
@@ -102,7 +100,14 @@ admin.add_view(
 class VueConducteurPenalite(VueConducteur) :
 
     #colonnes à afficher
-    colnum_list = ['civilite','nom','prenom','telephone','penalite']
+    colunm_list = [
+        'civilite',
+        'nom',
+        'prenom',
+        'telephone',
+        'numero_imei',
+        'penalite'
+        ]
       
 
 admin.add_view(
