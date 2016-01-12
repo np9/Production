@@ -18,3 +18,13 @@
 - Poser des index sur les tables.
 - Briser les fonctions pour pouvoir faire plus de tests unitaires.
 - Optimiser les calculs de l'API.
+
+
+
+# Idées d'extensions
+
+- Traduire l'application dans d'autres langues (anglais, espagnol, ...)
+- Noter, évaluer une course
+- Donner un avis sur un chauffeur, commenter
+- (...)
+- Fonctionnalités analytiques complètes, CRM
