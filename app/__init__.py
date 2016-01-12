@@ -60,7 +60,7 @@ from app.vues.admin import (
 	vehicules,
 	entreprises,
 	stations,
-	factures,
+	paiements,
 	adresses,
 	courses,
 	carte,
