@@ -66,6 +66,19 @@ function initializeAdresseArr() {
 google.maps.event.addDomListener(window, 'load', initializeAdresseArr);
 </script>
 
+<script type="text/javascript">
+    function AffichageAnimaux()
+     {
+        console.log(document.getElementById('nb_animaux').value)
+        if (document.getElementById('nb_animaux').value == 0) {
+            document.getElementById('animaux_grands1').style.visibility="hidden";
+        }
+        else {
+            document.getElementById('animaux_grands1').style.visibility="visible";
+        }
+    }
+</script>
+
 <script type='text/javascript'>
  $(document).ready(function()
  {
@@ -171,10 +184,26 @@ google.maps.event.addDomListener(window, 'load', initializeAdresseArr);
                     </div> 
                     <label>Commentaire</label>
                     <div class="two fields">
-                        <div class="ten wide field">
+                        <div class="sixteen wide field">
                             {{ m.render_field(form.commentaire) }} 
                         </div> 
                     </div>           
+                </div>
+                <div class="two fields">
+                    <div class="four wide field">
+                        <label>Nombre de bagages</label>
+                        {{ m.render_field(form.nb_bagages) }} 
+                    </div> 
+                </div> 
+                <div class="two fields" >
+                    <div class="four wide field">
+                        <label>Nombre d'animaux de grande taille (ex: labrador, </label>
+                        {{ m.render_fieldcheckanimaux(form.nb_animaux) }} 
+                    </div> 
+                    <div class="twelve wide field" id = "animaux_grands1" style="visibility:hidden;">
+                        <label>Pensez vous que le transport de vos animaux nécessite un véhicule de grande taille ? </label>
+                        {{ m.render_field(form.animaux_grands) }} 
+                    </div> 
                 </div>
             </div>
             {{ form.csrf_token }}

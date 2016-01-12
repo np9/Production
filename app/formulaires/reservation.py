@@ -53,6 +53,20 @@ class Demande_NonAuth(Form):
 
     commentaire = TextField(description="Commentaire")
 
+    nb_animaux = SelectField('Nombre animaux', choices=[
+        (str(i), str(i))
+        for i in range(0,11,1)
+    ])
+    nb_bagages = SelectField('Nombre de bagages éventuels', choices=[
+        (str(i), str(i))
+        for i in range(1,6,1)
+    ])
+    animaux_grands = SelectField("Pensez-vous que la taille de vos animaux nécessite d'avoir un grand véhicule ?", choices=[
+        ('False', 'Non'),
+        ('True', 'Oui'),
+    ])
+
+
 
 class Demande_Auth(Form):
 
@@ -81,3 +95,17 @@ class Demande_Auth(Form):
     ])
 
     commentaire = TextField(description="Commentaire")
+
+    nb_animaux = SelectField('Nombre animaux', choices=[
+        (str(i), str(i))
+        for i in range(0,11,1)
+    ])
+    nb_bagages = SelectField('Nombre de bagages éventuels', choices=[
+        (str(i), str(i))
+        for i in range(1,6,1)
+    ])
+    animaux_grands = SelectField("Pensez-vous que la taille de vos animaux nécessite d'avoir un grand véhicule ?", choices=[
+        ('False', 'Non'),
+        ('True', 'Oui'),
+    ])
+

@@ -19,6 +19,8 @@ def index():
         form = rs.Demande_Auth()
 
     if form.validate_on_submit():
+
+
         flash('Le formulaire de réservation a été validé.', 'positive')
 
         demande = form.data
@@ -30,10 +32,8 @@ def index():
             demande['mail'] = current_user.email
 
         # Données de test
-        demande['bagages'] = 0
         demande['gare'] = True
         demande['aeroport'] = True
-        demande['animaux'] = 0
 
         demande['debut'] = datetime.datetime.strptime(demande['date_debut'], '%d-%m-%Y %H:%M')
 
@@ -44,13 +44,16 @@ def index():
             except:
                 pass
 
+        print(demande)
         # Calcul de la tarification provisoire
         devis = tarif.estimation(demande)
+
 
         data = {
             'demande': demande,
             'devis': devis
         }
+
 
         return render_template('devis.html', data=data, titre='Devis')
     return render_template('index.html', form=form, titre='Réserver un taxi')
@@ -108,13 +111,16 @@ def accepter():
 
     # Création de la course
     nouvelle_course = modeles.Course(
-        depart=adresse_dep.identifiant,
-        arrivee=adresse_arr.identifiant,
-        places=demande['nb_passagers'],
-        commentaire=demande['commentaire'],
-        debut=demande['debut'],
-        trouvee=False,
-        finie=False
+        depart = adresse_dep.identifiant,
+        arrivee = adresse_arr.identifiant,
+        places = demande['nb_passagers'],
+        commentaire = demande['commentaire'],
+        debut = demande['debut'],
+        trouvee = False,
+        finie = False,
+        animaux = demande['nb_animaux'],
+        bagages = demande['nb_bagages'],
+        animaux_grands = demande['animaux_grands']
     )
 
     if current_user.is_authenticated:
@@ -129,10 +135,9 @@ def accepter():
     # Création d'une nouvelle facture
     facture = modeles.Facture(
         course=nouvelle_course.numero,
-        paiement=demande['paiement'],
-        estimation=0,
-        montant=0,
-        rabais=0
+        type_paiement=demande['paiement'],
+        estimation_1=0,
+        montant=0
     )
 
     db.session.add(facture)
@@ -145,6 +150,7 @@ def accepter():
         adresse_mail = current_user.email
 
     devis = data['devis']
+
     # Sujet du mail à envoyer
     sujet = 'Votre demande de réservation a été prise en compte.'
     # Le corps du mail est un template écrit en HTML

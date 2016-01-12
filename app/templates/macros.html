@@ -38,6 +38,17 @@
   	{% endif %}
 {% endmacro %}
 
+<!-- Macro générant une liste déroulante pour les animaux -->
+{% macro render_fieldcheckanimaux(field, valeur) %}
+	{{ field(name_=field.name, id=field.name, placeholder=field.description, class_="input", value=valeur, onclick = "AffichageAnimaux()" ) }}
+  	{% if field.errors %}
+    	<ul>
+	    	{% for error in field.errors %}
+	      		<li class="formulaire-erreur">{{ error }}</li>
+	    	{% endfor %}
+    	</ul>
+  	{% endif %}
+{% endmacro %}
 
 <!-- Macro permettant d'afficher une ligne de prix dans le devis -->
 {% macro segment_devis_prix(texte, valeur, icon) %}
