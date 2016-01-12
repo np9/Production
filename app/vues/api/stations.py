@@ -20,10 +20,10 @@ def getall():
 #Info Population :
 #Prends en paramètre une adresse de station
 #Renvoie tous les taxi present sur l'adresse + temps qu'ils ont sont	
-@apistationbp.route('/toto/', methods=['GET'])
-def toto():
+@apistationbp.route('/population/nom_station=<nom_station>', methods=['GET'])
+def population():
     ''' Retourne les informations pour un certain conducteur. '''   
-    requete = db.session.execute("select c.telephone, round((extract('epoch' from (CURRENT_TIMESTAMP - c.station_entree)))/60) temps from stations s, conducteurs c where c.station = s.nom and s.nom='Capitole'")
+    requete = db.session.execute("select c.telephone, round((extract('epoch' from (CURRENT_TIMESTAMP - c.station_entree)))/60) temps from stations s, conducteurs c where c.station = s.nom and s.nom='<nom_station>'")
     json = outils.transformer_json(requete)
     return json
 
