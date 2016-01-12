@@ -18,3 +18,16 @@
 - Poser des index sur les tables.
 - Briser les fonctions pour pouvoir faire plus de tests unitaires.
 - Optimiser les calculs de l'API.
+
+
+
+# Idées d'extensions
+
+- Traduire l'application dans d'autres langues (anglais, espagnol, ...)
+- Noter/Evaluer le trajet
+- Emettre un avis sur un chauffeur, commenter
+- Enregistrer une carte bancaire pour prélèvement automatique
+- Envoyer la facture par mail au client
+- Trajets pré-enregistrés/Favoris
+- (...)
+- Fonctionnalités analytiques complètes/CRM
