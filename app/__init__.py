@@ -39,14 +39,32 @@ app.register_blueprint(conducteur.conducteurbp)
 
 # Importer les vues de l'API
 from app.vues.api import (
+<<<<<<< HEAD
+	adresses,
 	base,
 	conducteurs,
-      stations
+	messages
+)
+
+app.register_blueprint(adresses.apiadressebp)
+app.register_blueprint(base.apibp)
+app.register_blueprint(conducteurs.apiconducteurbp)
+app.register_blueprint(messages.apimessagebp)
+=======
+	base,
+	conducteurs,
+    stations,
+	messages
 )
 
 app.register_blueprint(base.apibp)
 app.register_blueprint(conducteurs.apiconducteurbp)
 app.register_blueprint(stations.apistationbp)
+<<<<<<< HEAD
+>>>>>>> origin/master
+=======
+app.register_blueprint(messages.apimessagebp)
+>>>>>>> origin/master
 
 # Importer les vues administrateurs
 from app.vues.admin import (
