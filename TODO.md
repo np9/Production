@@ -18,3 +18,17 @@
 - Poser des index sur les tables.
 - Briser les fonctions pour pouvoir faire plus de tests unitaires.
 - Optimiser les calculs de l'API.
+
+
+
+# Idées d'extensions
+- Traduire l'application dans plusieurs langues (anglais, espagnol, ...)
+- Donner son avis sur un chauffeur, commenter
+- Noter, évaluer une course
+- Étendre l’application sur différents supports (tablette, ordinateur, téléphone, ...), mais également aux téléphones ne supportant pas Androïd (Iphones, par exemple)
+- Décompter l’arrivée du taxi : quand va-t-il arriver ?
+- Enregistrer des trajets réguliers, créer une catégorie "Favoris" (afin de ne pas réécrire à chaque fois l'adresse)
+- Sauvegarder un historique des courses effectuées
+- Envoyer au client, par mail ou SMS, des informations sur le véhicule réservé (marque, couleur, plaque d'immatriculation, nombre de places, ...)
+- Assurer que le prix réel ne dépasse pas la borne supérieure du prix estimé
+- Fonctionnalités analytiques complètes, CRM
