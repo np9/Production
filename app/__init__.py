@@ -19,7 +19,8 @@ bcrypt = Bcrypt(app)
 
 # Ajouter une interface administrateur
 from flask_admin import Admin
-admin = Admin(app, name='Admin', template_mode='bootstrap3')
+admin = Admin(app, 'Administration', base_template='admin.html',
+			  template_mode='bootstrap3')
 
 # Mobiliser l'application
 from flask.ext.mobility import Mobility

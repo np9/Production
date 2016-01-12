@@ -10,6 +10,10 @@ class VueModele(ModelView):
     HTTP. Toutes les autres vues héritent de celle-ci.
     '''
 
+    list_template = 'admin/list.html'
+    create_template = 'admin/create.html'
+    edit_template = 'admin/edit.html'
+
     # Edition des données dans une fenêtre modale
     #create_modal = True
     #edit_modal = True
