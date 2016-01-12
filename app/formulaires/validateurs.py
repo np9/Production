@@ -1,6 +1,6 @@
 from wtforms import ValidationError
 from app.outils import geographie
-
+import datetime
 
 class Unique(object):
 
@@ -41,4 +41,25 @@ class AdresseValide(object):
         print(field.data)
         position = geographie.geocoder(field.data)
         if position['statut'] == 'echec':
+            raise ValidationError(self.message)
+
+class DateValide(object):
+
+    '''
+    Validateur fait maison pour s'assurer qu'une
+    date est valide. C'est à dire qu'on vérifie qu'elle 
+    est supérieure à la date actuelle.
+    '''
+
+    def __init__(self, model, field):
+        self.model = model
+        self.field = field
+        self.message = "La date de réservation ne peut pas être antérieure à la date actuelle."
+
+    def __call__(self, form, field):
+        date_Aujd = datetime.datetime.now()
+        date_Res = datetime.datetime.strptime(field.data, '%d-%m-%Y %H:%M')
+
+        if date_Res < date_Aujd:
+            print("True")
             raise ValidationError(self.message)

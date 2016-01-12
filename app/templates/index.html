@@ -140,7 +140,7 @@ google.maps.event.addDomListener(window, 'load', initializeAdresseArr);
             <div class="field">
                 <div class="two fields">
                     <div class="fourteen wide field">
-                        <input type="text" id="datepicker" data-field="datetime" name="date_debut" placeholder="Départ le" autocomplete="off">
+                        {{ m.render_fielderrors_date(form.date_debut)}}
                         <div id="dtBox"></div>
                     </div> 
                 </div> 
