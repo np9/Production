@@ -7,13 +7,15 @@ from sqlalchemy import MetaData
 
 # On vide les tables dans un ordre logique
 modeles.Message.query.delete()
+modeles.Forfait.query.delete()
 modeles.Facture.query.delete()
+modeles.Paiement.query.delete()
 modeles.Etape.query.delete()
 modeles.Proposition.query.delete()
 modeles.Course.query.delete()
 modeles.Vehicule.query.delete()
-modeles.Etape.query.delete()
 modeles.Position.query.delete()
+modeles.Entreprise.query.delete()
 modeles.Conducteur.query.delete()
 modeles.Station.query.delete()
 modeles.Utilisateur.query.delete()
