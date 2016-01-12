@@ -22,6 +22,7 @@ class Utilisateur(db.Model, UserMixin):
     inscription = db.Column(db.DateTime)
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     _mdp = db.Column(db.String)
+    avoir_compte = db.Column(db.Boolean)
 
     @hybrid_property
     def mdp(self):
@@ -93,7 +94,7 @@ class Conducteur(db.Model):
     position = db.Column(Geometry('POINT'))
     adresse = db.Column(db.Integer, db.ForeignKey('adresses.identifiant'))
     inscription = db.Column(db.DateTime)
-    debut_penalite = db.Column(db.DateTime)
+    fin_penalite = db.Column(db.DateTime)
 
 
 class Message(db.Model):
