@@ -3,15 +3,19 @@ from app.outils import geographie as geo
 from app.outils import utile
 from app.outils import calendrier
 from app.devis import calculer
+from app import app, db, modeles
+from app.modeles import Course, Conducteur, Facture, Adresse
+from geoalchemy2.functions import ST_AsGeoJSON
+import json
 
 
 def calculer_supplement(demande, supplements):
     ''' Calcul des suppléments. '''
     supplement = 0
     # Bagages
-    supplement += int(demande['bagages']) * supplements['bagage']
+    supplement += int(demande['nb_bagages']) * supplements['bagage']
     # Animaux
-    supplement += int(demande['animaux']) * supplements['animal']
+    supplement += int(demande['nb_animaux']) * supplements['animal']
     # Passagers supplémentaires
     supplement += max(0, int(demande['nb_passagers']) - 4) * supplements['personne_sup']
     # Trajet à vide (ça ne m'a pas l'air bon, à discuter)
@@ -96,7 +100,7 @@ def estimation(demande):
             'montant': round(montant, 2),
             'supplement': round(supplement, 2),
             'trajet_a_vide' : tav,
-            'total_min': round(total)
+            'total': round(total,2)
 
         },
         'detail': {
@@ -106,14 +110,14 @@ def estimation(demande):
                 'prix_par_km': prix_par_km
             },
             'bagages': {
-                'nb': demande['bagages'],
+                'nb': demande['nb_bagages'],
                 'prix': supplements['bagage'],
-                'total': int(demande['bagages']) * supplements['bagage']
+                'total': int(demande['nb_bagages']) * supplements['bagage']
             },
             'animaux': {
-                'nb': demande['animaux'],
+                'nb': demande['nb_animaux'],
                 'prix': supplements['animal'],
-                'total': int(demande['animaux']) * supplements['animal']
+                'total': int(demande['nb_animaux']) * supplements['animal']
             },
             'personnes': {
                 'nb': demande['nb_passagers'],
@@ -135,3 +139,92 @@ def estimation(demande):
         }
     }
     return estimation
+
+
+
+
+def estimation_precise(course):
+    ''' Calculer le devis précis d'une course (en calculant le coût de trajet à vide). '''
+
+    # on récupère la valeur estimée de la course lors de la première estimation
+    prix = db.session.query(Course,Facture).filter(Course.numero == Facture.course).filter(Course.numero == course['numero']).first()
+    prix_estimation = prix.Facture.montant
+
+
+    # On récupère les tarifs applicables
+    tarifs = utile.lire_json('app/devis/data/tarifs.json')
+    supplements = utile.lire_json('app/devis/data/supplements.json')
+
+    # On déduit au prix estimé la valeur de trajet à vide fixée dans la première estimation
+    tav = supplements['trajet_a_vide']
+    prix_estimation -= tav
+    
+
+    # Simulation du trajet à vide
+
+    # Récupération de la position du taxi qui effectuera la course
+    pos = db.session.query(Course,Conducteur).filter(Course.conducteur == Conducteur.telephone).filter(Course.numero == course['numero']).first()
+    pos_taxi = pos.Conducteur.position
+    position = json.loads(db.session.scalar(
+                    ST_AsGeoJSON(
+                        pos_taxi
+                    )
+                ))
+    position['lat'] = position['coordinates'][0]
+    position['lon'] = position['coordinates'][1]
+
+
+
+
+    # Extraction des information de départ
+    dep = db.session.query(Course,Adresse).filter(Course.depart == Adresse.identifiant).filter(Course.numero == course['numero']).first()
+    depart = dep.Adresse.position
+    adresse_dep = json.loads(db.session.scalar(
+                    ST_AsGeoJSON(
+                        depart
+                    )
+                ))
+
+    adresse_dep['lat'] = adresse_dep['coordinates'][0]
+    adresse_dep['lon'] = adresse_dep['coordinates'][1]
+
+
+    
+    depart_taxi = position
+    depart_course = adresse_dep
+
+    deb = db.session.query(Course,Adresse).filter(Course.numero == course['numero']).first()   
+    debut = deb.Course.debut
+
+
+
+    # Calcul de la distance
+    simulation = calculer.simuler(depart_taxi, depart_course, debut)
+    duree = simulation['duree']
+    distance = simulation['distance']
+    jour = simulation['ratios']['jour']
+    nuit = simulation['ratios']['nuit']
+
+    # Savoir si c'est un jour ferié ou un dimanche
+    date = '{0}/{1}'.format(debut.day, debut.month)
+    jours_feries = calendrier.feries(debut.year)
+    ferie = date in jours_feries
+    dimanche = debut.weekday() == 6
+
+    # Décider du tarif à appliquer
+    if ferie or dimanche:
+        prix_par_km = tarifs['B']
+    else:
+        prix_par_km = jour * tarifs['A'] + nuit * tarifs['B']
+
+
+    # Calculer le prix de la course
+    total = round(prix_estimation + distance * prix_par_km,2)
+    # Prise en compte du tarif minimum
+    total = max(total, supplements['tarif_minimum'])
+
+
+    # On retourne la nouvelle estimation du prix du trajet
+    return total
+ 
+

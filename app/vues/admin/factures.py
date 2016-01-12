@@ -11,15 +11,21 @@ class VueFacture(VueModele):
     can_edit = True
     can_delete = True
 
+    column_searchable_list = [
+        'mois',
+        'annee'
+    ]
+
     form_columns = [
-    	'course',
-    	'montant',
-    	'type_paiement'
+    	'entreprise',
+        'mois',
+        'annee',
+        'montant'
     ]
 
 admin.add_view(
 	VueFacture(
-		modeles.Facture,
+		modeles.Paiement,
 		db.session
 	)
 )

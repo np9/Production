@@ -5,21 +5,6 @@ from app.outils.distance import Parcours
 
 
 
-def date_depart(demande):
-    '''
-    Extraire la date de départ d'une demande de course
-    et la rendre en format datetime.
-    '''
-    date = demande['date_debut'].split('-')
-    annee = int(date[0])
-    mois = int(date[1])
-    jour = int(date[2][:2])
-    heure = int(demande['heures'])
-    minutes = int(demande['minutes'])
-    # Retourner la date en format datetime
-    return datetime(annee, mois, jour, heure, minutes)
-
-
 def duree_trajet(depart, arrivee, debut):
     ''' Calculer la durée d'un trajet. '''
     
@@ -96,6 +81,7 @@ def simuler(depart, arrivee, debut):
     course = duree_trajet(depart, arrivee, debut)
     duree = course['duree']
     distance = course['distance']
+
 
     # Choisir une date de départ de référence (avec peu de trafic) pour calculer le temps passé en tarif ralenti
 

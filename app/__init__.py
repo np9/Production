@@ -58,6 +58,7 @@ from app.vues.admin import (
 	utilisateurs,
 	conducteurs,
 	vehicules,
+	entreprises,
 	stations,
 	factures,
 	adresses,

@@ -266,3 +266,22 @@ forfaits = pd.read_csv('app/data/forfaits.csv')
 forfaits.apply(inserer_forfait, axis=1)
 
 print('Forfaits insérés.')
+
+####################################
+############ Paiements #############
+####################################
+
+def inserer_paiement(ligne):
+    paiement = modeles.Paiement(
+        entreprise = ligne['entreprise'],
+        mois = ligne['mois'],
+        annee = ligne['annee'],
+        montant = ligne['montant']
+    )
+    db.session.add(paiement)
+    db.session.commit()
+
+paiements = pd.read_csv('app/data/paiements.csv')
+paiements.apply(inserer_paiement, axis=1)
+
+print('Paiements insérés.')
