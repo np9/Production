@@ -120,6 +120,7 @@ class Position(db.Model):
     conducteur = db.Column(db.String, db.ForeignKey('conducteurs.telephone'))
     moment = db.Column(db.DateTime)
     position = db.Column(Geometry('POINT'))
+    statut = db.Column(db.String)
 
     __table_args__ = (
         db.PrimaryKeyConstraint('conducteur', 'moment', name='pk_positions'),
